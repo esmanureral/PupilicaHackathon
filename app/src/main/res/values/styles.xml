@@ -2,9 +2,11 @@
 <resources>
 
     <style name="ToolbarTitleText">
-        <item name="android:textColor">@color/onPrimary</item>
-        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
+        <item name="android:textSize">@dimen/toolbar_title_size</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/black</item>
     </style>
+
 
     <style name="ViewArtistIndicator">
         <item name="android:background">@color/onPrimary</item>
@@ -13,7 +15,7 @@
 
     <style name="TvDetailLabelStyle">
         <item name="android:textSize">@dimen/item_year_text_size</item>
-        <item name="android:textColor">@color/label_color</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -65,4 +67,5 @@
         <item name="android:textColor">@color/primary</item>
     </style>
 
+    <dimen name="toolbar_title_size">24sp</dimen>
 </resources>
