@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/quizFragment">
+
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.quiz.QuizFragment"
+        android:label="QuizFragment">
+        <action
+            android:id="@+id/action_quizFragment_to_gameBadgeFragment"
+            app:destination="@id/gameBadgeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameBadgeFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.badge.GameBadgeFragment"
+        android:label="GameBadgeFragment" />
+</navigation>
