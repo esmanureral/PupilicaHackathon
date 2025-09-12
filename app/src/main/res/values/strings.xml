@@ -9,5 +9,9 @@
     <string name="quiz_score">Score: %1$d</string>
     <string name="quiz_completed">Quiz tamamlandı!</string>
     <string name="quiz_finished">Quiz bitti!</string>
+    <string name="badge_range_format">%1$d to %2$d</string>
+    <string name="current_badge_label">Current Badge</string>
+    <string name="arrow_button">arrow button</string>
+    <string name="badges_title">ROZETLER</string>
 
 </resources>

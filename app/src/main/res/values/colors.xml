@@ -20,5 +20,15 @@
     <color name="artwork_border">#8B5A2B</color>
     <color name="artwork_border_game">#A0522D</color>
     <color name="shadow_color">#000000</color>
-
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green_light">#ff99cc00</color>
+    <color name="red_light">#ffff4444</color>
+    <color name="grey">#E8CACA</color>
+    <color name="check_color">#7BB241</color>
+    <color name="background">#F5F5F5</color>
+    <color name="green">#A6C77E</color>
+    <color name="orange">#FF8A5C</color>
+    <color name="dark_grey">#4A4E69</color>
+    <color name="light">#FFEEDB</color>
 </resources>
