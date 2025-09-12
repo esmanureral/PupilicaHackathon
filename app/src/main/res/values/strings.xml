@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">PupilicaHackathon</string>
+    <string name="text_view_question">Question:</string>
+    <string name="tv_score">Score:</string>
+    <string name="btn_badges">Badges</string>
+    <string name="quiz_btn">Button Option</string>
+    <string name="btn_next_question">Next Question</string>
+    <string name="tv_question">Question: %1$d</string>
+
 </resources>

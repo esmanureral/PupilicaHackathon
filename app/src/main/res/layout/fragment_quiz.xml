@@ -1,0 +1,146 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_8dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_top"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_8dp"
+        android:backgroundTint="@color/primary"
+        app:cardCornerRadius="@dimen/iv_favorite_margin"
+        app:cardElevation="@dimen/space_4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeWidth="@dimen/stroke_width">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_8dp">
+
+            <TextView
+                android:id="@+id/tv_question_number"
+                style="@style/TvDetailLabelStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_8dp"
+                android:text="@string/text_view_question"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_score"
+                style="@style/TvDetailLabelStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_score"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/btn_badges"
+                style="@style/TvDetailLabelStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/btn_badges"
+                android:src="@drawable/badges"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tvQuestion"
+        style="@style/TvDetailTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/onPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/btnOption1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_top"
+        tools:text="@string/text_view_question" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="@dimen/progress_indicator_size"
+        android:layout_height="@dimen/progress_indicator_size"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="visible"
+        app:indicatorColor="@color/progress_indicator_color"
+        app:layout_constraintBottom_toBottomOf="@id/tvQuestion"
+        app:layout_constraintEnd_toEndOf="@id/tvQuestion"
+        app:layout_constraintStart_toStartOf="@id/tvQuestion"
+        app:layout_constraintTop_toTopOf="@id/tvQuestion" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOption1"
+        style="@style/OptionButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/option_height"
+        android:layout_marginHorizontal="@dimen/iv_favorite_margin"
+        app:cornerRadius="@dimen/iv_favorite_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/btnOption2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/quiz_btn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOption2"
+        style="@style/OptionButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/option_height"
+        android:layout_marginHorizontal="@dimen/iv_favorite_margin"
+        app:cornerRadius="@dimen/iv_favorite_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/btnOption3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/quiz_btn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOption3"
+        style="@style/OptionButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/option_height"
+        android:layout_marginHorizontal="@dimen/iv_favorite_margin"
+        app:cornerRadius="@dimen/iv_favorite_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/btnOption4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/quiz_btn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOption4"
+        style="@style/OptionButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/option_height"
+        android:layout_marginHorizontal="@dimen/iv_favorite_margin"
+        app:cornerRadius="@dimen/iv_favorite_bottom"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next_question"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="@string/quiz_btn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_next_question"
+        style="@style/OptionButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/option_height"
+        android:text="@string/btn_next_question"
+        app:cornerRadius="@dimen/iv_favorite_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
