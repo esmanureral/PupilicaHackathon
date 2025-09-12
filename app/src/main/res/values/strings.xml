@@ -6,5 +6,8 @@
     <string name="quiz_btn">Button Option</string>
     <string name="btn_next_question">Next Question</string>
     <string name="tv_question">Question: %1$d</string>
+    <string name="quiz_score">Score: %1$d</string>
+    <string name="quiz_completed">Quiz tamamlandı!</string>
+    <string name="quiz_finished">Quiz bitti!</string>
 
 </resources>
