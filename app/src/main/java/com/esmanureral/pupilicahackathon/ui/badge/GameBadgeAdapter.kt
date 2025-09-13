@@ -16,27 +16,33 @@ class GameBadgeAdapter(
     class BadgeViewHolder(val binding: ItemBadgeBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BadgeViewHolder {
-        val binding = ItemBadgeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return BadgeViewHolder(binding)
+        return BadgeViewHolder(
+            ItemBadgeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: BadgeViewHolder, position: Int) {
         val badge = badges[position]
+        bindBadge(holder, badge)
+    }
+
+    override fun getItemCount(): Int = badges.size
+    private fun bindBadge(holder: BadgeViewHolder, badge: Badge) {
         with(holder.binding) {
             badgeImage.setImageResource(badge.resourceId)
             badgeText.text = badge.name
-            scoreValue.text = root.context.getString(
+            scoreValue.text = holder.itemView.context.getString(
                 R.string.badge_range_format,
                 badge.minValue,
                 badge.maxValue
             )
-            val highlighted = currentScore in badge.minValue..badge.maxValue
-            val bgColor = if (highlighted) R.color.correct_answer else R.color.icon_color
-            root.setBackgroundColor(ContextCompat.getColor(root.context, bgColor))
+            setItemBackground(root, badge)
         }
     }
 
-    override fun getItemCount(): Int = badges.size
+    private fun setItemBackground(rootView: ViewGroup, badge: Badge) {
+        val highlighted = currentScore in badge.minValue..badge.maxValue
+        val bgColorRes = if (highlighted) R.color.correct_answer else R.color.icon_color
+        rootView.setBackgroundColor(ContextCompat.getColor(rootView.context, bgColorRes))
+    }
 }
-
-

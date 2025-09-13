@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.esmanureral.pupilicahackathon.data.QuizRepository
 import com.esmanureral.pupilicahackathon.data.local.QuizSharedPreferences
 import com.esmanureral.pupilicahackathon.data.network.ApiClient
@@ -16,6 +15,9 @@ class GameBadgeFragment : Fragment() {
 
     private var _binding: FragmentGameBadgeBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var repository: QuizRepository
+    private var currentScore: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,21 +30,28 @@ class GameBadgeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val repository = QuizRepository(
-            apiService = ApiClient.provideApi(),
-            prefs = QuizSharedPreferences(requireContext())
-        )
-        val score = repository.loadScore()
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = GameBadgeAdapter(GameBadgeList.badges, score)
+        initializeRepository()
+        loadCurrentScore()
+        setupRecyclerView()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun initializeRepository() {
+        repository = QuizRepository(
+            apiService = ApiClient.provideApi(),
+            prefs = QuizSharedPreferences(requireContext())
+        )
+    }
+
+    private fun loadCurrentScore() {
+        currentScore = repository.loadScore()
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerView.adapter = GameBadgeAdapter(GameBadgeList.badges, currentScore)
+    }
 }
-
-

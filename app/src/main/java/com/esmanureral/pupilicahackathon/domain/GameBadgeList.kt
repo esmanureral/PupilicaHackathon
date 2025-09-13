@@ -5,34 +5,40 @@ import com.esmanureral.pupilicahackathon.R
 object GameBadgeList {
     val badges: List<Badge> = listOf(
         Badge(
-            resourceId = R.drawable.badges,
-            name = "Cavity Crusader",
-            minValue = Int.MIN_VALUE,
-            maxValue = -50
-        ),
-        Badge(
-            resourceId = R.drawable.badges,
-            name = "Plaque Pirate",
-            minValue = -49,
-            maxValue = -1
-        ),
-        Badge(
-            resourceId = R.drawable.badges,
-            name = "Fearless Flosser",
-            minValue = 0,
-            maxValue = 4
-        ),
-        Badge(
-            resourceId = R.drawable.badges,
-            name = "Molar Master",
-            minValue = 5,
+            resourceId = R.drawable.badge1,
+            name = "Süt Dişi",
+            minValue = 1,
             maxValue = 9
         ),
         Badge(
-            resourceId = R.drawable.badges,
-            name = "Enamel Emperor",
+            resourceId = R.drawable.badge2,
+            name = "Köpük Şövalyesi",
             minValue = 10,
-            maxValue = 15
+            maxValue = 24
+        ),
+        Badge(
+            resourceId = R.drawable.badge3,
+            name = "Şeker Avcısı",
+            minValue = 25,
+            maxValue = 49
+        ),
+        Badge(
+            resourceId = R.drawable.badge4,
+            name = "Plak Koruyucusu",
+            minValue = 50,
+            maxValue = 74
+        ),
+        Badge(
+            resourceId = R.drawable.badge5,
+            name = "Diş Perisi Elçisi",
+            minValue = 75,
+            maxValue = 99
+        ),
+        Badge(
+            resourceId = R.drawable.badge6,
+            name = "Işıltılı Gülüş",
+            minValue = 100,
+            maxValue = 100
         )
     )
 
