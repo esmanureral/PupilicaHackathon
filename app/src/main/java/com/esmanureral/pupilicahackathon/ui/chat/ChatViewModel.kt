@@ -49,7 +49,10 @@ class ChatViewModel : ViewModel() {
 
     private fun createSpeechIntent(): Intent {
         return Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, "tr-TR")
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
@@ -64,13 +67,14 @@ class ChatViewModel : ViewModel() {
         override fun onEndOfSpeech() = stopListening()
         override fun onError(error: Int) = stopListening()
         override fun onResults(results: Bundle?) = handleResults(results)
-        override fun onPartialResults(partialResults: Bundle?) = handlePartialResults(partialResults)
+        override fun onPartialResults(partialResults: Bundle?) =
+            handlePartialResults(partialResults)
+
         override fun onEvent(eventType: Int, params: Bundle?) {}
     }
 
     fun checkPermissionStatus(context: Context) {
         isPermissionGranted = checkAudioPermission(context)
-        Log.d("ChatViewModel", "Permission status checked: $isPermissionGranted")
         _permissionGranted.value = isPermissionGranted
         updateVoiceButtonState(false)
     }
@@ -83,7 +87,6 @@ class ChatViewModel : ViewModel() {
     }
 
     fun onPermissionGranted() {
-        Log.d("ChatViewModel", "Permission granted, updating state")
         isPermissionGranted = true
         _permissionGranted.value = true
         startListening()
@@ -96,35 +99,25 @@ class ChatViewModel : ViewModel() {
     }
 
     fun onVoiceButtonClicked(context: Context) {
-        Log.d("ChatViewModel", "Voice button clicked in ViewModel")
-        Log.d("ChatViewModel", "isPermissionGranted: $isPermissionGranted")
-        
         if (isPermissionGranted || checkAudioPermission(context)) {
-            Log.d("ChatViewModel", "Permission granted, starting listening")
             startListening()
         } else {
-            Log.d("ChatViewModel", "Permission not granted")
             _permissionGranted.value = false
         }
     }
 
     private fun startListening() {
-        Log.d("ChatViewModel", "Attempting to start listening")
         if (!isListening && ::speechRecognizer.isInitialized) {
             try {
-                Log.d("ChatViewModel", "Starting speech recognition")
                 isListening = true
                 _isListening.value = true
                 speechRecognizer.startListening(speechIntent)
                 updateVoiceButtonState(true)
             } catch (e: Exception) {
-                Log.e("ChatViewModel", "Error starting speech recognition: ${e.message}")
                 isListening = false
                 _isListening.value = false
                 updateVoiceButtonState(false)
             }
-        } else {
-            Log.d("ChatViewModel", "Cannot start listening - isListening: $isListening, recognizer initialized: ${::speechRecognizer.isInitialized}")
         }
     }
 
