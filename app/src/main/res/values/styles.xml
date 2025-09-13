@@ -7,21 +7,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-
-
     <style name="TvDetailLabelStyle">
         <item name="android:textSize">@dimen/item_year_text_size</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">normal</item>
-    </style>
-
-
-
-    <style name="tvTitleDetailStyle">
-        <item name="android:textSize">@dimen/tv_title_text_size</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TvDetailTextStyle">
@@ -30,34 +19,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ContainerStyle">
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:focusableInTouchMode">true</item>
-    </style>
-
-    <style name="CollectionTextStyle">
-        <item name="android:textSize">@dimen/item_year_text_size</item>
-        <item name="android:textColor">@color/option_color</item>
-    </style>
-
-    <style name="CustomCardViewStyle" parent="@style/Widget.MaterialComponents.CardView">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay_card_custom_corners</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay_card_custom_corners">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/custom_card_view_style</item>
-        <item name="cornerSizeTopRight">@dimen/iv_favorite_margin</item>
-        <item name="cornerSizeTopLeft">@dimen/iv_favorite_margin</item>
-        <item name="cornerSizeBottomRight">@dimen/custom_card_view_style</item>
-        <item name="cornerSizeBottomLeft">@dimen/custom_card_view_style</item>
-    </style>
-
     <style name="OptionButtonStyle">
         <item name="backgroundTint">@color/option_color</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <dimen name="toolbar_title_size">24sp</dimen>
 </resources>
