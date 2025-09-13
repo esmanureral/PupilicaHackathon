@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">🏆 Hackathon Winner</string>
+
+    <string name="app_name">Pupullica Yapay Zeka</string>
     <string name="text_view_question">Question:</string>
     <string name="tv_score">Score:</string>
     <string name="btn_badges">Badges</string>
@@ -13,27 +14,6 @@
     <string name="current_badge_label">Current Badge</string>
     <string name="arrow_button">arrow button</string>
     <string name="badges_title">ROZETLER</string>
-    
-    <!-- 🏆 HACKATHON WINNER FEATURES -->
-    <string name="hackathon_winner">🏆 HACKATHON WINNER</string>
-    <string name="ai_assistant">Dr. AI Assistant</string>
-    <string name="perfect_score">Score: 100/100</string>
-    <string name="ai_search_hint">AI ile diş sağlığınızı analiz edin...</string>
-    <string name="ai_powered_services">🤖 AI POWERED SERVICES</string>
-    <string name="ai_dental_analysis">AI Diş Analizi</string>
-    <string name="ai_accuracy">%95 Doğruluk</string>
-    <string name="ai_consultant">AI Danışman</string>
-    <string name="ai_24_7">7/24 Aktif</string>
-    <string name="ai_reports">AI Raporlar</string>
-    <string name="ai_realtime">Anlık Analiz</string>
-    <string name="ai_insights_appointments">📊 AI INSIGHTS APPOINTMENTS</string>
-    <string name="ai_doctor">Dr. AI Assistant - Diş Hekimi</string>
-    <string name="ai_service">AI Destekli Diş Analizi</string>
-    <string name="appointment_date">Pazartesi, 20 Ocak 2024</string>
-    <string name="countdown">2 gün kaldı</string>
-    <string name="hackathon_promo_title">🏆 HACKATHON WINNER</string>
-    <string name="hackathon_promo_subtitle">AI-Powered Dental Health Revolution</string>
-    <string name="try_now">TRY NOW</string>
-
+    <string name="camera_permission_required">Kamera izni gerekli!</string>
 
 </resources>

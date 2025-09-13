@@ -1,37 +1,88 @@
 package com.esmanureral.pupilicahackathon.ui.home
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnimationUtils
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.activity.result.contract.ActivityResultContracts
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.databinding.FragmentHomeBinding
+import com.esmanureral.pupilicahackathon.showToast
 
 class HomeFragment : Fragment() {
-    
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    
+    private val viewModel: HomeViewModel by viewModels()
+
+    private val takePictureLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicturePreview()
+    ) { bitmap: Bitmap? ->
+        bitmap?.let {
+            viewModel.setCapturedImage(it)
+            viewModel.processImage(it)
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            openCamera()
+        } else {
+            requireContext().showToast(getString(R.string.camera_permission_required))
+        }
+    }
+
     override fun onCreateView(
-        inflater: LayoutInflater, 
+        inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.imgChat.setOnClickListener {
+
+        }
+        binding.imgAI.setOnClickListener {
+            checkCameraPermissionAndOpen()
+        }
+
+        viewModel.capturedImage.observe(viewLifecycleOwner) { bitmap ->
+            bitmap?.let {
+            }
+        }
     }
-    
+
+    private fun checkCameraPermissionAndOpen() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                openCamera()
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun openCamera() {
+        takePictureLauncher.launch(null)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
