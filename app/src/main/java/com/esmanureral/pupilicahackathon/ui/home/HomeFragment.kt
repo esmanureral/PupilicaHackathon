@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.navigation.fragment.findNavController
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.databinding.FragmentHomeBinding
 import com.esmanureral.pupilicahackathon.showToast
@@ -53,6 +54,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.imgChat.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToChatFragment())
 
         }
         binding.imgAI.setOnClickListener {

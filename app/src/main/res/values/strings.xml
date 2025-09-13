@@ -15,5 +15,6 @@
     <string name="arrow_button">arrow button</string>
     <string name="badges_title">ROZETLER</string>
     <string name="camera_permission_required">Kamera izni gerekli!</string>
+    <string name="recognized_text_format">%1$s %2$s</string>
 
 </resources>
