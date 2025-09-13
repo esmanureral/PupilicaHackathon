@@ -2,15 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light">
+    android:layout_height="match_parent">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_top"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_8dp"
-        android:backgroundTint="@color/primary"
+        android:backgroundTint="@color/white"
         app:cardCornerRadius="@dimen/iv_favorite_margin"
         app:cardElevation="@dimen/space_4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +65,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/onPrimary"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/btnOption1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +79,7 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="visible"
-        app:indicatorColor="@color/progress_indicator_color"
+        app:indicatorColor="@color/gray"
         app:layout_constraintBottom_toBottomOf="@id/tvQuestion"
         app:layout_constraintEnd_toEndOf="@id/tvQuestion"
         app:layout_constraintStart_toStartOf="@id/tvQuestion"

@@ -8,10 +8,6 @@
     </style>
 
 
-    <style name="ViewArtistIndicator">
-        <item name="android:background">@color/onPrimary</item>
-        <item name="android:visibility">gone</item>
-    </style>
 
     <style name="TvDetailLabelStyle">
         <item name="android:textSize">@dimen/item_year_text_size</item>
@@ -19,22 +15,18 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="ItemArtistTitleText">
-        <item name="android:textSize">@dimen/item_artist_text_size</item>
-        <item name="android:textColor">@color/onPrimary</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+
 
     <style name="tvTitleDetailStyle">
         <item name="android:textSize">@dimen/tv_title_text_size</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">@color/onPrimary</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TvDetailTextStyle">
         <item name="android:textSize">@dimen/item_artist_text_size</item>
-        <item name="android:textColor">@color/onPrimary</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -64,7 +56,7 @@
 
     <style name="OptionButtonStyle">
         <item name="backgroundTint">@color/option_color</item>
-        <item name="android:textColor">@color/primary</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <dimen name="toolbar_title_size">24sp</dimen>

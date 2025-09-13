@@ -1,62 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Diş Sağlığı Teması Renkleri -->
-    <color name="primary">#FFFFFF</color>
-    <color name="onPrimary">#000000</color>
-    <color name="surface">#9FA2A6</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="blue">#5E8CCF</color>
-    <color name="full_screen">#FFFFFF</color>
-    <color name="shimmer_color">#DDDDDD</color>
-    <color name="icon_color">#525A66</color>
-    <color name="divider_color">#D0D6D6</color>
-    <color name="primaryDark">#FBFBFB</color>
-    <color name="progress_indicator_color">#000000</color>
-    <color name="label_color">#7B828E</color>
-    <color name="bottom_bar_icon_color">#e3e3e3</color>
-    <color name="transparent_color">#4DFFFFFF</color>
-    <color name="button_next_color">#243465</color>
-    <color name="correct_answer">#9BBC67</color>
-    <color name="wrong_answer">#A05858</color>
+    <color name="gray">#525A66</color>
+    <color name="green_light">#9BBC67</color>
+    <color name="red_light">#A05858</color>
     <color name="option_color">#717E81</color>
-    <color name="artwork_border">#8B5A2B</color>
-    <color name="artwork_border_game">#A0522D</color>
-    <color name="shadow_color">#000000</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="green_light">#ff99cc00</color>
-    <color name="red_light">#ffff4444</color>
-    <color name="grey">#E8CACA</color>
-    <color name="check_color">#7BB241</color>
-    <color name="background">#F5F5F5</color>
-    <color name="green">#A6C77E</color>
     <color name="orange">#FF8A5C</color>
     <color name="dark_grey">#4A4E69</color>
-    <color name="light">#FFEEDB</color>
-    
-    <!-- Diş Sağlığı Teması -->
-    <color name="dental_primary_light">#4CAF50</color>
-    <color name="dental_primary_dark">#1B5E20</color>
-    <color name="dental_secondary">#81C784</color>
-    <color name="dental_background">#F8F9FA</color>
-    <color name="dental_surface">#FFFFFF</color>
-    <color name="dental_text_primary">#212121</color>
-    <color name="dental_text_secondary">#757575</color>
-    <color name="dental_divider">#E0E0E0</color>
-    <color name="dental_card_shadow">#1A000000</color>
     <color name="greenHome">#4CAF50</color>
-    <color name="dental_gradient_end">#2E7D32</color>
-    <!-- 🏆 HACKATHON WINNER COLORS -->
-    <color name="hackathon_gold">#FFD700</color>
-    <color name="hackathon_silver">#C0C0C0</color>
-    <color name="hackathon_bronze">#CD7F32</color>
-    <color name="ai_blue">#2196F3</color>
-    <color name="ai_purple">#9C27B0</color>
-    <color name="winner_gradient_start">#FFD700</color>
-    <color name="winner_gradient_end">#FFA500</color>
-    <color name="ai_gradient_start">#2196F3</color>
-    <color name="ai_gradient_end">#9C27B0</color>
-    <color name="hackathon_success">#4CAF50</color>
-    <color name="hackathon_warning">#FF9800</color>
-    <color name="hackathon_error">#F44336</color>
-    <color name="hackathon_info">#2196F3</color>
+
 </resources>

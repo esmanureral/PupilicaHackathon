@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    app:cardBackgroundColor="@color/icon_color"
+    app:cardBackgroundColor="@color/gray"
     app:cardElevation="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        tools:background="@color/icon_color">
+        tools:background="@color/gray">
 
         <ImageView
             android:id="@+id/badge_image"

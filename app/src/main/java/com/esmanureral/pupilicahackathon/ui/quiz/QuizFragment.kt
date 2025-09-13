@@ -136,7 +136,7 @@ class QuizFragment : Fragment() {
         val keys = options.keys.toList()
         buttons.forEachIndexed { index, button ->
             button.text = options[keys[index]]
-            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.icon_color))
+            button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
             button.isEnabled = true
             button.visibility = View.VISIBLE
         }
@@ -166,13 +166,13 @@ class QuizFragment : Fragment() {
             buttons[selectedIdx].setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    if (result.isCorrect) R.color.correct_answer else R.color.wrong_answer
+                    if (result.isCorrect) R.color.green_light else R.color.red_light
                 )
             )
         }
         if (correctIdx in buttons.indices) {
             buttons[correctIdx].setBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.correct_answer)
+                ContextCompat.getColor(requireContext(), R.color.green_light)
             )
         }
     }
