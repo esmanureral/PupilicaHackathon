@@ -60,6 +60,18 @@ class HomeFragment : Fragment() {
         binding.imgAI.setOnClickListener {
             checkCameraPermissionAndOpen()
         }
+        
+        binding.btnSelectDate.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToReminderFragment())
+        }
+        
+        binding.btnSelectTime.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToReminderFragment())
+        }
+        
+        binding.btnSetReminder.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToReminderFragment())
+        }
 
         viewModel.capturedImage.observe(viewLifecycleOwner) { bitmap ->
             bitmap?.let {
@@ -85,6 +97,7 @@ class HomeFragment : Fragment() {
     private fun openCamera() {
         takePictureLauncher.launch(null)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
