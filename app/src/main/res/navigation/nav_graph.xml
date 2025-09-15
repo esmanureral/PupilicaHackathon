@@ -41,4 +41,9 @@
         android:name="com.esmanureral.pupilicahackathon.ui.reminder.ReminderFragment"
         android:label="ReminderFragment" />
 
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.onboarding.OnboardingFragment"
+        android:label="Onboarding" />
+
 </navigation>
