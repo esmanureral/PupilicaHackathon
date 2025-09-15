@@ -36,8 +36,6 @@
             android:layout_height="48dp" />
 
     </LinearLayout>
-
-    <!-- Quick Time Selection -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,7 +63,6 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_background"
                 android:text="🌅 Sabah 08:00"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
@@ -76,16 +73,12 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/button_background"
                 android:text="🌙 Akşam 21:00"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
         </LinearLayout>
-
-
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -185,7 +178,6 @@
 
     </LinearLayout>
 
-    <!-- Active Reminders -->
     <LinearLayout
         android:id="@+id/layout_active_reminders"
         android:layout_width="match_parent"
@@ -219,7 +211,6 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/button_background"
             android:text="🗑️ Tüm Hatırlatmaları Sil"
             android:textColor="@color/white"
             android:textSize="14sp" />
@@ -236,12 +227,10 @@
         android:textSize="14sp"
         android:visibility="gone" />
 
-    <!-- Save Button -->
     <Button
         android:id="@+id/btn_save_reminder"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/button_background"
         android:text="Hatırlatmayı Kaydet"
         android:textColor="@color/white"
         android:textSize="16sp"

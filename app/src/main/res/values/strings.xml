@@ -1,6 +1,17 @@
 <resources>
 
     <string name="app_name">Pupullica Yapay Zeka</string>
+    <string name="skip">Atla</string>
+    <string name="next">İleri</string>
+    <string name="get_started">Başla</string>
+    <string name="onb_title_1">Akıllı Diş Analizi</string>
+    <string name="onb_desc_1">Diş fotoğrafını yükle; olası sorunları tespit edelim ve öneriler verelim.</string>
+    <string name="onb_title_2">Yapay Zeka Asistanı</string>
+    <string name="onb_desc_2">Chatbot ile istediğin konuda anında destek ve ağız-diş sağlığı bilgileri al.</string>
+    <string name="onb_title_3">Fırçalama Hatırlatıcıları</string>
+    <string name="onb_desc_3">Sabah/akşam bildirimleriyle düzenini koru; asla unutma.</string>
+    <string name="onb_title_4">Oyunlaştırma ve Rozetler</string>
+    <string name="onb_desc_4">Görevleri tamamla, rozetler kazan; eğlenirken öğren.</string>
     <string name="text_view_question">Question:</string>
     <string name="tv_score">Score:</string>
     <string name="btn_badges">Badges</string>
@@ -47,5 +58,6 @@
     <string name="every_day">Her gün</string>
     <string name="day_friday">Cuma</string>
     <string name="day_saturday">Cumartesi</string>
-
+    <string name="pref_onboarding_name">onboarding_prefs</string>
+    <string name="pref_onboarding_completed">onboarding_completed</string>
 </resources>

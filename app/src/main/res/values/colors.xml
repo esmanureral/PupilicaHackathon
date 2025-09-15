@@ -13,5 +13,8 @@
     <color name="greenHome">#4CAF50</color>
     <color name="primary">#2196F3</color>
     <color name="red">#F44336</color>
+    <color name="onb_yellow">#FFE2A9</color>
+    <color name="onb_blue">#CFE0FF</color>
+    <color name="onb_pink">#FFCFE6</color>
 
 </resources>
