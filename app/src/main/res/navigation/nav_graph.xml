@@ -17,6 +17,7 @@
         android:id="@+id/gameBadgeFragment"
         android:name="com.esmanureral.pupilicahackathon.ui.badge.GameBadgeFragment"
         android:label="GameBadgeFragment" />
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.esmanureral.pupilicahackathon.ui.home.HomeFragment"
@@ -25,10 +26,19 @@
         <action
             android:id="@+id/action_homeFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_reminderFragment"
+            app:destination="@id/reminderFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.esmanureral.pupilicahackathon.ui.chat.ChatFragment"
         android:label="ChatFragment" />
+
+    <fragment
+        android:id="@+id/reminderFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.reminder.ReminderFragment"
+        android:label="ReminderFragment" />
+
 </navigation>

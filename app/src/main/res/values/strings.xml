@@ -16,5 +16,36 @@
     <string name="badges_title">ROZETLER</string>
     <string name="camera_permission_required">Kamera izni gerekli!</string>
     <string name="recognized_text_format">%1$s %2$s</string>
+    <string name="reminder_channel_name">Diş Fırçalama Hatırlatmaları</string>
+    <string name="reminder_channel_description">Diş fırçalama hatırlatma bildirimleri</string>
+    <string name="reminder_action">com.esmanureral.pupilicahackathon.REMINDER_ACTION</string>
+    <string name="reminder_extra_id">reminder_id</string>
+    <string name="reminder_extra_title">title</string>
+    <string name="reminder_extra_description">description</string>
+    <string name="reminder_default_title">Diş Fırçalama Hatırlatması</string>
+    <string name="reminder_default_description">Dişlerinizi fırçalamayı unutmayın!</string>
+    <string name="prefs_name">reminder_preferences</string>
+    <string name="prefs_active_reminders_key">active_reminders</string>
+    <string name="error_save_reminder">Hatırlatma kaydedilirken hata oluştu: %1$s</string>
+    <string name="error_load_reminder">Hatırlatmalar yüklenirken hata oluştu: %1$s</string>
+    <string name="error_delete_reminder">Hatırlatma silinirken hata oluştu: %1$s</string>
+    <string name="error_clear_all_reminder">Tüm hatırlatmalar silinirken hata oluştu: %1$s</string>
+    <string name="morning_time">🌅 Sabah: %1$s</string>
+    <string name="evening_time">🌙 Akşam: %1$s</string>
+    <string name="error_no_day">Lütfen en az bir gün seçin!</string>
+    <string name="error_no_time">Lütfen sabah veya akşam saatini seçin!</string>
+    <string name="reminder_morning_title">Sabah Diş Fırçalama Hatırlatması</string>
+    <string name="reminder_evening_title">Akşam Diş Fırçalama Hatırlatması</string>
+    <string name="reminder_description">Dişlerinizi fırçalamayı unutmayın!</string>
+    <string name="reminder_saved">Hatırlatma kaydedildi</string>
+    <string name="reminders_cleared">Hatırlatmalar silindi</string>
+    <string name="day_sunday">Pazar</string>
+    <string name="day_monday">Pazartesi</string>
+    <string name="day_tuesday">Salı</string>
+    <string name="day_wednesday">Çarşamba</string>
+    <string name="day_thursday">Perşembe</string>
+    <string name="every_day">Her gün</string>
+    <string name="day_friday">Cuma</string>
+    <string name="day_saturday">Cumartesi</string>
 
 </resources>

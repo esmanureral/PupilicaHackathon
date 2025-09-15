@@ -1,6 +1,5 @@
 package com.esmanureral.pupilicahackathon.ui.home
 
-
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

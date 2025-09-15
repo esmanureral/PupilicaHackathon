@@ -11,5 +11,7 @@
     <color name="orange">#FF8A5C</color>
     <color name="dark_grey">#4A4E69</color>
     <color name="greenHome">#4CAF50</color>
+    <color name="primary">#2196F3</color>
+    <color name="red">#F44336</color>
 
 </resources>
