@@ -60,4 +60,13 @@
     <string name="day_saturday">Cumartesi</string>
     <string name="pref_onboarding_name">onboarding_prefs</string>
     <string name="pref_onboarding_completed">onboarding_completed</string>
+    <string name="take_photo">take photo</string>
+    <string name="choose_from_gallery">chose from gallery</string>
+    <string name="select_image_source">select image resource</string>
+    <string name="result_not_found">Sonuç bulunamadı</string>
+    <string name="weekly_care_plan">Haftalık Bakım Planı</string>
+    <string name="summary_prefix_1">Çürük riskiniz</string>
+    <string name="summary_prefix_2">Düzenli bakımla</string>
+    <string name="prediction_prefix_1">Caries:</string>
+    <string name="prediction_prefix_2">Hypodontia:</string>
 </resources>
