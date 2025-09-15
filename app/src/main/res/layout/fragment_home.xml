@@ -156,7 +156,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- AI Chat Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardChat"
             android:layout_width="0dp"
@@ -197,7 +196,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- AI Reports Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardReport"
             android:layout_width="0dp"
@@ -239,6 +237,20 @@
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/tvAnalysisResult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:textColor="@color/black"
+        android:background="@android:color/transparent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutServices"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Analiz sonucu burada görünecek" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardBrushingReminder"
         android:layout_width="0dp"
@@ -249,7 +261,7 @@
         app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutServices">
+        app:layout_constraintTop_toBottomOf="@id/tvAnalysisResult">
 
         <LinearLayout
             android:layout_width="match_parent"
