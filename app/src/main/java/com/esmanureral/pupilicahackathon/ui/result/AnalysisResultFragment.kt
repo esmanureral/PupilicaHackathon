@@ -62,9 +62,10 @@ class AnalysisResultFragment : Fragment() {
     }
 
     private fun goToHome() {
-        findNavController().popBackStack(R.id.homeFragment, false)
+        findNavController().navigate(
+            R.id.action_analysisResultFragment_to_homeFragment
+        )
     }
-
 
     private fun observeAnalysisResult() {
         viewModel.analysisResult.observe(viewLifecycleOwner) { result ->
