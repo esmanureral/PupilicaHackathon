@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_homeFragment_to_reminderFragment"
             app:destination="@id/reminderFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_analysisResultFragment"
+            app:destination="@id/analysisResultFragment" />
     </fragment>
 
     <fragment
@@ -41,6 +44,25 @@
         android:name="com.esmanureral.pupilicahackathon.ui.reminder.ReminderFragment"
         android:label="ReminderFragment" />
 
+    <fragment
+        android:id="@+id/analysisResultFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.result.AnalysisResultFragment"
+        android:label="Analysis Result">
+        <argument
+            android:name="resultText"
+            app:argType="string" />
+        <argument
+            android:name="imageUri"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="resultJson"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_analysisResultFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/onboardingFragment"
         android:name="com.esmanureral.pupilicahackathon.ui.onboarding.OnboardingFragment"
