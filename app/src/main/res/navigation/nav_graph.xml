@@ -45,6 +45,11 @@
         android:label="ReminderFragment" />
 
     <fragment
+        android:id="@+id/badgesFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.badge.GameBadgeFragment"
+        android:label="Rozetler" />
+
+    <fragment
         android:id="@+id/analysisResultFragment"
         android:name="com.esmanureral.pupilicahackathon.ui.result.AnalysisResultFragment"
         android:label="Analysis Result">
@@ -63,6 +68,7 @@
             android:id="@+id/action_analysisResultFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/onboardingFragment"
         android:name="com.esmanureral.pupilicahackathon.ui.onboarding.OnboardingFragment"
