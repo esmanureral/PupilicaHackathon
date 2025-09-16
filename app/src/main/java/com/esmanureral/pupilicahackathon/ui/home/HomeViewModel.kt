@@ -9,10 +9,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 
 class HomeViewModel : ViewModel() {
@@ -28,12 +27,12 @@ class HomeViewModel : ViewModel() {
     val capturedImage: LiveData<Bitmap?> = _capturedImage
 
     private val _analyzeResult = MutableLiveData<String?>()
-    val analyzeResult: MutableLiveData<String?> = _analyzeResult
+    val analyzeResult: LiveData<String?> = _analyzeResult
 
     private val _rawJsonResult = MutableLiveData<String>()
     val rawJsonResult: LiveData<String> = _rawJsonResult
 
-    private val _isLoading = MutableLiveData<Boolean>()
+    private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
     var lastImageUri: String? = null
@@ -47,16 +46,14 @@ class HomeViewModel : ViewModel() {
         _analyzeResult.value = null
 
         viewModelScope.launch {
-            try {
-                val result = uploadBitmapForAnalysis(bitmap)
-                _analyzeResult.value = result
-                _rawJsonResult.value = extractRawJson(result)
+            _analyzeResult.value = try {
+                uploadBitmapForAnalysis(bitmap)
             } catch (e: Exception) {
-                _analyzeResult.value = "Hata: ${e.message}"
-                _rawJsonResult.value = ""
-            } finally {
-                _isLoading.value = false
-            }
+                android.util.Log.e("HomeViewModel", "API hatası: ${e.message}", e)
+                "Hata: ${e.message}"
+            }.also { _rawJsonResult.value = it }
+
+            _isLoading.value = false
         }
     }
 
@@ -64,37 +61,40 @@ class HomeViewModel : ViewModel() {
         withContext(Dispatchers.IO) {
             var lastException: Exception? = null
 
-            for (attempt in 1..MAX_RETRIES) {
+            repeat(MAX_RETRIES) { attempt ->
                 try {
                     val resized = resizeBitmap(bitmap, MAX_IMAGE_SIZE)
                     val imageB64 = bitmapToBase64(resized)
                     val service = ApiClient.provideAnalyzeApi()
+
                     val response: ResponseBody = service.analyzeImage(
-                        userIdPart("demo_user"),
-                        imagePart(imageB64)
+                        "demo_user".toRequestBody("text/plain".toMediaType()),
+                        imageB64.toRequestBody("text/plain".toMediaType())
                     )
-                    val body = response.string()
-                    return@withContext if (body.isNullOrBlank()) "Sunucudan boş yanıt geldi" else formatJsonToText(
-                        body
-                    )
+
+                    return@withContext response.string().ifBlank { "Sunucudan boş yanıt geldi" }
+
                 } catch (e: Exception) {
                     lastException = e
-                    if (attempt < MAX_RETRIES) delay(attempt * RETRY_DELAY_BASE)
+                    android.util.Log.e(
+                        "HomeViewModel",
+                        "Deneme ${attempt + 1} hatası: ${e.message}",
+                        e
+                    )
+                    if (attempt < MAX_RETRIES - 1) delay((attempt + 1) * RETRY_DELAY_BASE)
                 }
             }
-            "API Hatası: ${lastException?.message ?: "Bilinmeyen hata"}"
+
+            val errorMsg = "API Hatası: ${lastException?.message ?: "Bilinmeyen hata"}"
+            android.util.Log.e("HomeViewModel", "Tüm denemeler başarısız: $errorMsg")
+            return@withContext errorMsg
         }
 
-    private fun userIdPart(userId: String): RequestBody =
-        RequestBody.create("text/plain".toMediaType(), userId)
-
-    private fun imagePart(imageB64: String): RequestBody =
-        RequestBody.create("text/plain".toMediaType(), imageB64)
-
     private fun bitmapToBase64(bitmap: Bitmap): String {
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, stream)
-        return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+        return ByteArrayOutputStream().use { stream ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, stream)
+            Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+        }
     }
 
     private fun resizeBitmap(source: Bitmap, maxSize: Int): Bitmap {
@@ -102,64 +102,17 @@ class HomeViewModel : ViewModel() {
         if (width <= maxSize && height <= maxSize) return source
 
         val aspect = width.toFloat() / height.toFloat()
-        val newWidth: Int
-        val newHeight: Int
-        if (aspect >= 1f) {
-            newWidth = maxSize
-            newHeight = (maxSize / aspect).toInt()
+        val (newWidth, newHeight) = if (aspect >= 1f) {
+            maxSize to (maxSize / aspect).toInt()
         } else {
-            newWidth = (maxSize * aspect).toInt()
-            newHeight = maxSize
+            (maxSize * aspect).toInt() to maxSize
         }
+
         return Bitmap.createScaledBitmap(source, newWidth, newHeight, true)
     }
 
-    private fun formatJsonToText(json: String): String {
-        return try {
-            val excludedKeys = setOf("user_id", "image_b64")
-            val values = mutableListOf<String>()
-
-            if (json.trim().startsWith("[")) {
-                JSONArray(json).forEach { collectValues(it, excludedKeys, values) }
-            } else {
-                collectValues(JSONObject(json), excludedKeys, values)
-            }
-
-            values.ifEmpty { listOf(json) }.joinToString("\n")
-        } catch (_: Exception) {
-            json
-        }
+    // JSONArray için Kotlin-style extension
+    private inline fun JSONArray.forEach(action: (Any?) -> Unit) {
+        for (i in 0 until length()) action(get(i))
     }
-
-    private fun collectValues(any: Any?, excludedKeys: Set<String>, out: MutableList<String>) {
-        when (any) {
-            null -> return
-            is JSONObject -> any.keys().forEach { key ->
-                if (key !in excludedKeys) collectValues(any.get(key), excludedKeys, out)
-            }
-
-            is JSONArray -> (0 until any.length()).forEach { i ->
-                collectValues(
-                    any.get(i),
-                    excludedKeys,
-                    out
-                )
-            }
-
-            else -> any.toString().takeIf { it.isNotBlank() }?.let { out.add(it) }
-        }
-    }
-
-    private fun extractRawJson(result: String): String {
-        return try {
-            JSONObject(result).toString()
-        } catch (_: Exception) {
-            result
-        }
-    }
-}
-
-// Extension function for JSONArray iteration
-private inline fun JSONArray.forEach(action: (Any?) -> Unit) {
-    for (i in 0 until length()) action(get(i))
 }
