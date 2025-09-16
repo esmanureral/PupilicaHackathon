@@ -22,9 +22,13 @@ class AnalysisResultViewModel : ViewModel() {
 
     private fun parseAnalysisResult(input: String): AnalysisResult {
         return try {
-            if (input.trim().startsWith("{")) parseJsonResult(JSONObject(input))
-            else parseTextResult(input)
+            when {
+                input.trim().startsWith("{") && input.trim().endsWith("}") -> parseJsonResult(JSONObject(input))
+                input.contains("'top_predictions'") || input.contains("\"top_predictions\"") -> parsePythonDictFormat(input)
+                else -> parseTextResult(input)
+            }
         } catch (e: Exception) {
+            android.util.Log.e("AnalysisResultViewModel", "Error in parseAnalysisResult", e)
             defaultResult(input)
         }
     }
@@ -36,18 +40,48 @@ class AnalysisResultViewModel : ViewModel() {
         videoUrl = ""
     )
 
+    private fun parsePythonDictFormat(input: String): AnalysisResult {
+        val jsonString = input
+            .replace("'", "\"")
+            .replace("True", "true")
+            .replace("False", "false")
+            .replace("None", "null")
+        return try {
+            parseJsonResult(JSONObject(jsonString))
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisResultViewModel", "Error parsing Python dict", e)
+            parseTextResult(input)
+        }
+    }
+
     private fun parseJsonResult(json: JSONObject): AnalysisResult {
-        return AnalysisResult(
-            summary = json.optString("dental_comment", ""),
-            predictions = parsePredictionsFromJson(json),
-            weeklyPlan = parseWeeklyPlanFromJson(json),
-            videoUrl = json.optString("video_suggestion", "")
-        )
+        val dentalComment = cleanDentalComment(json.optString("dental_comment", ""))
+        val predictions = parsePredictionsFromJson(json)
+        val weeklyPlan = parseWeeklyPlanFromJson(json)
+        val videoUrl = json.optString("video_suggestion", "")
+
+        return AnalysisResult(dentalComment, predictions, weeklyPlan, videoUrl)
+    }
+
+    private fun cleanDentalComment(dentalComment: String): String {
+        val detailedResultsIndex = dentalComment.indexOf("Detaylı Sonuçlar:")
+        return if (detailedResultsIndex != -1) dentalComment.substring(0, detailedResultsIndex).trim() else dentalComment
     }
 
     private fun parsePredictionsFromJson(json: JSONObject): String {
-        val array = json.optJSONArray("top_predictions") ?: return ""
-        return List(array.length()) { i -> array.optString(i, "") }.joinToString("\n")
+        return try {
+            json.optJSONArray("top_predictions")?.let { array ->
+                val predictions = mutableListOf<String>()
+                for (i in 0 until array.length()) {
+                    val prediction = array.optString(i, "")
+                    if (prediction.contains("%")) predictions.add(prediction)
+                }
+                predictions.joinToString("\n") { "• $it" }
+            } ?: ""
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisResultViewModel", "Error parsing predictions", e)
+            ""
+        }
     }
 
     private fun parseWeeklyPlanFromJson(json: JSONObject): List<WeeklyPlanItem> {
@@ -63,55 +97,33 @@ class AnalysisResultViewModel : ViewModel() {
 
     private fun parseTextResult(text: String): AnalysisResult {
         val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
-
         return AnalysisResult(
-            summary = extractSummary(lines),
-            predictions = extractPredictions(lines),
+            summary = lines.joinToString(" "),
+            predictions = "", // text formatında tahminleri atlayabiliriz
             weeklyPlan = extractWeeklyPlan(lines),
-            videoUrl = extractVideoUrl(lines)
+            videoUrl = "" // text içinde video linkleri yoksa boş bırak
         )
-    }
-
-    private fun extractSummary(lines: List<String>): String {
-        return lines.filter { it.contains("Çürük riskiniz") || it.contains("Düzenli bakımla") }
-            .joinToString(" ")
-    }
-
-    private fun extractPredictions(lines: List<String>): String {
-        return lines.filter { it.contains("Caries:") || it.contains("Hypodontia:") }
-            .joinToString("\n")
-    }
-
-    private fun extractVideoUrl(lines: List<String>): String {
-        return lines.firstOrNull { it.startsWith("https://") } ?: ""
     }
 
     private fun extractWeeklyPlan(lines: List<String>): List<WeeklyPlanItem> {
         val days = listOf("Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar")
         val weeklyPlan = mutableListOf<WeeklyPlanItem>()
-
         var currentDay = ""
         var currentTask = ""
 
         for (line in lines) {
-            when {
-                days.any { line.contains(it) } -> {
-                    if (currentDay.isNotEmpty() && currentTask.isNotEmpty()) {
-                        weeklyPlan.add(WeeklyPlanItem(currentDay, currentTask.trim()))
-                    }
-                    currentDay = line
-                    currentTask = ""
+            if (days.any { it == line }) { // sadece gün satırı
+                if (currentDay.isNotEmpty()) {
+                    weeklyPlan.add(WeeklyPlanItem(currentDay, currentTask.trim()))
                 }
-
-                line.startsWith("https://") || line.contains("Caries:") || line.contains("Hypodontia:") ||
-                        line.contains("Çürük riskiniz") || line.contains("Düzenli bakımla") -> {
-                }
-
-                else -> currentTask += "$line "
+                currentDay = line
+                currentTask = ""
+            } else {
+                currentTask += "$line "
             }
         }
 
-        if (currentDay.isNotEmpty() && currentTask.isNotEmpty()) {
+        if (currentDay.isNotEmpty()) {
             weeklyPlan.add(WeeklyPlanItem(currentDay, currentTask.trim()))
         }
 
