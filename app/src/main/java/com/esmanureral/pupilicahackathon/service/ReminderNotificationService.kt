@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import android.util.Log
 import com.esmanureral.pupilicahackathon.MainActivity
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.notification.NotificationHelper as CustomNotificationManager
@@ -27,6 +28,13 @@ class ReminderNotificationService : BroadcastReceiver() {
                     ?: context.getString(R.string.reminder_default_description)
 
             showNotification(context, reminderId, title, description)
+
+            val hour = intent.getIntExtra(EXTRA_HOUR, -1)
+            val minute = intent.getIntExtra(EXTRA_MINUTE, -1)
+            val dayOfWeek = intent.getIntExtra(EXTRA_DAY_OF_WEEK, -1)
+            if (hour in 0..23 && minute in 0..59 && dayOfWeek in 0..6) {
+                scheduleSingleExact(context, reminderId, title, description, hour, minute, dayOfWeek)
+            }
         }
     }
 
@@ -66,6 +74,9 @@ class ReminderNotificationService : BroadcastReceiver() {
     }
 
     companion object {
+        private const val EXTRA_HOUR = "extra_hour"
+        private const val EXTRA_MINUTE = "extra_minute"
+        private const val EXTRA_DAY_OF_WEEK = "extra_day_of_week"
         fun scheduleReminder(
             context: Context,
             reminderId: Int,
@@ -75,41 +86,66 @@ class ReminderNotificationService : BroadcastReceiver() {
             minute: Int,
             daysOfWeek: List<Int>
         ) {
+            daysOfWeek.forEach { dayOfWeek ->
+                scheduleSingleExact(context, reminderId + dayOfWeek, title, description, hour, minute, dayOfWeek)
+            }
+        }
+
+        private fun scheduleSingleExact(
+            context: Context,
+            requestCode: Int,
+            title: String,
+            description: String,
+            hour: Int,
+            minute: Int,
+            dayOfWeek: Int
+        ) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            daysOfWeek.forEach { dayOfWeek ->
-                val calendar = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, hour)
-                    set(Calendar.MINUTE, minute)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                    set(Calendar.DAY_OF_WEEK, dayOfWeek + 1)
-
-                    if (timeInMillis <= System.currentTimeMillis()) {
-                        add(Calendar.WEEK_OF_YEAR, 1)
-                    }
+            val triggerAt = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+                set(Calendar.DAY_OF_WEEK, dayOfWeek + 1)
+                if (timeInMillis <= System.currentTimeMillis()) {
+                    add(Calendar.WEEK_OF_YEAR, 1)
                 }
+            }.timeInMillis
 
-                val intent = Intent(context, ReminderNotificationService::class.java).apply {
-                    action = context.getString(R.string.reminder_action)
-                    putExtra(context.getString(R.string.reminder_extra_id), reminderId + dayOfWeek)
-                    putExtra(context.getString(R.string.reminder_extra_title), title)
-                    putExtra(context.getString(R.string.reminder_extra_description), description)
-                }
+            val intent = Intent(context, ReminderNotificationService::class.java).apply {
+                action = context.getString(R.string.reminder_action)
+                putExtra(context.getString(R.string.reminder_extra_id), requestCode)
+                putExtra(context.getString(R.string.reminder_extra_title), title)
+                putExtra(context.getString(R.string.reminder_extra_description), description)
+                putExtra(EXTRA_HOUR, hour)
+                putExtra(EXTRA_MINUTE, minute)
+                putExtra(EXTRA_DAY_OF_WEEK, dayOfWeek)
+            }
 
-                val pendingIntent = PendingIntent.getBroadcast(
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val canExact = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                alarmManager.canScheduleExactAlarms()
+            } else true
+
+            if (canExact) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pendingIntent)
+            } else {
+                val showIntent = PendingIntent.getActivity(
                     context,
-                    reminderId + dayOfWeek,
-                    intent,
+                    requestCode,
+                    Intent(context, MainActivity::class.java),
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
-
-                alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY * 7,
-                    pendingIntent
-                )
+                val info = AlarmManager.AlarmClockInfo(triggerAt, showIntent)
+                alarmManager.setAlarmClock(info, pendingIntent)
+                Log.w("ReminderService", "Exact izni yok. setAlarmClock ile planlandı rc=$requestCode")
             }
         }
 

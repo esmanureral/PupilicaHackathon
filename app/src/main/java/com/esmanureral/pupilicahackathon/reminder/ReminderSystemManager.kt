@@ -1,7 +1,6 @@
 package com.esmanureral.pupilicahackathon.reminder
 
 import android.content.Context
-import com.esmanureral.pupilicahackathon.data.local.ReminderSharedPreferences
 import com.esmanureral.pupilicahackathon.notification.NotificationHelper
 
 class ReminderSystemManager(private val context: Context) {

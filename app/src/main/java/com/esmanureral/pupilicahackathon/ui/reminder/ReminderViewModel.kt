@@ -86,6 +86,10 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
 
     fun clearAllReminders() {
         try {
+            val existing = reminderPrefs.loadActiveReminders()
+            existing.forEach { reminder ->
+                ReminderNotificationService.cancelReminder(context, reminder.id)
+            }
             reminderPrefs.clearAllReminders()
             notificationManager.cancelAll()
             _activeReminders.value = emptyList()

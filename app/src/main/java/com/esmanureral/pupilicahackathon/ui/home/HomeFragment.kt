@@ -60,8 +60,7 @@ class HomeFragment : Fragment() {
 
         val reminderListener =
             View.OnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToReminderFragment()) }
-        binding.btnSelectDate.setOnClickListener(reminderListener)
-        binding.btnSelectTime.setOnClickListener(reminderListener)
+
         binding.btnSetReminder.setOnClickListener(reminderListener)
     }
 
@@ -102,11 +101,16 @@ class HomeFragment : Fragment() {
     private fun openGallery() = pickImageLauncher.launch("image/*")
 
     private fun showSourceChooser() {
-        val options =
-            arrayOf(getString(R.string.take_photo), getString(R.string.choose_from_gallery))
         AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.select_image_source))
-            .setItems(options) { _, which -> if (which == 0) checkCameraPermissionAndOpen() else openGallery() }
+            .setTitle("Fotoğraf Seçin")
+            .setMessage("AI analizi için diş fotoğrafınızı yükleyin")
+            .setPositiveButton("Kamera") { _, _ ->
+                checkCameraPermissionAndOpen()
+            }
+            .setNeutralButton("Galeri") { _, _ ->
+                openGallery()
+            }
+            .setNegativeButton("İptal", null)
             .show()
     }
 

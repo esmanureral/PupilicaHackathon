@@ -1,6 +1,11 @@
 package com.esmanureral.pupilicahackathon.ui.reminder
 
+import android.app.AlarmManager
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.core.app.NotificationManagerCompat
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.data.model.ReminderModel
 import com.esmanureral.pupilicahackathon.databinding.FragmentReminderBinding
@@ -150,8 +156,59 @@ class ReminderFragment : Fragment() {
 
     private fun saveReminder() {
         if (!validateInputs()) return
+        if (!ensureReminderCapabilities()) return
         val reminder = createReminderModel()
         viewModel.saveReminder(reminder)
+    }
+
+    private fun ensureReminderCapabilities(): Boolean {
+        val ctx = requireContext()
+
+        val notificationsEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
+        if (!notificationsEnabled) {
+            showSettingsDialog(
+                title = getString(R.string.notification_permission_message),
+                message = getString(R.string.notification_permission_message),
+            ) { openNotificationSettings() }
+            return false
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!am.canScheduleExactAlarms()) {
+                showSettingsDialog(
+                    title = getString(R.string.exact_alarm_permission_title),
+                    message = getString(R.string.exact_alarm_permission_message),
+                ) { openExactAlarmSettings() }
+                return false
+            }
+        }
+
+        return true
+    }
+
+    private fun showSettingsDialog(title: String, message: String, onPositive: () -> Unit) {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(R.string.open_settings) { _, _ -> onPositive() }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun openNotificationSettings() {
+        val ctx = requireContext()
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+            putExtra(Settings.EXTRA_APP_PACKAGE, ctx.packageName)
+        }
+        startActivity(intent)
+    }
+
+    private fun openExactAlarmSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            startActivity(intent)
+        }
     }
 
     private fun validateInputs(): Boolean {
