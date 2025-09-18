@@ -90,13 +90,13 @@ class AnalysisResultFragment : Fragment() {
     private fun shareAnalysisResults(fileUri: Uri) {
         val shareContent = viewModel.getShareContent()
         val shareIntent = createShareIntent(shareContent, fileUri)
-        startActivity(Intent.createChooser(shareIntent, "Doktorla Paylaş"))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_with_doctor)))
     }
 
     private fun createShareIntent(content: String, fileUri: Uri): Intent {
         return Intent(Intent.ACTION_SEND).apply {
             type = "image/*"
-            putExtra(Intent.EXTRA_SUBJECT, "Diş Analiz Sonuçları")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject))
             putExtra(Intent.EXTRA_TEXT, content)
             putExtra(Intent.EXTRA_STREAM, fileUri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
