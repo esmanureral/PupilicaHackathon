@@ -7,11 +7,16 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import com.esmanureral.pupilicahackathon.data.model.ChatMessage
+import com.esmanureral.pupilicahackathon.data.network.ApiClient
+import com.esmanureral.pupilicahackathon.data.network.ChatApiService
+import java.util.UUID
 
 class ChatViewModel : ViewModel() {
 
@@ -19,6 +24,9 @@ class ChatViewModel : ViewModel() {
     private lateinit var speechIntent: Intent
     private var isListening = false
     private var isPermissionGranted = false
+    
+    private val chatApiService: ChatApiService = ApiClient.provideChatApi()
+    private val sessionId = UUID.randomUUID().toString()
 
     private val _isListening = MutableLiveData<Boolean>()
     val isListeningLiveData: LiveData<Boolean> = _isListening
@@ -28,6 +36,24 @@ class ChatViewModel : ViewModel() {
 
     private val _recognizedText = MutableLiveData<String>()
     val recognizedTextLiveData: LiveData<String> = _recognizedText
+    
+    private val _messages = MutableLiveData<List<ChatMessage>>()
+    val messagesLiveData: LiveData<List<ChatMessage>> = _messages
+    
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoadingLiveData: LiveData<Boolean> = _isLoading
+    
+    private val messagesList = mutableListOf<ChatMessage>()
+    
+    init {
+        val welcomeMessage = ChatMessage(
+            id = UUID.randomUUID().toString(),
+            text = "Merhaba! Ben AI danışmanınızım. Size nasıl yardımcı olabilirim?",
+            isFromUser = false
+        )
+        messagesList.add(welcomeMessage)
+        _messages.value = messagesList
+    }
 
     private val _voiceButtonColor = MutableLiveData<Int>()
     val voiceButtonColorLiveData: LiveData<Int> = _voiceButtonColor
@@ -183,6 +209,118 @@ class ChatViewModel : ViewModel() {
 
     fun resetStopPulseAnimationFlag() {
         _shouldStopPulseAnimation.value = false
+    }
+
+    fun sendMessage(message: String) {
+        val trimmedMessage = message.trim()
+        val validSessionId = sessionId.trim()
+        
+        if (trimmedMessage.isEmpty()) {
+            val errorMessage = ChatMessage(
+                id = UUID.randomUUID().toString(),
+                text = "Mesaj boş olamaz. Lütfen bir mesaj yazın.",
+                isFromUser = false
+            )
+            messagesList.add(errorMessage)
+            _messages.value = messagesList.toList()
+            return
+        }
+        
+        if (validSessionId.isEmpty()) {
+            val errorMessage = ChatMessage(
+                id = UUID.randomUUID().toString(),
+                text = "Session ID hatası. Lütfen uygulamayı yeniden başlatın.",
+                isFromUser = false
+            )
+            messagesList.add(errorMessage)
+            _messages.value = messagesList.toList()
+            return
+        }
+        
+        val userMessage = ChatMessage(
+            id = UUID.randomUUID().toString(),
+            text = trimmedMessage,
+            isFromUser = true
+        )
+        messagesList.add(userMessage)
+        _messages.value = messagesList.toList()
+        
+        _isLoading.value = true
+        
+        viewModelScope.launch {
+            try {
+                val response = chatApiService.sendMessage(trimmedMessage, validSessionId)
+                if (response.isSuccessful) {
+                    val chatResponse = response.body()
+                    
+                    chatResponse?.let {
+                        val responseText = it.response ?: it.message ?: it.answer ?: it.reply
+                        
+                        if (!responseText.isNullOrEmpty()) {
+                            val botMessage = ChatMessage(
+                                id = UUID.randomUUID().toString(),
+                                text = responseText!!,
+                                isFromUser = false
+                            )
+                            messagesList.add(botMessage)
+                            _messages.value = messagesList.toList()
+                        } else {
+                            val errorMessage = ChatMessage(
+                                id = UUID.randomUUID().toString(),
+                                text = "Sunucudan geçersiz yanıt alındı. Lütfen tekrar deneyin.",
+                                isFromUser = false
+                            )
+                            messagesList.add(errorMessage)
+                            _messages.value = messagesList.toList()
+                        }
+                    } ?: run {
+                        // Response body null ise
+                        val errorMessage = ChatMessage(
+                            id = UUID.randomUUID().toString(),
+                            text = "Sunucudan yanıt alınamadı. Lütfen tekrar deneyin.",
+                            isFromUser = false
+                        )
+                        messagesList.add(errorMessage)
+                        _messages.value = messagesList.toList()
+                    }
+                } else {
+                    val errorCode = response.code()
+                    val errorMessage = ChatMessage(
+                        id = UUID.randomUUID().toString(),
+                        text = "Sunucu hatası ($errorCode). Lütfen tekrar deneyin.",
+                        isFromUser = false
+                    )
+                    messagesList.add(errorMessage)
+                    _messages.value = messagesList.toList()
+                }
+            } catch (e: java.net.UnknownHostException) {
+                val errorMessage = ChatMessage(
+                    id = UUID.randomUUID().toString(),
+                    text = "Sunucu bulunamadı. Lütfen internet bağlantınızı kontrol edin.",
+                    isFromUser = false
+                )
+                messagesList.add(errorMessage)
+                _messages.value = messagesList.toList()
+            } catch (e: java.net.SocketTimeoutException) {
+                val errorMessage = ChatMessage(
+                    id = UUID.randomUUID().toString(),
+                    text = "Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.",
+                    isFromUser = false
+                )
+                messagesList.add(errorMessage)
+                _messages.value = messagesList.toList()
+            } catch (e: Exception) {
+                val errorMessage = ChatMessage(
+                    id = UUID.randomUUID().toString(),
+                    text = "Bağlantı hatası: ${e.message}",
+                    isFromUser = false
+                )
+                messagesList.add(errorMessage)
+                _messages.value = messagesList.toList()
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
     override fun onCleared() {

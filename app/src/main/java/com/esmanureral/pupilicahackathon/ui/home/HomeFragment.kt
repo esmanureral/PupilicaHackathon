@@ -62,6 +62,7 @@ class HomeFragment : Fragment() {
             View.OnClickListener { findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToReminderFragment()) }
 
         binding.btnSetReminder.setOnClickListener(reminderListener)
+
     }
 
     private fun observeViewModel() {
@@ -82,6 +83,7 @@ class HomeFragment : Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.imgAI.apply { alpha = if (isLoading) 0.5f else 1f; isEnabled = !isLoading }
+            binding.progressAI.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
 

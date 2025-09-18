@@ -4,11 +4,10 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 object ApiClient {
     private const val BASE_URL = "https://raw.githubusercontent.com/"
-    private const val ANALYZE_BASE_URL = " https://52fa26c0631a.ngrok-free.app/"
-    private const val CHAT_BASE_URL = "https://44b31bb1138c.ngrok-free.app/"
+    private const val ANALYZE_BASE_URL = "https://2b8cf760aa42.ngrok-free.app/"
+    private const val CHAT_BASE_URL = "https://cbae95380037.ngrok-free.app/"
 
     fun provideApi(): QuizApiService {
         val client = OkHttpClient.Builder().build()
@@ -43,14 +42,20 @@ object ApiClient {
     }
 
     fun provideChatApi(): ChatApiService {
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+        val ngrokInterceptor = okhttp3.Interceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader("ngrok-skip-browser-warning", "true")
+                .build()
+            chain.proceed(request)
         }
+        
         val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-            .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
-            .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
+            .addInterceptor(ngrokInterceptor)
+            .connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .protocols(listOf(okhttp3.Protocol.HTTP_1_1))
             .build()
 
         val retrofit = Retrofit.Builder()

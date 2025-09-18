@@ -1,119 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/smile_background">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:id="@+id/card_top"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding_8dp"
-        android:backgroundTint="@color/white"
-        app:cardCornerRadius="@dimen/iv_favorite_margin"
-        app:cardElevation="@dimen/space_4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:strokeWidth="@dimen/stroke_width">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/btnArrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:tint="@color/smile_text_primary"
+            android:contentDescription="Geri" />
+
+        <TextView
+            android:id="@+id/tv_badges"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/orange"
-            android:padding="@dimen/padding_8dp">
+            android:layout_weight="1"
+            android:text="AI Danışman"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/smile_text_primary"
+            android:gravity="center" />
 
-            <ImageView
-                android:id="@+id/btnArrow"
-                style="@style/TvDetailLabelStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/btn_badges"
-                android:src="@drawable/arrow_back"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_badges"
-                style="@style/ToolbarTitleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chatbot"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btnArrow"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-
+    <!-- Messages RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:padding="8dp"
+        android:padding="16dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@id/inputContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_top" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/inputContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:padding="8dp"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnVoice"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="Voice"
-            android:focusable="true"
-            android:src="@android:drawable/ic_btn_speak_now"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/inputMessage"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/input_bg"
-            android:ellipsize="end"
-            android:gravity="top|start"
-            android:hint="Mesaj yaz..."
-            android:imeOptions="actionSend"
-            android:inputType="textMultiLine"
-            android:maxLines="5"
-            android:minHeight="48dp"
-            android:overScrollMode="always"
-            android:padding="10dp"
-            android:scrollbars="vertical"
-            android:scrollHorizontally="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnSend"
-            app:layout_constraintStart_toEndOf="@id/btnVoice"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp">
 
-        <ImageButton
-            android:id="@+id/btnSend"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="Send"
-            android:src="@android:drawable/ic_menu_send"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/btnVoice"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_btn_speak_now"
+                android:background="@drawable/circle_background"
+                android:padding="8dp"
+                android:tint="@color/smile_blue"
+                android:contentDescription="Sesli Mesaj" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <EditText
+                android:id="@+id/inputMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="12dp"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical|start"
+                android:hint="Mesaj yazın..."
+                android:imeOptions="actionSend"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="4"
+                android:minHeight="40dp"
+                android:padding="8dp"
+                android:textColor="@color/smile_text_primary"
+                android:textColorHint="@color/smile_text_secondary"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/btnSend"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_send"
+                android:background="@drawable/circle_blue_background"
+                android:padding="8dp"
+                android:contentDescription="Gönder"
+                app:tint="@color/white" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
