@@ -69,4 +69,96 @@
     <string name="summary_prefix_2">Düzenli bakımla</string>
     <string name="prediction_prefix_1">Caries:</string>
     <string name="prediction_prefix_2">Hypodontia:</string>
+    <string name="analyzing_please_wait">Analiz ediliyor, lütfen bekleyin…</string>
+
+    <!-- Reminder capability prompts -->
+    <string name="notification_permission_title">Bildirim izni gerekli</string>
+    <string name="notification_permission_message">Hatırlatmaların çalışması için uygulama bildirimlerini açın.</string>
+    <string name="exact_alarm_permission_title">Kesin alarm izni gerekli</string>
+    <string name="exact_alarm_permission_message">Zamanında hatırlatma için Kesin Alarmlar iznini verin.</string>
+    <string name="battery_opt_title">Pil optimizasyonu</string>
+    <string name="battery_opt_message">Hatırlatmalar gecikebilir. Uygulamayı pil optimizasyonundan hariç tutun.</string>
+    <string name="open_settings">Ayarları Aç</string>
+
+    <!-- Chat related strings -->
+    <string name="chat_welcome_message">Merhaba! Ben AI danışmanınızım. Size nasıl yardımcı olabilirim?</string>
+    <string name="chat_empty_message_error">Mesajınız boş görünüyor. Bir şeyler yazabilir misiniz?</string>
+    <string name="chat_session_error">Bir sorun oluştu. Uygulamayı yeniden başlatmayı deneyebilir misiniz?</string>
+    <string name="chat_invalid_response_error">Sunucudan beklenmeyen bir yanıt geldi. Tekrar deneyebilir misiniz?</string>
+    <string name="chat_no_response_error">Sunucudan yanıt alamadım. Tekrar deneyebilir misiniz?</string>
+    <string name="chat_server_error">Sunucuda bir sorun oluştu (%1$s). Tekrar deneyebilir misiniz?</string>
+    <string name="chat_network_error">İnternet bağlantınızı kontrol edebilir misiniz?</string>
+    <string name="chat_timeout_error">Bağlantı zaman aşımına uğradı. Tekrar deneyebilir misiniz?</string>
+    <string name="chat_connection_error">Bağlantı sorunu yaşandı. Tekrar deneyebilir misiniz?</string>
+    <string name="chat_unexpected_error">Beklenmeyen bir hata oluştu. Tekrar deneyebilir misiniz?</string>
+
+    <!-- Speech recognition error messages -->
+    <string name="speech_audio_error">Ses kaydında sorun oluştu. Tekrar deneyebilir misiniz?</string>
+    <string name="speech_client_error">Ses algılama başlatılamadı. Tekrar deneyebilir misiniz?</string>
+    <string name="speech_permission_error">Mikrofon izni gerekli. Lütfen izinleri kontrol edin.</string>
+    <string name="speech_network_error">Ağ bağlantısında sorun var. İnternet bağlantınızı kontrol edin.</string>
+    <string name="speech_network_timeout_error">Ağ zaman aşımı. Tekrar deneyebilir misiniz?</string>
+    <string name="speech_no_match_error">Ses algılanmadı. Tekrar deneyebilir misiniz?</string>
+    <string name="speech_busy_error">Ses algılama meşgul. Lütfen bekleyin.</string>
+    <string name="speech_server_error">Sunucu hatası. Tekrar deneyebilir misiniz?</string>
+    <string name="speech_timeout_error">Konuşma zaman aşımı. Tekrar deneyebilir misiniz?</string>
+    <string name="speech_general_error">Ses algılamada sorun oluştu. Tekrar deneyebilir misiniz?</string>
+
+    <!-- Home fragment dialog strings -->
+    <string name="photo_selection_title">Fotoğraf Seçin</string>
+    <string name="photo_selection_message">AI analizi için diş fotoğrafınızı yükleyin</string>
+    <string name="camera_option">Kamera</string>
+    <string name="gallery_option">Galeri</string>
+    <string name="cancel_option">İptal</string>
+
+    <!-- Analysis result strings -->
+    <string name="detailed_results_prefix">Detaylı Sonuçlar:</string>
+    <string name="prediction_bullet">• %1$s</string>
+    <string name="day_monday_short">Pazartesi</string>
+    <string name="day_tuesday_short">Salı</string>
+    <string name="day_wednesday_short">Çarşamba</string>
+    <string name="day_thursday_short">Perşembe</string>
+    <string name="day_friday_short">Cuma</string>
+    <string name="day_saturday_short">Cumartesi</string>
+    <string name="day_sunday_short">Pazar</string>
+
+    <!-- Game badge names -->
+    <string name="badge_milk_tooth">Süt Dişi</string>
+    <string name="badge_foam_knight">Köpük Şövalyesi</string>
+    <string name="badge_sugar_hunter">Şeker Avcısı</string>
+    <string name="badge_plaque_protector">Plak Koruyucusu</string>
+    <string name="badge_tooth_fairy_ambassador">Diş Perisi Elçisi</string>
+    <string name="badge_sparkling_smile">Işıltılı Gülüş</string>
+
+    <!-- Time format strings -->
+    <string name="time_format">%02d:%02d</string>
+    <string name="reminder_time_format">🕐 %1$s - %2$s</string>
+
+    <!-- API related strings -->
+    <string name="demo_user">demo_user</string>
+    <string name="text_plain_content_type">text/plain</string>
+    <string name="empty_server_response">Sunucudan boş yanıt geldi</string>
+    <string name="api_error_prefix">API Hatası: %1$s</string>
+    <string name="unknown_error">Bilinmeyen hata</string>
+
+    <!-- Log tags -->
+    <string name="log_tag_home_viewmodel">HomeViewModel</string>
+    <string name="log_tag_analysis_result">AnalysisResultViewModel</string>
+    <string name="log_tag_quiz_viewmodel">QuizViewModel</string>
+    <string name="log_tag_reminder_service">ReminderService</string>
+
+    <!-- Share with doctor feature -->
+    <string name="share_with_doctor">Doktorunla Paylaş</string>
+    <string name="share_subject">Diş Analizi Sonuçları</string>
+    <string name="share_content_title">Pupullica AI Diş Analizi Sonuçları</string>
+    <string name="share_content_summary">Analiz Özeti:</string>
+    <string name="share_content_predictions">Risk Analizi:</string>
+    <string name="share_content_plan">Haftalık Bakım Planı:</string>
+    <string name="share_content_note">Not: Bu analiz yapay zeka tarafından oluşturulmuştur ve profesyonel tıbbi görüş yerine geçmez. Lütfen doktorunuza danışın.</string>
+
+    <!-- Constants -->
+    <string name="speech_language_code">tr-TR</string>
+    <string name="image_mime_type">image/*</string>
+    <string name="ngrok_skip_header">ngrok-skip-browser-warning</string>
+    <string name="ngrok_skip_value">true</string>
 </resources>

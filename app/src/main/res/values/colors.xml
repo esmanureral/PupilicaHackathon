@@ -16,5 +16,22 @@
     <color name="onb_yellow">#FFE2A9</color>
     <color name="onb_blue">#CFE0FF</color>
     <color name="onb_pink">#FFCFE6</color>
+    
+    <!-- SmileSync inspired colors -->
+    <color name="smile_blue">#2196F3</color>
+    <color name="smile_blue_light">#E3F2FD</color>
+    <color name="smile_blue_dark">#1976D2</color>
+    <color name="smile_gray">#F5F5F5</color>
+    <color name="smile_text_primary">#212121</color>
+    <color name="smile_text_secondary">#757575</color>
+    <color name="smile_background">#FAFAFA</color>
+    <color name="smile_card_background">#FFFFFF</color>
+    <color name="smile_accent">#03DAC6</color>
+    
+    <!-- New colors for modern design -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="gray_light">#E9ECEF</color>
+    <color name="text_secondary">#6C757D</color>
+    <color name="green">#28A745</color>
 
 </resources>

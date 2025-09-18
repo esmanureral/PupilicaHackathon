@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_homeFragment_to_analysisResultFragment"
             app:destination="@id/analysisResultFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
     <fragment
@@ -73,5 +76,14 @@
         android:id="@+id/onboardingFragment"
         android:name="com.esmanureral.pupilicahackathon.ui.onboarding.OnboardingFragment"
         android:label="Onboarding" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.profile.ProfileFragment"
+        android:label="Profil Yönetimi">
+        <action
+            android:id="@+id/action_profileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 
 </navigation>

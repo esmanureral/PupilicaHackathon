@@ -8,10 +8,11 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import androidx.core.content.ContextCompat
-import com.esmanureral.pupilicahackathon.R
 
 class SpeechRecognizerManager(
     private val context: Context,
+    private val languageCode: String,
+    private val errorMessages: Map<Int, String>,
     private val onTextRecognized: (String) -> Unit,
     private val onPartialTextRecognized: (String) -> Unit,
     private val onSpeechError: (String) -> Unit,
@@ -76,7 +77,7 @@ class SpeechRecognizerManager(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
             )
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, context.getString(R.string.speech_language_code))
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode)
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
         }
@@ -138,18 +139,7 @@ class SpeechRecognizerManager(
     }
     
     private fun handleSpeechError(error: Int) {
-        val errorMessage = when (error) {
-            SpeechRecognizer.ERROR_AUDIO -> context.getString(R.string.speech_audio_error)
-            SpeechRecognizer.ERROR_CLIENT -> context.getString(R.string.speech_client_error)
-            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> context.getString(R.string.speech_permission_error)
-            SpeechRecognizer.ERROR_NETWORK -> context.getString(R.string.speech_network_error)
-            SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> context.getString(R.string.speech_network_timeout_error)
-            SpeechRecognizer.ERROR_NO_MATCH -> context.getString(R.string.speech_no_match_error)
-            SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> context.getString(R.string.speech_busy_error)
-            SpeechRecognizer.ERROR_SERVER -> context.getString(R.string.speech_server_error)
-            SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> context.getString(R.string.speech_timeout_error)
-            else -> context.getString(R.string.speech_general_error)
-        }
+        val errorMessage = errorMessages[error] ?: errorMessages[-1] ?: "Bilinmeyen hata oluştu"
         
         onSpeechError(errorMessage)
         stopListening()

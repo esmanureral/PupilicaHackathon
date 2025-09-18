@@ -100,19 +100,19 @@ class HomeFragment : Fragment() {
     }
 
     private fun openCamera() = takePictureLauncher.launch(null)
-    private fun openGallery() = pickImageLauncher.launch("image/*")
+    private fun openGallery() = pickImageLauncher.launch(getString(R.string.image_mime_type))
 
     private fun showSourceChooser() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Fotoğraf Seçin")
-            .setMessage("AI analizi için diş fotoğrafınızı yükleyin")
-            .setPositiveButton("Kamera") { _, _ ->
+            .setTitle(getString(R.string.photo_selection_title))
+            .setMessage(getString(R.string.photo_selection_message))
+            .setPositiveButton(getString(R.string.camera_option)) { _, _ ->
                 checkCameraPermissionAndOpen()
             }
-            .setNeutralButton("Galeri") { _, _ ->
+            .setNeutralButton(getString(R.string.gallery_option)) { _, _ ->
                 openGallery()
             }
-            .setNegativeButton("İptal", null)
+            .setNegativeButton(getString(R.string.cancel_option), null)
             .show()
     }
 

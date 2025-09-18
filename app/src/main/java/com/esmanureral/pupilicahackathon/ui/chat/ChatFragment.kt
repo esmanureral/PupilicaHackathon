@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.speech.SpeechRecognizer
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -60,8 +61,24 @@ class ChatFragment : Fragment() {
     }
 
     private fun initSpeechRecognizerManager() {
+        val languageCode = getString(R.string.speech_language_code)
+        val errorMessages = mapOf(
+            SpeechRecognizer.ERROR_AUDIO to getString(R.string.speech_audio_error),
+            SpeechRecognizer.ERROR_CLIENT to getString(R.string.speech_client_error),
+            SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS to getString(R.string.speech_permission_error),
+            SpeechRecognizer.ERROR_NETWORK to getString(R.string.speech_network_error),
+            SpeechRecognizer.ERROR_NETWORK_TIMEOUT to getString(R.string.speech_network_timeout_error),
+            SpeechRecognizer.ERROR_NO_MATCH to getString(R.string.speech_no_match_error),
+            SpeechRecognizer.ERROR_RECOGNIZER_BUSY to getString(R.string.speech_busy_error),
+            SpeechRecognizer.ERROR_SERVER to getString(R.string.speech_server_error),
+            SpeechRecognizer.ERROR_SPEECH_TIMEOUT to getString(R.string.speech_timeout_error),
+            -1 to getString(R.string.speech_general_error) // Default error message
+        )
+        
         speechRecognizerManager = SpeechRecognizerManager(
             context = requireContext(),
+            languageCode = languageCode,
+            errorMessages = errorMessages,
             onTextRecognized = { text -> viewModel.onSpeechTextRecognized(text) },
             onPartialTextRecognized = { text -> viewModel.onSpeechPartialTextRecognized(text) },
             onSpeechError = { errorMessage -> viewModel.onSpeechError(errorMessage) },
