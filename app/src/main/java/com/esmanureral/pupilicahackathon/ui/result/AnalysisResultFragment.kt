@@ -13,12 +13,16 @@ import androidx.navigation.fragment.findNavController
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.data.model.AnalysisResult
 import com.esmanureral.pupilicahackathon.databinding.FragmentAnalysisResultBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AnalysisResultFragment : Fragment() {
 
     private var _binding: FragmentAnalysisResultBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AnalysisResultViewModel by viewModels { AnalysisResultViewModelFactory() }
+    private lateinit var weeklyPlanAdapter: WeeklyPlanAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +36,7 @@ class AnalysisResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initializeAdapter()
         initArgs()
         setupBackButton()
         setupShareButton()
@@ -39,6 +44,13 @@ class AnalysisResultFragment : Fragment() {
         observeImage()
         observeLoadedBitmap()
         observeShareData()
+    }
+
+    private fun initializeAdapter() {
+        weeklyPlanAdapter = WeeklyPlanAdapter()
+        with(binding) {
+            rvPlan.adapter = weeklyPlanAdapter
+        }
     }
 
     private fun initArgs() {
@@ -88,9 +100,43 @@ class AnalysisResultFragment : Fragment() {
     }
 
     private fun shareAnalysisResults(fileUri: Uri) {
-        val shareContent = viewModel.getShareContent()
+        val result = viewModel.analysisResult.value ?: return
+        val shareContent = generateShareContent(result)
         val shareIntent = createShareIntent(shareContent, fileUri)
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_with_doctor)))
+    }
+
+    private fun generateShareContent(result: AnalysisResult): String {
+        val dateFormat = SimpleDateFormat(getString(R.string.date_format), Locale.getDefault())
+        val currentDate = dateFormat.format(Date())
+
+        return buildString {
+            appendLine(getString(R.string.share_content_title))
+            appendLine(getString(R.string.share_content_date_prefix, currentDate))
+            appendLine()
+
+            if (result.summary.isNotBlank()) {
+                appendLine(getString(R.string.share_content_summary))
+                appendLine(result.summary)
+                appendLine()
+            }
+
+            if (result.predictions.isNotBlank()) {
+                appendLine(getString(R.string.share_content_predictions))
+                appendLine(result.predictions)
+                appendLine()
+            }
+
+            if (result.weeklyPlan.isNotEmpty()) {
+                appendLine(getString(R.string.share_content_plan))
+                result.weeklyPlan.forEach { plan ->
+                    appendLine(getString(R.string.share_content_plan_item, plan.day, plan.task))
+                }
+                appendLine()
+            }
+
+            appendLine(getString(R.string.share_content_note))
+        }
     }
 
     private fun createShareIntent(content: String, fileUri: Uri): Intent {
@@ -139,8 +185,8 @@ class AnalysisResultFragment : Fragment() {
             if (result.weeklyPlan.isNotEmpty()) {
                 tvPlanTitle.text = getString(R.string.weekly_care_plan)
             }
-            rvPlan.adapter = WeeklyPlanAdapter(result.weeklyPlan)
         }
+        weeklyPlanAdapter.updateData(result.weeklyPlan)
     }
 
     private fun updateVideoButton(result: AnalysisResult) {
@@ -176,9 +222,12 @@ class AnalysisResultFragment : Fragment() {
     }
 
     private fun setImageToView(bitmap: android.graphics.Bitmap?) {
-        bitmap?.let {
-            with(binding) {
-                ivAnalyzed.setImageBitmap(it)
+        with(binding) {
+            if (bitmap != null) {
+                ivAnalyzed.setImageBitmap(bitmap)
+                ivAnalyzed.visibility = View.VISIBLE
+            } else {
+                ivAnalyzed.visibility = View.GONE
             }
         }
     }
