@@ -58,17 +58,23 @@ class ChatFragment : Fragment() {
     private fun initViewModel() {
         initSpeechRecognizerManager()
     }
-    
+
     private fun initSpeechRecognizerManager() {
         speechRecognizerManager = SpeechRecognizerManager(
             context = requireContext(),
             onTextRecognized = { text -> viewModel.onSpeechTextRecognized(text) },
-            onPermissionStatusChanged = { isGranted -> viewModel.onSpeechPermissionStatusChanged(isGranted) },
-            onVoiceButtonStateChanged = { isListening, color, scale -> 
-                viewModel.onSpeechVoiceButtonStateChanged(isListening, color, scale) 
+            onPartialTextRecognized = { text -> viewModel.onSpeechPartialTextRecognized(text) },
+            onSpeechError = { errorMessage -> viewModel.onSpeechError(errorMessage) },
+            onPermissionStatusChanged = { isGranted ->
+                viewModel.onSpeechPermissionStatusChanged(
+                    isGranted
+                )
             },
-            onAnimationStateChanged = { shouldStart, shouldStop -> 
-                viewModel.onSpeechAnimationStateChanged(shouldStart, shouldStop) 
+            onVoiceButtonStateChanged = { isListening, color, scale ->
+                viewModel.onSpeechVoiceButtonStateChanged(isListening, color, scale)
+            },
+            onAnimationStateChanged = { shouldStart, shouldStop ->
+                viewModel.onSpeechAnimationStateChanged(shouldStart, shouldStop)
             }
         )
         speechRecognizerManager.initialize()
@@ -156,6 +162,7 @@ class ChatFragment : Fragment() {
         observeMessages()
         observeLoadingState()
         observeRecognizedText()
+        observePartialText()
         observeFormattedText()
         observeVoiceButtonStates()
     }
@@ -195,6 +202,16 @@ class ChatFragment : Fragment() {
                 val currentText = binding.inputMessage.text.toString()
                 viewModel.onRecognizedTextReceived(newText, currentText)
                 viewModel.clearRecognizedText()
+                viewModel.clearPartialText()
+            }
+        }
+    }
+
+    private fun observePartialText() {
+        viewModel.partialTextLiveData.observe(viewLifecycleOwner) { partialText ->
+            if (partialText.isNotEmpty()) {
+                binding.inputMessage.setText(partialText)
+                binding.inputMessage.setSelection(partialText.length)
             }
         }
     }
