@@ -1,15 +1,29 @@
 package com.esmanureral.pupilicahackathon.ui.result
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.esmanureral.pupilicahackathon.R
+import androidx.lifecycle.viewModelScope
 import com.esmanureral.pupilicahackathon.data.model.AnalysisResult
 import com.esmanureral.pupilicahackathon.data.model.WeeklyPlanItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class AnalysisResultViewModel(private val context: Context) : ViewModel() {
+class AnalysisResultViewModel : ViewModel() {
 
     private val _analysisResult = MutableLiveData<AnalysisResult>()
     val analysisResult: LiveData<AnalysisResult> get() = _analysisResult
@@ -17,16 +31,32 @@ class AnalysisResultViewModel(private val context: Context) : ViewModel() {
     private val _imageUri = MutableLiveData<String?>()
     val imageUri: LiveData<String?> get() = _imageUri
 
+    private val _shareContent = MutableLiveData<String>()
+    val shareContent: LiveData<String> get() = _shareContent
+
+    private val _loadedBitmap = MutableLiveData<Bitmap?>()
+    val loadedBitmap: LiveData<Bitmap?> get() = _loadedBitmap
+
+    private val _shareFileUri = MutableLiveData<Uri?>()
+    val shareFileUri: LiveData<Uri?> get() = _shareFileUri
+
     fun initializeData(resultText: String, imageUri: String?) {
         _analysisResult.value = parseAnalysisResult(resultText)
         _imageUri.value = imageUri
+        generateShareContent()
     }
 
     private fun parseAnalysisResult(input: String): AnalysisResult {
         return try {
             when {
-                input.trim().startsWith("{") && input.trim().endsWith("}") -> parseJsonResult(JSONObject(input))
-                input.contains("'top_predictions'") || input.contains("\"top_predictions\"") -> parsePythonDictFormat(input)
+                input.trim().startsWith("{") && input.trim().endsWith("}") -> parseJsonResult(
+                    JSONObject(input)
+                )
+
+                input.contains("'top_predictions'") || input.contains("\"top_predictions\"") -> parsePythonDictFormat(
+                    input
+                )
+
                 else -> parseTextResult(input)
             }
         } catch (e: Exception) {
@@ -66,8 +96,9 @@ class AnalysisResultViewModel(private val context: Context) : ViewModel() {
     }
 
     private fun cleanDentalComment(dentalComment: String): String {
-        val detailedResultsIndex = dentalComment.indexOf(context.getString(R.string.detailed_results_prefix))
-        return if (detailedResultsIndex != -1) dentalComment.substring(0, detailedResultsIndex).trim() else dentalComment
+        val detailedResultsIndex = dentalComment.indexOf("Detaylı Sonuçlar:")
+        return if (detailedResultsIndex != -1) dentalComment.substring(0, detailedResultsIndex)
+            .trim() else dentalComment
     }
 
     private fun parsePredictionsFromJson(json: JSONObject): String {
@@ -78,7 +109,7 @@ class AnalysisResultViewModel(private val context: Context) : ViewModel() {
                     val prediction = array.optString(i, "")
                     if (prediction.contains("%")) predictions.add(prediction)
                 }
-                predictions.joinToString("\n") { context.getString(R.string.prediction_bullet, it) }
+                predictions.joinToString("\n") { "• $it" }
             } ?: ""
         } catch (e: Exception) {
             android.util.Log.e("AnalysisResultViewModel", "Error parsing predictions", e)
@@ -109,13 +140,13 @@ class AnalysisResultViewModel(private val context: Context) : ViewModel() {
 
     private fun extractWeeklyPlan(lines: List<String>): List<WeeklyPlanItem> {
         val days = listOf(
-            context.getString(R.string.day_monday_short),
-            context.getString(R.string.day_tuesday_short),
-            context.getString(R.string.day_wednesday_short),
-            context.getString(R.string.day_thursday_short),
-            context.getString(R.string.day_friday_short),
-            context.getString(R.string.day_saturday_short),
-            context.getString(R.string.day_sunday_short)
+            "Pazartesi",
+            "Salı",
+            "Çarşamba",
+            "Perşembe",
+            "Cuma",
+            "Cumartesi",
+            "Pazar"
         )
         val weeklyPlan = mutableListOf<WeeklyPlanItem>()
         var currentDay = ""
@@ -139,15 +170,131 @@ class AnalysisResultViewModel(private val context: Context) : ViewModel() {
 
         return weeklyPlan
     }
+
+    private fun generateShareContent() {
+        val result = _analysisResult.value ?: return
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val currentDate = dateFormat.format(Date())
+
+        val content = StringBuilder().apply {
+            appendLine("Diş Analiz Sonuçları")
+            appendLine("Tarih: $currentDate")
+            appendLine()
+
+            if (result.summary.isNotBlank()) {
+                appendLine("Özet:")
+                appendLine(result.summary)
+                appendLine()
+            }
+
+            if (result.predictions.isNotBlank()) {
+                appendLine("Tahminler:")
+                appendLine(result.predictions)
+                appendLine()
+            }
+
+            if (result.weeklyPlan.isNotEmpty()) {
+                appendLine("Haftalık Bakım Planı:")
+                result.weeklyPlan.forEach { plan ->
+                    appendLine("• ${plan.day}: ${plan.task}")
+                }
+                appendLine()
+            }
+
+            appendLine("Not: Bu sonuçlar sadece bilgilendirme amaçlıdır. Kesin teşhis için diş hekiminize başvurun.")
+        }
+
+        _shareContent.value = content.toString()
+    }
+
+    fun getShareContent(): String {
+        return _shareContent.value ?: ""
+    }
+
+    fun loadBitmapFromUri(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            try {
+                val bitmap = withContext(Dispatchers.IO) {
+                    loadBitmapFromUriInternal(context, uri)
+                }
+                _loadedBitmap.value = bitmap
+            } catch (e: Exception) {
+                android.util.Log.e("AnalysisResultViewModel", "Error loading bitmap", e)
+                _loadedBitmap.value = null
+            }
+        }
+    }
+
+    private fun loadBitmapFromUriInternal(context: Context, uri: Uri): Bitmap? {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(context.contentResolver, uri)
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisResultViewModel", "Error loading bitmap from URI", e)
+            null
+        }
+    }
+
+    fun prepareShareData(context: Context) {
+        viewModelScope.launch {
+            try {
+                val imageUriString = _imageUri.value
+
+                if (!imageUriString.isNullOrBlank()) {
+                    val uri = Uri.parse(imageUriString)
+                    val bitmap = withContext(Dispatchers.IO) {
+                        loadBitmapFromUriInternal(context, uri)
+                    }
+
+                    bitmap?.let { bmp ->
+                        val fileUri = withContext(Dispatchers.IO) {
+                            saveBitmapToFile(context, bmp)
+                        }
+                        _shareFileUri.value = fileUri
+                    }
+                } else {
+                    _shareFileUri.value = null
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("AnalysisResultViewModel", "Error preparing share data", e)
+                _shareFileUri.value = null
+            }
+        }
+    }
+
+    private fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri? {
+        return try {
+            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val fileName = "dental_analysis_$timestamp.jpg"
+            val file = File(context.cacheDir, fileName)
+
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+            outputStream.flush()
+            outputStream.close()
+
+            FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
+        } catch (e: Exception) {
+            android.util.Log.e("AnalysisResultViewModel", "Error saving bitmap", e)
+            null
+        }
+    }
 }
 
-class AnalysisResultViewModelFactory(
-    private val context: Context
-) : androidx.lifecycle.ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+class AnalysisResultViewModelFactory : androidx.lifecycle.ViewModelProvider.Factory {
+    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AnalysisResultViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return AnalysisResultViewModel(context) as T
+            return AnalysisResultViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
