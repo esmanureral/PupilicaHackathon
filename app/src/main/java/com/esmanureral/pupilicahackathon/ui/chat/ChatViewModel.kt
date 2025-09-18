@@ -1,13 +1,5 @@
 package com.esmanureral.pupilicahackathon.ui.chat
 
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Bundle
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,11 +11,6 @@ import com.esmanureral.pupilicahackathon.data.network.ChatApiService
 import java.util.UUID
 
 class ChatViewModel : ViewModel() {
-
-    private lateinit var speechRecognizer: SpeechRecognizer
-    private lateinit var speechIntent: Intent
-    private var isListening = false
-    private var isPermissionGranted = false
     
     private val chatApiService: ChatApiService = ApiClient.provideChatApi()
     private val sessionId = UUID.randomUUID().toString()
@@ -36,6 +23,9 @@ class ChatViewModel : ViewModel() {
 
     private val _recognizedText = MutableLiveData<String>()
     val recognizedTextLiveData: LiveData<String> = _recognizedText
+    
+    private val _formattedText = MutableLiveData<String>()
+    val formattedTextLiveData: LiveData<String> = _formattedText
     
     private val _messages = MutableLiveData<List<ChatMessage>>()
     val messagesLiveData: LiveData<List<ChatMessage>> = _messages
@@ -67,139 +57,26 @@ class ChatViewModel : ViewModel() {
     private val _shouldStopPulseAnimation = MutableLiveData<Boolean>()
     val shouldStopPulseAnimationLiveData: LiveData<Boolean> = _shouldStopPulseAnimation
 
-    fun initSpeechRecognizer(context: Context) {
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context)
-        speechIntent = createSpeechIntent()
-        speechRecognizer.setRecognitionListener(createRecognitionListener())
+    fun onSpeechTextRecognized(text: String) {
+        _recognizedText.value = text
     }
-
-    private fun createSpeechIntent(): Intent {
-        return Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-            )
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "tr-TR")
-            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
-        }
+    
+    fun onSpeechPermissionStatusChanged(isGranted: Boolean) {
+        _permissionGranted.value = isGranted
     }
-
-    private fun createRecognitionListener() = object : RecognitionListener {
-        override fun onReadyForSpeech(params: Bundle?) {}
-        override fun onBeginningOfSpeech() {}
-        override fun onRmsChanged(rmsdB: Float) = updateVoiceButtonScale(rmsdB)
-        override fun onBufferReceived(buffer: ByteArray?) {}
-        override fun onEndOfSpeech() = stopListening()
-        override fun onError(error: Int) = stopListening()
-        override fun onResults(results: Bundle?) = handleResults(results)
-        override fun onPartialResults(partialResults: Bundle?) =
-            handlePartialResults(partialResults)
-
-        override fun onEvent(eventType: Int, params: Bundle?) {}
-    }
-
-    fun checkPermissionStatus(context: Context) {
-        isPermissionGranted = checkAudioPermission(context)
-        _permissionGranted.value = isPermissionGranted
-        updateVoiceButtonState(false)
-    }
-
-    private fun checkAudioPermission(context: Context): Boolean {
-        return ContextCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    fun onPermissionGranted() {
-        isPermissionGranted = true
-        _permissionGranted.value = true
-        startListening()
-    }
-
-    fun onPermissionDenied() {
-        isPermissionGranted = false
-        _permissionGranted.value = false
-        updateVoiceButtonState(false)
-    }
-
-    fun onVoiceButtonClicked(context: Context) {
-        if (isPermissionGranted || checkAudioPermission(context)) {
-            startListening()
-        } else {
-            _permissionGranted.value = false
-        }
-    }
-
-    private fun startListening() {
-        if (!isListening && ::speechRecognizer.isInitialized) {
-            try {
-                isListening = true
-                _isListening.value = true
-                speechRecognizer.startListening(speechIntent)
-                updateVoiceButtonState(true)
-            } catch (e: Exception) {
-                isListening = false
-                _isListening.value = false
-                updateVoiceButtonState(false)
-            }
-        }
-    }
-
-    private fun stopListening() {
-        if (isListening && ::speechRecognizer.isInitialized) {
-            try {
-                speechRecognizer.stopListening()
-            } catch (e: Exception) {
-            }
-        }
-        isListening = false
-        _isListening.value = false
-        updateVoiceButtonState(false)
-    }
-
-    private fun handlePartialResults(partialResults: Bundle?) {
-    }
-
-    private fun handleResults(results: Bundle?) {
-        val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-        if (!matches.isNullOrEmpty()) {
-            val newText = matches[0]
-            _recognizedText.value = newText
-        }
-
-        isListening = false
-        _isListening.value = false
-        updateVoiceButtonState(false)
-    }
-
-    private fun updateVoiceButtonState(isListening: Boolean) {
-        val color = if (isListening) android.graphics.Color.RED else android.graphics.Color.GRAY
+    
+    fun onSpeechVoiceButtonStateChanged(isListening: Boolean, color: Int, scale: Float) {
+        _isListening.value = isListening
         _voiceButtonColor.value = color
-
-        if (isListening) {
+        _voiceButtonScale.value = scale
+    }
+    
+    fun onSpeechAnimationStateChanged(shouldStart: Boolean, shouldStop: Boolean) {
+        if (shouldStart) {
             _shouldStartPulseAnimation.value = true
-        } else {
-            _shouldStopPulseAnimation.value = true
         }
-    }
-
-    private fun updateVoiceButtonScale(rmsdB: Float) {
-        val scale = 1.0f + (rmsdB / 100f)
-        val clampedScale = scale.coerceIn(1.0f, 1.3f)
-        _voiceButtonScale.value = clampedScale
-    }
-
-    fun getCurrentRecognizedText(): String? = _recognizedText.value
-
-    fun clearRecognizedText() {
-        _recognizedText.value = ""
-    }
-
-    fun stopListeningIfActive() {
-        if (isListening) {
-            stopListening()
+        if (shouldStop) {
+            _shouldStopPulseAnimation.value = true
         }
     }
 
@@ -211,45 +88,92 @@ class ChatViewModel : ViewModel() {
         _shouldStopPulseAnimation.value = false
     }
 
-    fun sendMessage(message: String) {
+    fun onSendClicked(message: String) {
         val trimmedMessage = message.trim()
-        val validSessionId = sessionId.trim()
         
         if (trimmedMessage.isEmpty()) {
-            val errorMessage = ChatMessage(
-                id = UUID.randomUUID().toString(),
-                text = "Mesaj boş olamaz. Lütfen bir mesaj yazın.",
-                isFromUser = false
-            )
-            messagesList.add(errorMessage)
-            _messages.value = messagesList.toList()
+            addErrorMessage(getNaturalErrorMessage("empty_message"))
             return
         }
         
-        if (validSessionId.isEmpty()) {
-            val errorMessage = ChatMessage(
-                id = UUID.randomUUID().toString(),
-                text = "Session ID hatası. Lütfen uygulamayı yeniden başlatın.",
-                isFromUser = false
-            )
-            messagesList.add(errorMessage)
-            _messages.value = messagesList.toList()
-            return
+        _isLoading.value = true
+        sendMessage(trimmedMessage)
+    }
+    
+    
+    fun onRecognizedTextReceived(newText: String, currentText: String = "") {
+        if (newText.isNotEmpty()) {
+            val formattedText = if (currentText.isEmpty()) {
+                newText
+            } else {
+                "$currentText $newText"
+            }
+            _formattedText.value = formattedText
         }
-        
+    }
+    
+    fun clearRecognizedText() {
+        _recognizedText.value = ""
+    }
+    
+    private fun addErrorMessage(text: String) {
+        val errorMessage = ChatMessage(
+            id = UUID.randomUUID().toString(),
+            text = text,
+            isFromUser = false
+        )
+        messagesList.add(errorMessage)
+        _messages.value = messagesList.toList()
+    }
+    
+    private fun addUserMessage(text: String) {
         val userMessage = ChatMessage(
             id = UUID.randomUUID().toString(),
-            text = trimmedMessage,
+            text = text,
             isFromUser = true
         )
         messagesList.add(userMessage)
         _messages.value = messagesList.toList()
+    }
+    
+    private fun addBotMessage(text: String) {
+        val botMessage = ChatMessage(
+            id = UUID.randomUUID().toString(),
+            text = text,
+            isFromUser = false
+        )
+        messagesList.add(botMessage)
+        _messages.value = messagesList.toList()
+    }
+    
+    private fun getNaturalErrorMessage(errorType: String, details: String = ""): String {
+        return when (errorType) {
+            "empty_message" -> "Mesajınız boş görünüyor. Bir şeyler yazabilir misiniz?"
+            "session_error" -> "Bir sorun oluştu. Uygulamayı yeniden başlatmayı deneyebilir misiniz?"
+            "invalid_response" -> "Sunucudan beklenmeyen bir yanıt geldi. Tekrar deneyebilir misiniz?"
+            "no_response" -> "Sunucudan yanıt alamadım. Tekrar deneyebilir misiniz?"
+            "server_error" -> "Sunucuda bir sorun oluştu ($details). Tekrar deneyebilir misiniz?"
+            "network_error" -> "İnternet bağlantınızı kontrol edebilir misiniz?"
+            "timeout_error" -> "Bağlantı zaman aşımına uğradı. Tekrar deneyebilir misiniz?"
+            "connection_error" -> "Bağlantı sorunu yaşandı. Tekrar deneyebilir misiniz?"
+            else -> "Beklenmeyen bir hata oluştu. Tekrar deneyebilir misiniz?"
+        }
+    }
+    
+    private fun sendMessage(message: String) {
+        val validSessionId = sessionId.trim()
         
-        _isLoading.value = true
+        if (validSessionId.isEmpty()) {
+            addErrorMessage(getNaturalErrorMessage("session_error"))
+            _isLoading.value = false
+            return
+        }
+        
+        addUserMessage(message)
         
         viewModelScope.launch {
             try {
-                val response = chatApiService.sendMessage(trimmedMessage, validSessionId)
+                val response = chatApiService.sendMessage(message, validSessionId)
                 if (response.isSuccessful) {
                     val chatResponse = response.body()
                     
@@ -257,66 +181,23 @@ class ChatViewModel : ViewModel() {
                         val responseText = it.response ?: it.message ?: it.answer ?: it.reply
                         
                         if (!responseText.isNullOrEmpty()) {
-                            val botMessage = ChatMessage(
-                                id = UUID.randomUUID().toString(),
-                                text = responseText!!,
-                                isFromUser = false
-                            )
-                            messagesList.add(botMessage)
-                            _messages.value = messagesList.toList()
+                            addBotMessage(responseText!!)
                         } else {
-                            val errorMessage = ChatMessage(
-                                id = UUID.randomUUID().toString(),
-                                text = "Sunucudan geçersiz yanıt alındı. Lütfen tekrar deneyin.",
-                                isFromUser = false
-                            )
-                            messagesList.add(errorMessage)
-                            _messages.value = messagesList.toList()
+                            addErrorMessage(getNaturalErrorMessage("invalid_response"))
                         }
                     } ?: run {
-                        // Response body null ise
-                        val errorMessage = ChatMessage(
-                            id = UUID.randomUUID().toString(),
-                            text = "Sunucudan yanıt alınamadı. Lütfen tekrar deneyin.",
-                            isFromUser = false
-                        )
-                        messagesList.add(errorMessage)
-                        _messages.value = messagesList.toList()
+                        addErrorMessage(getNaturalErrorMessage("no_response"))
                     }
                 } else {
                     val errorCode = response.code()
-                    val errorMessage = ChatMessage(
-                        id = UUID.randomUUID().toString(),
-                        text = "Sunucu hatası ($errorCode). Lütfen tekrar deneyin.",
-                        isFromUser = false
-                    )
-                    messagesList.add(errorMessage)
-                    _messages.value = messagesList.toList()
+                    addErrorMessage(getNaturalErrorMessage("server_error", errorCode.toString()))
                 }
             } catch (e: java.net.UnknownHostException) {
-                val errorMessage = ChatMessage(
-                    id = UUID.randomUUID().toString(),
-                    text = "Sunucu bulunamadı. Lütfen internet bağlantınızı kontrol edin.",
-                    isFromUser = false
-                )
-                messagesList.add(errorMessage)
-                _messages.value = messagesList.toList()
+                addErrorMessage(getNaturalErrorMessage("network_error"))
             } catch (e: java.net.SocketTimeoutException) {
-                val errorMessage = ChatMessage(
-                    id = UUID.randomUUID().toString(),
-                    text = "Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.",
-                    isFromUser = false
-                )
-                messagesList.add(errorMessage)
-                _messages.value = messagesList.toList()
+                addErrorMessage(getNaturalErrorMessage("timeout_error"))
             } catch (e: Exception) {
-                val errorMessage = ChatMessage(
-                    id = UUID.randomUUID().toString(),
-                    text = "Bağlantı hatası: ${e.message}",
-                    isFromUser = false
-                )
-                messagesList.add(errorMessage)
-                _messages.value = messagesList.toList()
+                addErrorMessage(getNaturalErrorMessage("connection_error"))
             } finally {
                 _isLoading.value = false
             }
@@ -325,8 +206,5 @@ class ChatViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        if (::speechRecognizer.isInitialized) {
-            speechRecognizer.destroy()
-        }
     }
 }
