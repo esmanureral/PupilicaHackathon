@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.esmanureral.pupilicahackathon.R
+import com.esmanureral.pupilicahackathon.data.model.ChatMessage
 import com.esmanureral.pupilicahackathon.databinding.FragmentChatBinding
 import com.esmanureral.pupilicahackathon.startPulseAnimation
 import com.esmanureral.pupilicahackathon.stopPulseAnimation
@@ -24,11 +25,12 @@ class ChatFragment : Fragment() {
 
     private val viewModel: ChatViewModel by viewModels()
     private lateinit var messageAdapter: ChatMessageAdapter
+    private lateinit var speechRecognizerManager: SpeechRecognizerManager
 
     private val requestRecordAudioPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (granted) viewModel.onPermissionGranted()
-            else viewModel.onPermissionDenied()
+            if (granted) speechRecognizerManager.onPermissionGranted()
+            else speechRecognizerManager.onPermissionDenied()
         }
 
     override fun onCreateView(
@@ -54,8 +56,22 @@ class ChatFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel.initSpeechRecognizer(requireContext())
-        viewModel.checkPermissionStatus(requireContext())
+        initSpeechRecognizerManager()
+    }
+    
+    private fun initSpeechRecognizerManager() {
+        speechRecognizerManager = SpeechRecognizerManager(
+            context = requireContext(),
+            onTextRecognized = { text -> viewModel.onSpeechTextRecognized(text) },
+            onPermissionStatusChanged = { isGranted -> viewModel.onSpeechPermissionStatusChanged(isGranted) },
+            onVoiceButtonStateChanged = { isListening, color, scale -> 
+                viewModel.onSpeechVoiceButtonStateChanged(isListening, color, scale) 
+            },
+            onAnimationStateChanged = { shouldStart, shouldStop -> 
+                viewModel.onSpeechAnimationStateChanged(shouldStart, shouldStop) 
+            }
+        )
+        speechRecognizerManager.initialize()
     }
 
     private fun initRecyclerView() {
@@ -69,21 +85,26 @@ class ChatFragment : Fragment() {
     private fun initVoiceButton() {
         binding.btnVoice.setOnClickListener {
             if (viewModel.permissionGrantedLiveData.value == true) {
-                viewModel.onVoiceButtonClicked(requireContext())
+                speechRecognizerManager.onVoiceButtonClicked()
             } else {
                 requestRecordAudioPermission.launch(android.Manifest.permission.RECORD_AUDIO)
             }
         }
     }
-    
+
     private fun initSendButton() {
         binding.btnSend.setOnClickListener {
             sendMessage()
         }
     }
-    
+
     private fun initEditText() {
-        binding.inputMessage.setOnEditorActionListener { _, actionId, event ->
+        setupEditorActionListener()
+        setupEditTextClickListener()
+    }
+
+    private fun setupEditorActionListener() {
+        binding.inputMessage.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 sendMessage()
                 true
@@ -91,101 +112,147 @@ class ChatFragment : Fragment() {
                 false
             }
         }
-        
+    }
+
+    private fun setupEditTextClickListener() {
         binding.inputMessage.setOnClickListener {
-            binding.inputMessage.requestFocus()
-            val inputMethodManager = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.showSoftInput(binding.inputMessage, InputMethodManager.SHOW_IMPLICIT)
+            focusEditText()
+            showKeyboard()
         }
     }
-    
+
+    private fun focusEditText() {
+        binding.inputMessage.requestFocus()
+    }
+
+    private fun showKeyboard() {
+        val inputMethodManager =
+            requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(binding.inputMessage, InputMethodManager.SHOW_IMPLICIT)
+    }
+
     private fun sendMessage() {
-        val message = binding.inputMessage.text.toString().trim()
-        if (message.isNotEmpty()) {
-            binding.inputMessage.text?.clear()
-            
-            val inputMethodManager = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(binding.inputMessage.windowToken, 0)
-            
-            viewModel.sendMessage(message)
-        }
+        val message = getMessageText()
+        clearInputField()
+        hideKeyboard()
+        viewModel.onSendClicked(message)
+    }
+
+    private fun getMessageText(): String {
+        return binding.inputMessage.text.toString()
+    }
+
+    private fun clearInputField() {
+        binding.inputMessage.text?.clear()
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager =
+            requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.inputMessage.windowToken, 0)
     }
 
     private fun observeViewModel() {
-        binding.apply {
-            // Mesajları gözlemle
-            viewModel.messagesLiveData.observe(viewLifecycleOwner) { messages ->
-                messageAdapter.submitList(messages)
-                // Son mesaja scroll yap
-                if (messages.isNotEmpty()) {
-                    recyclerViewMessages.scrollToPosition(messages.size - 1)
-                }
-            }
+        observeMessages()
+        observeLoadingState()
+        observeRecognizedText()
+        observeFormattedText()
+        observeVoiceButtonStates()
+    }
 
-            // Loading durumunu gözlemle
-            viewModel.isLoadingLiveData.observe(viewLifecycleOwner) { isLoading ->
-                btnSend.isEnabled = !isLoading
-                inputMessage.isEnabled = !isLoading
-                if (isLoading) {
-                    btnSend.alpha = 0.5f
-                } else {
-                    btnSend.alpha = 1.0f
-                }
-            }
+    private fun observeMessages() {
+        viewModel.messagesLiveData.observe(viewLifecycleOwner) { messages ->
+            messageAdapter.submitList(messages)
+            scrollToLastMessage(messages)
+        }
+    }
 
-            viewModel.recognizedTextLiveData.observe(viewLifecycleOwner) { newText ->
-                if (newText.isNotEmpty()) {
-                    appendRecognizedText(newText)
-                    viewModel.clearRecognizedText()
-                }
-            }
+    private fun scrollToLastMessage(messages: List<ChatMessage>) {
+        if (messages.isNotEmpty()) {
+            binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
+        }
+    }
 
-            viewModel.voiceButtonColorLiveData.observe(viewLifecycleOwner) { color ->
-                btnVoice.setColorFilter(color)
-            }
+    private fun observeLoadingState() {
+        viewModel.isLoadingLiveData.observe(viewLifecycleOwner) { isLoading ->
+            updateSendButtonState(isLoading)
+            updateInputFieldState(isLoading)
+        }
+    }
 
-            viewModel.voiceButtonScaleLiveData.observe(viewLifecycleOwner) { scale ->
-                btnVoice.scaleX = scale
-                btnVoice.scaleY = scale
-            }
+    private fun updateSendButtonState(isLoading: Boolean) {
+        binding.btnSend.isEnabled = !isLoading
+        binding.btnSend.alpha = if (isLoading) 0.5f else 1.0f
+    }
 
-            viewModel.shouldStartPulseAnimationLiveData.observe(viewLifecycleOwner) { shouldStart ->
-                if (shouldStart) {
-                    btnVoice.startPulseAnimation()
-                    viewModel.resetStartPulseAnimationFlag()
-                }
-            }
+    private fun updateInputFieldState(isLoading: Boolean) {
+        binding.inputMessage.isEnabled = !isLoading
+    }
 
-            viewModel.shouldStopPulseAnimationLiveData.observe(viewLifecycleOwner) { shouldStop ->
-                if (shouldStop) {
-                    btnVoice.stopPulseAnimation()
-                    viewModel.resetStopPulseAnimationFlag()
-                }
+    private fun observeRecognizedText() {
+        viewModel.recognizedTextLiveData.observe(viewLifecycleOwner) { newText ->
+            if (newText.isNotEmpty()) {
+                val currentText = binding.inputMessage.text.toString()
+                viewModel.onRecognizedTextReceived(newText, currentText)
+                viewModel.clearRecognizedText()
             }
         }
     }
 
-    private fun appendRecognizedText(newText: String) {
-        binding.apply {
-            val currentText = inputMessage.text.toString()
-            val updatedText = if (currentText.isEmpty()) {
-                newText
-            } else {
-                requireContext().getString(R.string.recognized_text_format, currentText, newText)
+    private fun observeFormattedText() {
+        viewModel.formattedTextLiveData.observe(viewLifecycleOwner) { formattedText ->
+            if (formattedText.isNotEmpty()) {
+                binding.inputMessage.setText(formattedText)
+                binding.inputMessage.setSelection(formattedText.length)
             }
-            inputMessage.setText(updatedText)
-            inputMessage.setSelection(updatedText.length)
         }
     }
+
+    private fun observeVoiceButtonStates() {
+        observeVoiceButtonColor()
+        observeVoiceButtonScale()
+        observeVoiceButtonAnimations()
+    }
+
+    private fun observeVoiceButtonColor() {
+        viewModel.voiceButtonColorLiveData.observe(viewLifecycleOwner) { color ->
+            binding.btnVoice.setColorFilter(color)
+        }
+    }
+
+    private fun observeVoiceButtonScale() {
+        viewModel.voiceButtonScaleLiveData.observe(viewLifecycleOwner) { scale ->
+            binding.btnVoice.scaleX = scale
+            binding.btnVoice.scaleY = scale
+        }
+    }
+
+    private fun observeVoiceButtonAnimations() {
+        viewModel.shouldStartPulseAnimationLiveData.observe(viewLifecycleOwner) { shouldStart ->
+            if (shouldStart) {
+                binding.btnVoice.startPulseAnimation()
+                viewModel.resetStartPulseAnimationFlag()
+            }
+        }
+
+        viewModel.shouldStopPulseAnimationLiveData.observe(viewLifecycleOwner) { shouldStop ->
+            if (shouldStop) {
+                binding.btnVoice.stopPulseAnimation()
+                viewModel.resetStopPulseAnimationFlag()
+            }
+        }
+    }
+
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopListeningIfActive()
+        speechRecognizerManager.stopListeningIfActive()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding.btnVoice.stopPulseAnimation()
+        speechRecognizerManager.destroy()
         _binding = null
     }
 }
