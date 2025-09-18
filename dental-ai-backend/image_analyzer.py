@@ -7,6 +7,7 @@ from PIL import Image
 from transformers import AutoImageProcessor, SiglipForImageClassification
 from typing import Dict, List, Optional
 from datetime import datetime, timedelta
+from uuid import uuid4
 
 try:
     from dotenv import load_dotenv
@@ -19,28 +20,17 @@ try:
 except Exception:
     genai = None
 
-try:
-    from langchain.tools import Tool
-    from langchain.memory import ConversationBufferMemory
-    from langchain.agents import AgentExecutor, create_react_agent
-    from langchain.prompts import PromptTemplate
-    from langchain_google_genai import ChatGoogleGenerativeAI
-    LANGCHAIN_AVAILABLE = True
-except ImportError:
-    LANGCHAIN_AVAILABLE = False
-    print("LangChain not available; agent features disabled.")
-
 # Model configuration
 CLASSIFIER_MODEL_NAME = "prithivMLmods/tooth-agenesis-siglip2"
 
-# Label mapping (TÜRKÇE)
+# Label mapping (TÜRKÇE and English)
 ID_TO_LABEL = {
-    "0": "Diş Taşı (Calculus)",
-    "1": "Diş Çürüğü (Karies)", 
-    "2": "Diş Eti İltihabı (Gingivitis)",
-    "3": "Aft (Ağız Yarası)",
-    "4": "Diş Renklenmesi",
-    "5": "Hipodonti (Eksik Diş)",
+    "0": {"tr": "Diş Taşı (Calculus)", "en": "Calculus"},
+    "1": {"tr": "Diş Çürüğü (Karies)", "en": "Caries"},
+    "2": {"tr": "Diş Eti İltihabı (Gingivitis)", "en": "Gingivitis"},
+    "3": {"tr": "Aft (Ağız Yarası)", "en": "Mouth Ulcer"},
+    "4": {"tr": "Diş Renklenmesi", "en": "Tooth Discoloration"},
+    "5": {"tr": "Hipodonti (Eksik Diş)", "en": "Hypodontia"},
 }
 
 # Video link mappings (TÜRKÇE anahtarlar)
@@ -58,7 +48,7 @@ class DentalImageAnalyzer:
         self.image_processor = None
         self.image_classifier = None
         self.gemini_model = None
-        self.memory = ConversationBufferMemory(return_messages=True) if LANGCHAIN_AVAILABLE else None
+        self.user_memory = {}  # Basit dict-based memory (user_id -> list of messages)
         
         # Load image classifier
         try:
@@ -77,17 +67,19 @@ class DentalImageAnalyzer:
                     self.gemini_model = genai.GenerativeModel("gemini-1.5-flash")
                     print("Gemini NLG enabled: gemini-1.5-flash")
                 else:
+                    self.gemini_model = None 
                     print("GEMINI_API_KEY not set; using rule-based summary")
             except Exception as e:
                 print(f"Gemini init error: {e}")
-    
-    def analyze_image(self, image_b64: str, user_id: Optional[str] = None) -> Dict:
+
+    def analyze_image(self, image_b64: str, user_id: Optional[str] = None, symptom: Optional[str] = None) -> Dict:
         """
         Analyze dental image and return classification results with Turkish summary.
         
         Args:
             image_b64: Base64 encoded image (with or without data: prefix)
             user_id: Optional user ID for memory personalization
+            symptom: Optional symptom for additional advice
             
         Returns:
             dict: Analysis results with predictions, summary, weekly plan, and video
@@ -108,28 +100,39 @@ class DentalImageAnalyzer:
                 probs = torch.nn.functional.softmax(logits, dim=1).squeeze().tolist()
             
             # Filter <1% probabilities and get top predictions
-            filtered_probs = {k: v for k, v in zip(ID_TO_LABEL.values(), probs) if v >= 0.01}
+            filtered_probs = {k: v for k, v in zip(ID_TO_LABEL.keys(), probs) if v >= 0.01}
             topk = sorted(filtered_probs.items(), key=lambda x: x[1], reverse=True)[:3]
-            topk_labels = [f"{label}: {prob*100:.1f}%" for label, prob in topk]
-            raw_results = {label: round(prob * 100, 2) for label, prob in filtered_probs.items()}
+            topk_labels = [f"{ID_TO_LABEL[k]['tr']}: {v*100:.1f}%" for k, v in topk]
+            all_predictions = {
+                "tr": {ID_TO_LABEL[k]["tr"]: round(v * 100, 2) for k, v in filtered_probs.items()},
+                "en": {ID_TO_LABEL[k]["en"]: round(v * 100, 2) for k, v in filtered_probs.items()}
+            }
             
             # Generate summary and weekly plan
-            findings_text = ", ".join(topk_labels)
-            summary_data = self._generate_enhanced_summary(findings_text, topk[0][0] if topk else None, user_id)
+            top_issue = ID_TO_LABEL[topk[0][0]]["tr"] if topk else None
+            summary_data = self._generate_enhanced_summary(", ".join(topk_labels), top_issue, user_id)
             
-            # Save to memory
-            if self.memory and user_id:
-                self.memory.chat_memory.add_user_message(f"User {user_id} scan: {findings_text}")
-                self.memory.chat_memory.add_ai_message(f"Plan for {topk[0][0] if topk else 'healthy'}.")
+            # Save to memory (simple list)
+            if user_id:
+                if user_id not in self.user_memory:
+                    self.user_memory[user_id] = []
+                self.user_memory[user_id].append({"user": f"Scan: {', '.join(topk_labels)}", "ai": f"Plan for {top_issue or 'healthy'}."})
             
-            return {
+            result = {
                 "top_predictions": topk_labels,  # Etiketler Türkçe
-                "all_predictions": raw_results,  # Etiketler Türkçe
+                "all_predictions": all_predictions,  # Türkçe ve İngilizce
                 "dental_comment": summary_data["comment"],
                 "weekly_plan": summary_data["plan"],
-                "video_suggestion": VIDEO_LINKS.get(topk[0][0], "https://www.youtube.com/watch?v=general_dental_care") if topk else None,
+                "video_suggestion": VIDEO_LINKS.get(top_issue, "https://www.youtube.com/results?search_query=genel+di%C5%9F+bak%C4%B1m%C4%B1"),
                 "success": True
             }
+            
+            # Symptom handling if provided
+            if symptom:
+                symptom_advice = self._handle_symptom(symptom, top_issue or "Sağlıklı")
+                result["symptom_advice"] = symptom_advice
+            
+            return result
             
         except Exception as e:
             return {"error": f"Analiz hatası: {str(e)}", "success": False}
@@ -138,166 +141,172 @@ class DentalImageAnalyzer:
         """Generate Turkish summary with weekly plan using Gemini or rule-based, more detailed and personalized."""
         if self.gemini_model is not None:
             try:
-                history = self.memory.load_memory_variables({})["history"] if self.memory and user_id else ""
-                history_str = f"Önceki: {history[-1] if history else 'Yeni kullanıcı'}." if history else ""
+                # Simple history from memory
+                history = self.user_memory.get(user_id, [])[-3:] if user_id and self.user_memory.get(user_id) else []  # Last 3 interactions
+                history_str = "\n".join([f"Önceki: {msg['user']} -> {msg['ai']}" for msg in history]) if history else "Yeni kullanıcı."
                 
                 prompt = (
-                    "Sen kişisel diş koçu ajansın. Tarama sonuçlarına göre haftalık bakım planı üret. "
-                    f"{history_str}\n"
-                    "En yüksek olasılıklı sorunu odak yap (%1 üstü). Kısa, motive edici, TÜRKÇE.\n\n"
-                    f"Sonuçlar: {findings_text}. Ana sorun: {top_issue or 'Sağlıklı'}.\n\n"
-                    "Çıktı JSON: {'comment': 'Özet + riskler + öneriler', 'plan': [{'day': 'Pazartesi', 'task': 'Görev'} x7]}"
+                    "Sen kişisel diş koçu asistanısın. Tarama sonuçlarına göre motive edici, detaylı TÜRKÇE özet ve 7 günlük kişiselleştirilmiş bakım planı üret. "
+                    f"Tarihçe: {history_str}\n\n"
+                    f"Sonuçlar: {findings_text}. Ana sorun: {top_issue or 'Sağlıklı görünüm'}.\n\n"
+                    "Özet: Riskleri, önerileri ve motivasyonu içersin (200 kelime max).\n"
+                    "Plan: 7 gün için JSON array: [{'day': 'Pazartesi', 'task': 'Kısa, actionable görev'}]. Görevler çeşitlilikli, ana soruna odaklansın, hekime yönlendirsin.\n\n"
+                    "Sadece JSON dön: {'comment': 'Özet metni', 'plan': [array]}"
                 )
                 
                 gemini_resp = self.gemini_model.generate_content(prompt)
                 response_text = getattr(gemini_resp, "text", "")
                 try:
+                    # JSON extraction improved
                     json_start = response_text.find('{')
                     json_end = response_text.rfind('}') + 1
-                    parsed = json.loads(response_text[json_start:json_end])
-                    return parsed
+                    if json_start != -1 and json_end != 0:
+                        parsed = json.loads(response_text[json_start:json_end])
+                        # Ensure plan is list of 7 days
+                        if len(parsed.get("plan", [])) != 7:
+                            parsed["plan"] = self._generate_fallback_plan(top_issue)  # Fallback if incomplete
+                        return parsed
                 except json.JSONDecodeError:
-                    pass
+                    print("Gemini JSON parse failed, using fallback.")
             except Exception as e:
                 print(f"Gemini error: {e}")
 
-        # Rule-based fallback, now more detailed and personalized
+        # Rule-based fallback (unchanged, but now ensures 7 days)
         base_comment = self._generate_detailed_comment(findings_text, top_issue)
         plan = self._generate_personalized_plan(top_issue)
         return {"comment": base_comment, "plan": plan}
 
     def _generate_detailed_comment(self, findings_text: str, top_issue: Optional[str]) -> str:
-        """Sınıflandırma sonucuna göre detaylı analiz ve öneri döndürür."""
+        """Generate a detailed, user-friendly comment based on classification results."""
         explanations = {
-            "Calculus": "Diş taşları (Calculus) dişler üzerinde birikmiş sertleşmiş plaklardır. Diş taşları diş eti hastalıklarına yol açabilir. Düzenli profesyonel temizlik ve ağız hijyeni çok önemlidir.",
-            "Caries": "Diş çürüğü (karies), diş minesinin asitler nedeniyle zarar görmesiyle oluşur. Şekerli gıdalardan kaçınmak, düzenli fırçalama ve diş ipi kullanımı çok önemlidir. Erken tedavi edilmezse ağrı ve enfeksiyona yol açabilir.",
-            "Gingivitis": "Diş eti iltihabı (gingivitis), diş etlerinde kızarıklık, şişlik ve kanamaya yol açar. Düzenli ve doğru fırçalama, diş ipi kullanımı ve diş taşı temizliği gereklidir.",
-            "Mouth Ulcer": "Aft veya ağız yarası, genellikle stres, vitamin eksikliği veya travma sonrası oluşur. Tuzlu suyla gargara ve yumuşak besinler önerilir.",
-            "Tooth Discoloration": "Dişlerde renk değişimi, çay, kahve, sigara gibi dış etkenlerden veya yapısal nedenlerden kaynaklanabilir. Beyazlatıcı macunlar ve profesyonel temizlik yardımcı olabilir.",
-            "Hypodontia": "Hipodonti, doğuştan bir veya daha fazla dişin eksik olmasıdır. Ortodontik ve protetik tedavi seçenekleri için diş hekiminize başvurun.",
+            "Diş Taşı (Calculus)": (
+                "Diş taşları, diş yüzeyinde biriken sertleşmiş plaklardır. Diş eti hastalıklarına yol açabilir ve düzenli temizlik gerektirir. "
+                "Risk: Diş eti çekilmesi ve enfeksiyon. "
+                "Öneri: Diş hekiminizde profesyonel temizlik yaptırın ve günlük ağız hijyenine özen gösterin."
+            ),
+            "Diş Çürüğü (Karies)": (
+                "Diş çürüğü, diş minesinde asitler nedeniyle oluşan oyuklardır. Erken müdahale edilmezse ağrı ve enfeksiyona yol açabilir. "
+                "Risk: Çürüklerin ilerlemesi ve diş kaybı. "
+                "Öneri: Şekerli gıdalardan kaçının, florürlü diş macunu kullanın ve diş hekiminize başvurun."
+            ),
+            "Diş Eti İltihabı (Gingivitis)": (
+                "Diş eti iltihabı, diş etlerinde kızarıklık, şişlik ve kanamaya neden olur. Uygun bakım ile iyileşme mümkündür. "
+                "Risk: Diş eti çekilmesi ve periodontitis. "
+                "Öneri: Yumuşak bir fırça ile nazikçe fırçalayın ve diş ipi kullanın."
+            ),
+            "Aft (Ağız Yarası)": (
+                "Aft, ağız içinde oluşan ağrılı yaralardır. Genellikle stres, vitamin eksikliği veya travmadan kaynaklanır. "
+                "Risk: Konfor kaybı ve hassasiyet. "
+                "Öneri: Tuzlu suyla gargara yapın ve tahriş edici yiyeceklerden kaçının."
+            ),
+            "Diş Renklenmesi": (
+                "Diş renklenmesi, çay, kahve, sigara veya yapısal nedenlerden kaynaklanabilir. Estetik bir sorundur. "
+                "Risk: Estetik kaygı ve özgüven kaybı. "
+                "Öneri: Beyazlatıcı diş macunu kullanın ve profesyonel temizlik için diş hekiminize danışın."
+            ),
+            "Hipodonti (Eksik Diş)": (
+                "Hipodonti, doğuştan bir veya daha fazla dişin eksik olmasıdır. Fonksiyonel ve estetik sorunlara yol açabilir. "
+                "Risk: Çiğneme ve konuşma zorlukları. "
+                "Öneri: Ortodontik veya protetik tedavi için diş hekiminize başvurun."
+            ),
         }
-        risk_level = {
-            "Calculus": "Diş eti hastalığı riski artmış.",
-            "Caries": "Çürük gelişme riski yüksek.",
-            "Gingivitis": "Diş eti kanaması ve çekilmesi riski var.",
-            "Mouth Ulcer": "Ağız içi hassasiyeti artmış.",
-            "Tooth Discoloration": "Estetik kaygı riski.",
-            "Hypodontia": "Çiğneme fonksiyonunda azalma riski.",
-        }
-        suggestion = {
-            "Calculus": "Diş hekiminizde profesyonel temizlik yaptırın. Günde 2 kez fırçalama ve diş ipi kullanımı ihmal etmeyin.",
-            "Caries": "Şekerli yiyecek ve içecekleri azaltın, florürlü diş macunu kullanın. Düzenli diş kontrolü yaptırın.",
-            "Gingivitis": "Diş eti kanaması varsa daha yumuşak fırça kullanın ve diş ipiyle nazik olun. C vitamini alımınızı artırın.",
-            "Mouth Ulcer": "Asitli, baharatlı yiyeceklerden kaçının. Gargara ve lokal kremler kullanabilirsiniz.",
-            "Tooth Discoloration": "Renklenmeye neden olan içecekleri azaltın. Diş hekiminizden beyazlatma seçeneklerini öğrenin.",
-            "Hypodontia": "Ortodontik muayene önerilir. Eksik dişlerin yerine uygun tedavi planı oluşturulmalı.",
-        }
-        if top_issue in explanations:
-            return (
-                f"Durum: {top_issue}\n"
-                f"Açıklama: {explanations[top_issue]}\n"
-                f"Risk: {risk_level[top_issue]}\n"
-                f"Öneri: {suggestion[top_issue]}\n"
-                f"Detaylı Sonuçlar: {findings_text}"
+        
+        if top_issue and top_issue in explanations:
+            top_prob = findings_text.split(",")[0].split(":")[1].strip() if findings_text else "N/A"
+            secondary_issues = findings_text.split(",")[1:] if "," in findings_text else []
+            comment = (
+                f"Analiz sonuçlarınızı inceledim. Sonuçlara göre, en yüksek olasılıkla {top_prob} ile *{top_issue}* tespit edildi. "
+                f"{explanations[top_issue]}\n\n"
+            )
+            if secondary_issues:
+                comment += (
+                    f"İkinci en olası bulgu ise {secondary_issues[0].split(':')[1].strip()} ile *{secondary_issues[0].split(':')[0].strip()}*. "
+                    f"{explanations.get(secondary_issues[0].split(':')[0].strip(), 'Bu durum genellikle ciddi değildir, ancak dikkat edilmelidir.')}\n\n"
+                )
+            comment += (
+                "Diğer olasılıklar %1'in altında olduğu için değerlendirmeye alınmamıştır.\n\n"
+                "Size detaylı bir tedavi planı sunabilmem için en kısa sürede bir diş hekimine başvurmanız önemlidir. "
+                "Erken teşhis ve tedavi ile bu durumu kolayca çözebiliriz. Sorularınız varsa lütfen çekinmeden sorun!"
             )
         else:
-            return f"Dişlerin genel olarak sağlıklı görünüyor. Yine de düzenli bakım ve kontrolleri ihmal etme. Detaylı Sonuçlar: {findings_text}"
+            comment = (
+                "Analiz sonuçlarınızı inceledim. Dişleriniz genel olarak sağlıklı görünüyor! "
+                f"Detaylı sonuçlar: {findings_text}\n\n"
+                "Yine de düzenli diş hekimi kontrollerini ihmal etmeyin. "
+                "Ağız hijyenine devam ederek bu sağlıklı durumu koruyabilirsiniz. Sorularınız varsa lütfen çekinmeden sorun!"
+            )
+        return comment
 
     def _generate_personalized_plan(self, top_issue: Optional[str]) -> list:
-        """Her güne özel, mantıklı ve çeşitli görevler içeren haftalık plan döndürür."""
+        """Generate a logical and varied 7-day plan tailored to the top issue (fallback)."""
         day_tasks = {
-            "Calculus": [
-                "Diş hekiminizde profesyonel temizlik randevusu alın.",
-                "Diş aralarını diş ipiyle temizleyin.",
-                "Elektrikli diş fırçası kullanmayı deneyin.",
-                "Ağız gargarası ile ağız bakımınızı destekleyin.",
-                "Şekerli ve yapışkan gıdalardan uzak durun.",
-                "Diş eti masajı yapın.",
-                "Diş fırçanızı 3 ayda bir yenileyin."
+            "Diş Taşı (Calculus)": [
+                {"day": "Pazartesi", "task": "Diş hekiminizden profesyonel temizlik randevusu alın."},
+                {"day": "Salı", "task": "Diş aralarını diş ipi veya ara yüz fırçasıyla temizleyin."},
+                {"day": "Çarşamba", "task": "Elektrikli diş fırçası ile 2 dakika fırçalayın."},
+                {"day": "Perşembe", "task": "Antibakteriyel ağız gargarası kullanın."},
+                {"day": "Cuma", "task": "Şekerli ve yapışkan gıdalardan uzak durun."},
+                {"day": "Cumartesi", "task": "Parmakla diş eti masajı yaparak kan dolaşımını artırın."},
+                {"day": "Pazar", "task": "Diş fırçanızı kontrol edin, gerekirse yenileyin."},
             ],
-            "Caries": [
-                "Sabah ve akşam 2 dakika boyunca dişlerinizi florürlü diş macunuyla fırçalayın.",
-                "Diş ipi kullanarak arayüz temizliği yapın.",
-                "Şekerli yiyecek ve içeceklerden uzak durun.",
-                "Günde en az bir kez su için, ağız içini temiz tutun.",
-                "Diş hekiminizden çürük kontrolü randevusu alın.",
-                "Sağlıklı atıştırmalıklar (meyve, sebze) tercih edin.",
-                "Diş fırçanızı düzenli olarak yenileyin."
+            "Diş Çürüğü (Karies)": [
+                {"day": "Pazartesi", "task": "Florürlü diş macunu ile sabah ve akşam 2 dakika fırçalayın."},
+                {"day": "Salı", "task": "Diş ipi ile diş aralarını temizleyin."},
+                {"day": "Çarşamba", "task": "Şekerli içecek ve yiyecek tüketimini azaltın."},
+                {"day": "Perşembe", "task": "Bol su içerek ağız içini temiz tutun."},
+                {"day": "Cuma", "task": "Diş hekiminizden çürük kontrolü için randevu alın."},
+                {"day": "Cumartesi", "task": "Sebze ve meyve gibi sağlıklı atıştırmalıklar tüketin."},
+                {"day": "Pazar", "task": "Ağız gargarası ile bakımınızı destekleyin."},
             ],
-            "Gingivitis": [
-                "Diş etlerinizi yumuşak fırça ile nazikçe fırçalayın.",
-                "Diş ipi ile diş aralarını temizleyin.",
-                "Ağız gargarası kullanın.",
-                "C vitamini açısından zengin besinler tüketin.",
-                "Diş eti masajı yapın.",
-                "Diş taşı temizliği için randevu alın.",
-                "Diş eti kanaması devam ederse hekime başvurun."
+            "Diş Eti İltihabı (Gingivitis)": [
+                {"day": "Pazartesi", "task": "Yumuşak kıllı fırça ile diş etlerinizi nazikçe fırçalayın."},
+                {"day": "Salı", "task": "Diş ipi ile nazikçe diş aralarını temizleyin."},
+                {"day": "Çarşamba", "task": "Antibakteriyel ağız gargarası kullanın."},
+                {"day": "Perşembe", "task": "C vitamini açısından zengin gıdalar (portakal, kivi) tüketin."},
+                {"day": "Cuma", "task": "Diş hekiminizden diş taşı temizliği randevusu alın."},
+                {"day": "Cumartesi", "task": "Diş eti masajı ile kan dolaşımını destekleyin."},
+                {"day": "Pazar", "task": "Diş eti kanaması devam ederse hekime başvurun."},
             ],
-            "Mouth Ulcer": [
-                "Tuzlu suyla gargara yapın.",
-                "Baharatlı ve asitli yiyeceklerden kaçının.",
-                "Ağız içi hijyenine dikkat edin.",
-                "Yumuşak ve soğuk yiyecekler tüketin.",
-                "Stresten uzak durmaya çalışın.",
-                "Vitamin desteği alın (özellikle B12, C).",
-                "Ağız yarası geçmezse hekime başvurun."
+            "Aft (Ağız Yarası)": [
+                {"day": "Pazartesi", "task": "Tuzlu suyla günde 2 kez gargara yapın."},
+                {"day": "Salı", "task": "Asitli ve baharatlı yiyeceklerden kaçının."},
+                {"day": "Çarşamba", "task": "Yumuşak kıllı fırça ile nazikçe fırçalayın."},
+                {"day": "Perşembe", "task": "Soğuk ve yumuşak yiyecekler (yoğurt, smoothie) tüketin."},
+                {"day": "Cuma", "task": "B12 ve C vitamini takviyesi almayı düşünün."},
+                {"day": "Cumartesi", "task": "Stresi azaltmak için rahatlama teknikleri uygulayın."},
+                {"day": "Pazar", "task": "Aft 1 haftadan uzun sürerse hekime başvurun."},
             ],
-            "Tooth Discoloration": [
-                "Çay, kahve ve sigara tüketimini azaltın.",
-                "Beyazlatıcı diş macunu kullanın.",
-                "Diş hekiminizden profesyonel temizlik randevusu alın.",
-                "Bol su için, ağız içini temiz tutun.",
-                "Renklenmeye neden olan gıdalardan uzak durun.",
-                "Diş fırçanızı düzenli olarak yenileyin.",
-                "Beyazlatma işlemleri hakkında hekiminize danışın."
+            "Diş Renklenmesi": [
+                {"day": "Pazartesi", "task": "Çay, kahve ve sigara tüketimini azaltın."},
+                {"day": "Salı", "task": "Beyazlatıcı diş macunu ile 2 dakika fırçalayın."},
+                {"day": "Çarşamba", "task": "Diş hekiminizden profesyonel temizlik randevusu alın."},
+                {"day": "Perşembe", "task": "Bol su içerek ağız içini temiz tutun."},
+                {"day": "Cuma", "task": "Renklenmeye neden olan gıdalardan uzak durun."},
+                {"day": "Cumartesi", "task": "Diş ipi ile diş aralarını temizleyin."},
+                {"day": "Pazar", "task": "Beyazlatma seçenekleri için hekiminize danışın."},
             ],
-            "Hypodontia": [
-                "Ortodontik muayene için randevu alın.",
-                "Eksik dişlerin yerine uygun tedavi seçeneklerini araştırın.",
-                "Diş hekiminizle tedavi planınızı görüşün.",
-                "Ağız hijyenine ekstra özen gösterin.",
-                "Düzenli diş kontrolü yaptırın.",
-                "Yumuşak kıllı diş fırçası kullanın.",
-                "Beslenme düzeninize dikkat edin."
+            "Hipodonti (Eksik Diş)": [
+                {"day": "Pazartesi", "task": "Ortodontik muayene için diş hekiminden randevu alın."},
+                {"day": "Salı", "task": "Eksik dişlerin yerine tedavi seçeneklerini araştırın."},
+                {"day": "Çarşamba", "task": "Yumuşak kıllı fırça ile dişlerinizi fırçalayın."},
+                {"day": "Perşembe", "task": "Ağız hijyenine ekstra özen gösterin."},
+                {"day": "Cuma", "task": "Diş hekiminizle tedavi planınızı görüşün."},
+                {"day": "Cumartesi", "task": "Sağlıklı beslenmeye dikkat edin, kalsiyum alın."},
+                {"day": "Pazar", "task": "Düzenli diş kontrolü için plan yapın."},
             ],
         }
-        days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
         if top_issue in day_tasks:
-            plan = []
-            for i, day in enumerate(days):
-                plan.append({"day": day, "task": day_tasks[top_issue][i]})
-            return plan
+            return day_tasks[top_issue]
         else:
-            # Genel bakım planı
-            generic_tasks = [
-                "Sabah ve akşam dişlerinizi fırçalayın.",
-                "Diş ipi kullanın.",
-                "Ağız gargarası ile bakım yapın.",
-                "Düzenli su tüketin.",
-                "Diş hekiminizden kontrol randevusu alın.",
-                "Sağlıklı atıştırmalıklar tüketin.",
-                "Diş fırçanızı düzenli olarak değiştirin."
+            return [
+                {"day": "Pazartesi", "task": "Sabah ve akşam 2 dakika diş fırçalayın."},
+                {"day": "Salı", "task": "Diş ipi ile diş aralarını temizleyin."},
+                {"day": "Çarşamba", "task": "Antibakteriyel ağız gargarası kullanın."},
+                {"day": "Perşembe", "task": "Bol su içerek ağız hijyenini destekleyin."},
+                {"day": "Cuma", "task": "Diş hekiminizden kontrol randevusu alın."},
+                {"day": "Cumartesi", "task": "Sebze ve meyve gibi sağlıklı atıştırmalıklar tüketin."},
+                {"day": "Pazar", "task": "Diş fırçanızı kontrol edin ve gerekirse yenileyin."},
             ]
-            return [{"day": day, "task": generic_tasks[i]} for i, day in enumerate(days)]
-
-    
-    def _generate_rule_based_plan(self, top_issue: Optional[str]) -> List[Dict]:
-        """Generate 7-day plan based on top issue."""
-        base_tasks = ["2 dk yumuşak fırça ile fırçala", "Diş ipi kullan", "Ağız gargarası"]
-        issue_specific = {
-            "Calculus": "Plak odaklı: Diş arası temizle",
-            "Caries": "Şeker azalt, florürlü macun",
-            "Gingivitis": "Diş eti masajı yap",
-            "Mouth Ulcer": "Tuzlu su gargara",
-            "Tooth Discoloration": "Beyazlatıcı diş macunu",
-            "Hypodontia": "Ortodonti danış",
-        }.get(top_issue, "Genel bakım uygula")
-        
-        plan = []
-        for i, day in enumerate(["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]):
-            task = f"{base_tasks[i % len(base_tasks)]}, {issue_specific}"
-            plan.append({"day": day, "task": task})
-        return plan
     
     def _handle_symptom(self, symptom: str, top_issue: str) -> str:
         """Handle symptoms like 'Ağrım var'."""
@@ -308,32 +317,6 @@ class DentalImageAnalyzer:
             return "Kanama: Diş eti sorunu? Hafif fırçala, C vitamini artır. 2 günde geçmezse muayene."
         else:
             return "Semptom detaylandır: Ağrı tipi, şişlik? Ek bilgi ver."
-    
-    def get_agent_tool(self):
-        """Returns LangChain Tool for agent integration."""
-        if not LANGCHAIN_AVAILABLE:
-            raise ImportError("LangChain required.")
-        
-        def tool_func(image_b64: str, symptom: Optional[str] = None, user_id: Optional[str] = None) -> str:
-            analysis = self.analyze_image(image_b64, user_id)
-            if not analysis["success"]:
-                return analysis["error"]
-            
-            top_issue = analysis["top_predictions"][0].split(":")[0].strip() if analysis["top_predictions"] else "healthy"
-            
-            if symptom:
-                symptom_advice = self._handle_symptom(symptom, top_issue)
-                return f"{analysis['dental_comment']}\nSemptom: {symptom_advice}\nPlan: {json.dumps(analysis['weekly_plan'], ensure_ascii=False, indent=2)}"
-            
-            return (f"Analiz: {analysis['dental_comment']}\n"
-                    f"Video: {analysis['video_suggestion']}\n"
-                    f"Plan: {json.dumps(analysis['weekly_plan'], ensure_ascii=False, indent=2)}")
-        
-        return Tool(
-            name="DentalScanAnalyzer",
-            func=tool_func,
-            description="Analyzes dental image (base64), optional symptom, generates plan and video."
-        )
 
 # Global analyzer instance
 analyzer = DentalImageAnalyzer()
