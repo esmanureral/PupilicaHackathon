@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#FFFFFF</color>
-    <color name="onPrimary">#000000</color>
-    <color name="surface">#9FA2A6</color>
-    <color name="full_screen">#FFFFFF</color>
-    <color name="shimmer_color">#DDDDDD</color>
-    <color name="icon_color">#525A66</color>
-    <color name="divider_color">#D0D6D6</color>
-    <color name="primaryDark">#FBFBFB</color>
-    <color name="progress_indicator_color">#000000</color>
-    <color name="label_color">#7B828E</color>
-    <color name="bottom_bar_icon_color">#e3e3e3</color>
-    <color name="transparent_color">#4DFFFFFF</color>
-    <color name="button_next_color">#243465</color>
-    <color name="correct_answer">#9BBC67</color>
-    <color name="wrong_answer">#A05858</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="blue">#5E8CCF</color>
+    <color name="gray">#525A66</color>
+    <color name="green_light">#9BBC67</color>
+    <color name="red_light">#A05858</color>
     <color name="option_color">#717E81</color>
-    <color name="artwork_border">#8B5A2B</color>
-    <color name="artwork_border_game">#A0522D</color>
-    <color name="shadow_color">#000000</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="green_light">#ff99cc00</color>
-    <color name="red_light">#ffff4444</color>
-    <color name="grey">#E8CACA</color>
-    <color name="check_color">#7BB241</color>
-    <color name="background">#F5F5F5</color>
-    <color name="green">#A6C77E</color>
     <color name="orange">#FF8A5C</color>
     <color name="dark_grey">#4A4E69</color>
-    <color name="light">#FFEEDB</color>
+    <color name="greenHome">#4CAF50</color>
+    <color name="primary">#2196F3</color>
+    <color name="red">#F44336</color>
+    <color name="onb_yellow">#FFE2A9</color>
+    <color name="onb_blue">#CFE0FF</color>
+    <color name="onb_pink">#FFCFE6</color>
+    
+    <!-- SmileSync inspired colors -->
+    <color name="smile_blue">#2196F3</color>
+    <color name="smile_blue_light">#E3F2FD</color>
+    <color name="smile_blue_dark">#1976D2</color>
+    <color name="smile_gray">#F5F5F5</color>
+    <color name="smile_text_primary">#212121</color>
+    <color name="smile_text_secondary">#757575</color>
+    <color name="smile_background">#FAFAFA</color>
+    <color name="smile_card_background">#FFFFFF</color>
+    <color name="smile_accent">#03DAC6</color>
+    
+    <!-- New colors for modern design -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="gray_light">#E9ECEF</color>
+    <color name="text_secondary">#6C757D</color>
+    <color name="green">#28A745</color>
+
 </resources>

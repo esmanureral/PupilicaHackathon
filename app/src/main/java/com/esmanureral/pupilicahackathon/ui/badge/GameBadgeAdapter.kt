@@ -42,7 +42,7 @@ class GameBadgeAdapter(
 
     private fun setItemBackground(rootView: ViewGroup, badge: Badge) {
         val highlighted = currentScore in badge.minValue..badge.maxValue
-        val bgColorRes = if (highlighted) R.color.correct_answer else R.color.icon_color
+        val bgColorRes = if (highlighted) R.color.green_light else R.color.gray
         rootView.setBackgroundColor(ContextCompat.getColor(rootView.context, bgColorRes))
     }
 }

@@ -52,6 +52,6 @@ class GameBadgeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.recyclerView.adapter = GameBadgeAdapter(GameBadgeList.badges, currentScore)
+        binding.recyclerView.adapter = GameBadgeAdapter(GameBadgeList.getBadges(requireContext()), currentScore)
     }
 }

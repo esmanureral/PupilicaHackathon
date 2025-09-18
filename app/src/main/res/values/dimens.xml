@@ -46,5 +46,7 @@
     <dimen name="result_game_width">140dp</dimen>
     <dimen name="result_game_height">180dp</dimen>
     <dimen name="logo_image_view">150dp</dimen>
+    <dimen name="toolbar_title_size">24sp</dimen>
+
 
 </resources>
