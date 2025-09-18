@@ -31,9 +31,6 @@ class AnalysisResultViewModel : ViewModel() {
     private val _imageUri = MutableLiveData<String?>()
     val imageUri: LiveData<String?> get() = _imageUri
 
-    private val _shareContent = MutableLiveData<String>()
-    val shareContent: LiveData<String> get() = _shareContent
-
     private val _loadedBitmap = MutableLiveData<Bitmap?>()
     val loadedBitmap: LiveData<Bitmap?> get() = _loadedBitmap
 
@@ -43,7 +40,6 @@ class AnalysisResultViewModel : ViewModel() {
     fun initializeData(resultText: String, imageUri: String?) {
         _analysisResult.value = parseAnalysisResult(resultText)
         _imageUri.value = imageUri
-        generateShareContent()
     }
 
     private fun parseAnalysisResult(input: String): AnalysisResult {
@@ -132,9 +128,9 @@ class AnalysisResultViewModel : ViewModel() {
         val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
         return AnalysisResult(
             summary = lines.joinToString(" "),
-            predictions = "", // text formatında tahminleri atlayabiliriz
+            predictions = "",
             weeklyPlan = extractWeeklyPlan(lines),
-            videoUrl = "" // text içinde video linkleri yoksa boş bırak
+            videoUrl = ""
         )
     }
 
@@ -153,7 +149,7 @@ class AnalysisResultViewModel : ViewModel() {
         var currentTask = ""
 
         for (line in lines) {
-            if (days.any { it == line }) { // sadece gün satırı
+            if (days.any { it == line }) {
                 if (currentDay.isNotEmpty()) {
                     weeklyPlan.add(WeeklyPlanItem(currentDay, currentTask.trim()))
                 }
@@ -171,45 +167,6 @@ class AnalysisResultViewModel : ViewModel() {
         return weeklyPlan
     }
 
-    private fun generateShareContent() {
-        val result = _analysisResult.value ?: return
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-        val currentDate = dateFormat.format(Date())
-
-        val content = StringBuilder().apply {
-            appendLine("Diş Analiz Sonuçları")
-            appendLine("Tarih: $currentDate")
-            appendLine()
-
-            if (result.summary.isNotBlank()) {
-                appendLine("Özet:")
-                appendLine(result.summary)
-                appendLine()
-            }
-
-            if (result.predictions.isNotBlank()) {
-                appendLine("Tahminler:")
-                appendLine(result.predictions)
-                appendLine()
-            }
-
-            if (result.weeklyPlan.isNotEmpty()) {
-                appendLine("Haftalık Bakım Planı:")
-                result.weeklyPlan.forEach { plan ->
-                    appendLine("• ${plan.day}: ${plan.task}")
-                }
-                appendLine()
-            }
-
-            appendLine("Not: Bu sonuçlar sadece bilgilendirme amaçlıdır. Kesin teşhis için diş hekiminize başvurun.")
-        }
-
-        _shareContent.value = content.toString()
-    }
-
-    fun getShareContent(): String {
-        return _shareContent.value ?: ""
-    }
 
     fun loadBitmapFromUri(context: Context, uri: Uri) {
         viewModelScope.launch {
@@ -291,7 +248,7 @@ class AnalysisResultViewModel : ViewModel() {
 }
 
 class AnalysisResultViewModelFactory : androidx.lifecycle.ViewModelProvider.Factory {
-    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AnalysisResultViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return AnalysisResultViewModel() as T

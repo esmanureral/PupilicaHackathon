@@ -155,6 +155,9 @@
     <string name="share_content_predictions">Risk Analizi:</string>
     <string name="share_content_plan">Haftalık Bakım Planı:</string>
     <string name="share_content_note">Not: Bu analiz yapay zeka tarafından oluşturulmuştur ve profesyonel tıbbi görüş yerine geçmez. Lütfen doktorunuza danışın.</string>
+    <string name="share_content_plan_item">• %1$s: %2$s</string>
+    <string name="date_format">dd/MM/yyyy HH:mm</string>
+    <string name="share_content_date_prefix">Tarih: %1$s</string>
 
     <!-- Constants -->
     <string name="speech_language_code">tr-TR</string>

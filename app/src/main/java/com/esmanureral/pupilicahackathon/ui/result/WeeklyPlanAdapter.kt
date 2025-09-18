@@ -6,14 +6,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.esmanureral.pupilicahackathon.data.model.WeeklyPlanItem
 import com.esmanureral.pupilicahackathon.databinding.ItemWeeklyPlanBinding
 
-class WeeklyPlanAdapter(
-    private val planItems: List<WeeklyPlanItem>
-) : RecyclerView.Adapter<WeeklyPlanAdapter.WeeklyPlanViewHolder>() {
+class WeeklyPlanAdapter : RecyclerView.Adapter<WeeklyPlanAdapter.WeeklyPlanViewHolder>() {
+
+    private var planItems: List<WeeklyPlanItem> = emptyList()
+
+    fun updateData(newPlanItems: List<WeeklyPlanItem>) {
+        planItems = newPlanItems
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeeklyPlanViewHolder {
         val binding = ItemWeeklyPlanBinding.inflate(
-            LayoutInflater.from(parent.context), 
-            parent, 
+            LayoutInflater.from(parent.context),
+            parent,
             false
         )
         return WeeklyPlanViewHolder(binding)
@@ -26,7 +31,8 @@ class WeeklyPlanAdapter(
 
     override fun getItemCount(): Int = planItems.size
 
-    class WeeklyPlanViewHolder(private val binding: ItemWeeklyPlanBinding) : RecyclerView.ViewHolder(binding.root) {
+    class WeeklyPlanViewHolder(private val binding: ItemWeeklyPlanBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun showItem(item: WeeklyPlanItem) {
             binding.tvDay.text = item.day
