@@ -11,6 +11,14 @@ import com.esmanureral.pupilicahackathon.databinding.ItemMessageBotBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+abstract class BaseMessageViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
+    
+    protected fun formatTime(timestamp: Long): String {
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return sdf.format(Date(timestamp))
+    }
+}
+
 class ChatMessageAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatMessageDiffCallback()) {
 
     companion object {
@@ -48,27 +56,17 @@ class ChatMessageAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(Cha
         }
     }
 
-    class UserMessageViewHolder(private val binding: ItemMessageUserBinding) : RecyclerView.ViewHolder(binding.root) {
+    class UserMessageViewHolder(private val binding: ItemMessageUserBinding) : BaseMessageViewHolder(binding.root) {
         fun bind(message: ChatMessage) {
             binding.tvMessage.text = message.text
             binding.tvTime.text = formatTime(message.timestamp)
-        }
-        
-        private fun formatTime(timestamp: Long): String {
-            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-            return sdf.format(Date(timestamp))
         }
     }
 
-    class BotMessageViewHolder(private val binding: ItemMessageBotBinding) : RecyclerView.ViewHolder(binding.root) {
+    class BotMessageViewHolder(private val binding: ItemMessageBotBinding) : BaseMessageViewHolder(binding.root) {
         fun bind(message: ChatMessage) {
             binding.tvMessage.text = message.text
             binding.tvTime.text = formatTime(message.timestamp)
-        }
-        
-        private fun formatTime(timestamp: Long): String {
-            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-            return sdf.format(Date(timestamp))
         }
     }
 }
