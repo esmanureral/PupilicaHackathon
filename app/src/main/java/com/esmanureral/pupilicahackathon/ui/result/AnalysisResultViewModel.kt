@@ -1,13 +1,15 @@
 package com.esmanureral.pupilicahackathon.ui.result
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.data.model.AnalysisResult
 import com.esmanureral.pupilicahackathon.data.model.WeeklyPlanItem
 import org.json.JSONObject
 
-class AnalysisResultViewModel : ViewModel() {
+class AnalysisResultViewModel(private val context: Context) : ViewModel() {
 
     private val _analysisResult = MutableLiveData<AnalysisResult>()
     val analysisResult: LiveData<AnalysisResult> get() = _analysisResult
@@ -64,7 +66,7 @@ class AnalysisResultViewModel : ViewModel() {
     }
 
     private fun cleanDentalComment(dentalComment: String): String {
-        val detailedResultsIndex = dentalComment.indexOf("Detaylı Sonuçlar:")
+        val detailedResultsIndex = dentalComment.indexOf(context.getString(R.string.detailed_results_prefix))
         return if (detailedResultsIndex != -1) dentalComment.substring(0, detailedResultsIndex).trim() else dentalComment
     }
 
@@ -76,7 +78,7 @@ class AnalysisResultViewModel : ViewModel() {
                     val prediction = array.optString(i, "")
                     if (prediction.contains("%")) predictions.add(prediction)
                 }
-                predictions.joinToString("\n") { "• $it" }
+                predictions.joinToString("\n") { context.getString(R.string.prediction_bullet, it) }
             } ?: ""
         } catch (e: Exception) {
             android.util.Log.e("AnalysisResultViewModel", "Error parsing predictions", e)
@@ -106,7 +108,15 @@ class AnalysisResultViewModel : ViewModel() {
     }
 
     private fun extractWeeklyPlan(lines: List<String>): List<WeeklyPlanItem> {
-        val days = listOf("Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar")
+        val days = listOf(
+            context.getString(R.string.day_monday_short),
+            context.getString(R.string.day_tuesday_short),
+            context.getString(R.string.day_wednesday_short),
+            context.getString(R.string.day_thursday_short),
+            context.getString(R.string.day_friday_short),
+            context.getString(R.string.day_saturday_short),
+            context.getString(R.string.day_sunday_short)
+        )
         val weeklyPlan = mutableListOf<WeeklyPlanItem>()
         var currentDay = ""
         var currentTask = ""
@@ -128,5 +138,17 @@ class AnalysisResultViewModel : ViewModel() {
         }
 
         return weeklyPlan
+    }
+}
+
+class AnalysisResultViewModelFactory(
+    private val context: Context
+) : androidx.lifecycle.ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(AnalysisResultViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return AnalysisResultViewModel(context) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
