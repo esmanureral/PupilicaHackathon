@@ -1,4 +1,4 @@
-package com.esmanureral.pupilicahackathon.ui.reminder
+package com.esmanureral.pupilicahackathon.presentation.reminder
 
 import android.app.AlarmManager
 import android.app.TimePickerDialog
@@ -12,20 +12,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.ViewModelProvider
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.data.model.ReminderModel
 import com.esmanureral.pupilicahackathon.databinding.FragmentReminderBinding
-import com.esmanureral.pupilicahackathon.showToast
+import com.esmanureral.pupilicahackathon.presentation.extensions.showToast
+import java.util.Locale
 
 class ReminderFragment : Fragment() {
 
     private var _binding: FragmentReminderBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: ReminderViewModel by viewModels()
+    private val viewModel: ReminderViewModel by lazy {
+        ViewModelProvider(
+            this,
+            ReminderViewModelFactory(requireContext())
+        )[ReminderViewModel::class.java]
+    }
 
     private var morningHour = 8
     private var morningMinute = 0
@@ -45,6 +52,7 @@ class ReminderFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -72,23 +80,23 @@ class ReminderFragment : Fragment() {
     }
 
     private fun initializeUI() = with(binding) {
-        btnQuickMorning.alpha = 0.7f
-        btnQuickEvening.alpha = 0.7f
-        updateButtonTexts()
+        morningCard.alpha = 0.7f
+        eveningCard.alpha = 0.7f
     }
 
     private fun setupNavigation() {
-        binding.btnBack.setOnClickListener { findNavController().navigateUp() }
+        binding.toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
     }
 
     private fun setupQuickButtons() = with(binding) {
-        btnQuickMorning.setOnClickListener { showTimePicker(true) }
-        btnQuickEvening.setOnClickListener { showTimePicker(false) }
+        imgSunrise.setOnClickListener { showTimePicker(true) }
+        imgSunset.setOnClickListener { showTimePicker(false) }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupSaveAndClearButtons() = with(binding) {
         btnSaveReminder.setOnClickListener { saveReminder() }
-        btnClearReminders.setOnClickListener { clearAllReminders() }
+        btnClearSingleReminder.setOnClickListener { clearAllReminders() }
     }
 
     private fun setupDayCheckboxes() {
@@ -141,19 +149,16 @@ class ReminderFragment : Fragment() {
             morningMinute = minute
             isMorningSelected = true
             isEveningSelected = false
-            highlightQuickButton(binding.btnQuickMorning)
         } else {
             eveningHour = hour
             eveningMinute = minute
             isMorningSelected = false
             isEveningSelected = true
-            highlightQuickButton(binding.btnQuickEvening)
         }
-
         selectAllDays()
-        updateButtonTexts()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveReminder() {
         if (!validateInputs()) return
         if (!ensureReminderCapabilities()) return
@@ -161,30 +166,49 @@ class ReminderFragment : Fragment() {
         viewModel.saveReminder(reminder)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun ensureReminderCapabilities(): Boolean {
-        val ctx = requireContext()
+        return checkNotificationPermission() && checkExactAlarmPermission()
+    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun checkNotificationPermission(): Boolean {
+        val ctx = requireContext()
         val notificationsEnabled = NotificationManagerCompat.from(ctx).areNotificationsEnabled()
+
         if (!notificationsEnabled) {
-            showSettingsDialog(
-                title = getString(R.string.notification_permission_message),
-                message = getString(R.string.notification_permission_message),
-            ) { openNotificationSettings() }
+            showNotificationPermissionDialog()
             return false
         }
+        return true
+    }
 
+    private fun checkExactAlarmPermission(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val ctx = requireContext()
             val am = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
             if (!am.canScheduleExactAlarms()) {
-                showSettingsDialog(
-                    title = getString(R.string.exact_alarm_permission_title),
-                    message = getString(R.string.exact_alarm_permission_message),
-                ) { openExactAlarmSettings() }
+                showExactAlarmPermissionDialog()
                 return false
             }
         }
-
         return true
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showNotificationPermissionDialog() {
+        showSettingsDialog(
+            title = getString(R.string.notification_permission_message),
+            message = getString(R.string.notification_permission_message),
+        ) { openNotificationSettings() }
+    }
+
+    private fun showExactAlarmPermissionDialog() {
+        showSettingsDialog(
+            title = getString(R.string.exact_alarm_permission_title),
+            message = getString(R.string.exact_alarm_permission_message),
+        ) { openExactAlarmSettings() }
     }
 
     private fun showSettingsDialog(title: String, message: String, onPositive: () -> Unit) {
@@ -196,6 +220,7 @@ class ReminderFragment : Fragment() {
             .show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun openNotificationSettings() {
         val ctx = requireContext()
         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
@@ -212,35 +237,61 @@ class ReminderFragment : Fragment() {
     }
 
     private fun validateInputs(): Boolean {
-        return when {
-            selectedDays.isEmpty() -> {
-                showError(getString(R.string.error_no_day)); false
-            }
+        return validateDaySelection() && validateTimeSelection()
+    }
 
-            !isMorningSelected && !isEveningSelected -> {
-                showError(getString(R.string.error_no_time)); false
-            }
-
-            else -> true
+    private fun validateDaySelection(): Boolean {
+        if (selectedDays.isEmpty()) {
+            showError(getString(R.string.error_no_day))
+            return false
         }
+        return true
+    }
+
+    private fun validateTimeSelection(): Boolean {
+        if (!isMorningSelected && !isEveningSelected) {
+            showError(getString(R.string.error_no_time))
+            return false
+        }
+        return true
     }
 
     private fun createReminderModel(): ReminderModel {
-        val isMorning = isMorningSelected
-        val hour = if (isMorning) morningHour else eveningHour
-        val minute = if (isMorning) morningMinute else eveningMinute
-        val title = if (isMorning) getString(R.string.reminder_morning_title)
-        else getString(R.string.reminder_evening_title)
+        val timeData = getSelectedTimeData()
+        val title = getReminderTitle(timeData.isMorning)
 
         return ReminderModel(
-            id = System.currentTimeMillis().toInt(),
+            id = generateReminderId(),
             title = title,
             description = getString(R.string.reminder_description),
-            hour = hour,
-            minute = minute,
+            hour = timeData.hour,
+            minute = timeData.minute,
             isEnabled = true,
             daysOfWeek = selectedDays.toList()
         )
+    }
+
+    private data class TimeData(val hour: Int, val minute: Int, val isMorning: Boolean)
+
+    private fun getSelectedTimeData(): TimeData {
+        val isMorning = isMorningSelected
+        return TimeData(
+            hour = if (isMorning) morningHour else eveningHour,
+            minute = if (isMorning) morningMinute else eveningMinute,
+            isMorning = isMorning
+        )
+    }
+
+    private fun getReminderTitle(isMorning: Boolean): String {
+        return if (isMorning) {
+            getString(R.string.reminder_morning_title)
+        } else {
+            getString(R.string.reminder_evening_title)
+        }
+    }
+
+    private fun generateReminderId(): Int {
+        return System.currentTimeMillis().toInt()
     }
 
     private fun setupObservers() {
@@ -280,28 +331,50 @@ class ReminderFragment : Fragment() {
 
     private fun displayReminders(reminders: List<ReminderModel>) = with(binding) {
         if (reminders.isEmpty()) {
-            layoutActiveReminders.visibility = View.GONE
+            hideRemindersLayout()
         } else {
-            layoutActiveReminders.visibility = View.VISIBLE
-            tvActiveReminders.text = generateRemindersText(reminders)
+            showRemindersLayout(reminders)
         }
+    }
+
+    private fun hideRemindersLayout() = with(binding) {
+        layoutActiveReminders.visibility = View.GONE
+    }
+
+    private fun showRemindersLayout(reminders: List<ReminderModel>) = with(binding) {
+        layoutActiveReminders.visibility = View.VISIBLE
+        tvActiveReminderItem.text = generateRemindersText(reminders)
     }
 
     private fun generateRemindersText(reminders: List<ReminderModel>): String {
         return reminders.joinToString("\n") { reminder ->
-            "🕐 ${reminder.getTimeString()} - ${reminder.getDaysString(requireContext())}"
+            "🕐 ${getTimeString(reminder)} - ${getDaysString(reminder)}"
         }
     }
 
-    private fun updateButtonTexts() = with(binding) {
-        btnQuickMorning.text =
-            getString(R.string.morning_time, formatTime(morningHour, morningMinute))
-        btnQuickEvening.text =
-            getString(R.string.evening_time, formatTime(eveningHour, eveningMinute))
+    private fun getTimeString(reminder: ReminderModel): String {
+        return String.format(Locale.getDefault(), "%02d:%02d", reminder.hour, reminder.minute)
     }
 
-    private fun formatTime(hour: Int, minute: Int): String =
-        "%02d:%02d".format(hour, minute)
+    private fun getDaysString(reminder: ReminderModel): String {
+        val dayNames = listOf(
+            getString(R.string.day_sunday),
+            getString(R.string.day_monday),
+            getString(R.string.day_tuesday),
+            getString(R.string.day_wednesday),
+            getString(R.string.day_thursday),
+            getString(R.string.day_friday),
+            getString(R.string.day_saturday)
+        )
+
+        return if (reminder.daysOfWeek.isEmpty()) {
+            getString(R.string.every_day)
+        } else {
+            reminder.daysOfWeek
+                .filter { it in 0..6 } // Safe bounds check
+                .joinToString(", ") { dayNames[it] }
+        }
+    }
 
     private fun selectAllDays() {
         binding.checkboxEveryday.isChecked = true
@@ -319,12 +392,6 @@ class ReminderFragment : Fragment() {
         text = message
         visibility = View.VISIBLE
         postDelayed({ binding.tvError.visibility = View.GONE }, 3000)
-    }
-
-    private fun highlightQuickButton(selectedButton: android.widget.Button) = with(binding) {
-        btnQuickMorning.alpha = 0.7f
-        btnQuickEvening.alpha = 0.7f
-        selectedButton.alpha = 1.0f
     }
 
     override fun onDestroyView() {

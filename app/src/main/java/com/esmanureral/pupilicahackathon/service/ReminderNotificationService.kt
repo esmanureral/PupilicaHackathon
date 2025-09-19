@@ -9,7 +9,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import android.util.Log
-import com.esmanureral.pupilicahackathon.MainActivity
+import com.esmanureral.pupilicahackathon.presentation.main.MainActivity
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.notification.NotificationHelper as CustomNotificationManager
 import java.util.*
@@ -33,7 +33,15 @@ class ReminderNotificationService : BroadcastReceiver() {
             val minute = intent.getIntExtra(EXTRA_MINUTE, -1)
             val dayOfWeek = intent.getIntExtra(EXTRA_DAY_OF_WEEK, -1)
             if (hour in 0..23 && minute in 0..59 && dayOfWeek in 0..6) {
-                scheduleSingleExact(context, reminderId, title, description, hour, minute, dayOfWeek)
+                scheduleSingleExact(
+                    context,
+                    reminderId,
+                    title,
+                    description,
+                    hour,
+                    minute,
+                    dayOfWeek
+                )
             }
         }
     }
@@ -87,7 +95,15 @@ class ReminderNotificationService : BroadcastReceiver() {
             daysOfWeek: List<Int>
         ) {
             daysOfWeek.forEach { dayOfWeek ->
-                scheduleSingleExact(context, reminderId + dayOfWeek, title, description, hour, minute, dayOfWeek)
+                scheduleSingleExact(
+                    context,
+                    reminderId + dayOfWeek,
+                    title,
+                    description,
+                    hour,
+                    minute,
+                    dayOfWeek
+                )
             }
         }
 
@@ -130,12 +146,17 @@ class ReminderNotificationService : BroadcastReceiver() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            val canExact = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                alarmManager.canScheduleExactAlarms()
-            } else true
+            val canExact =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    alarmManager.canScheduleExactAlarms()
+                } else true
 
             if (canExact) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAt, pendingIntent)
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerAt,
+                    pendingIntent
+                )
             } else {
                 val showIntent = PendingIntent.getActivity(
                     context,
@@ -145,7 +166,10 @@ class ReminderNotificationService : BroadcastReceiver() {
                 )
                 val info = AlarmManager.AlarmClockInfo(triggerAt, showIntent)
                 alarmManager.setAlarmClock(info, pendingIntent)
-                Log.w("ReminderService", "Exact izni yok. setAlarmClock ile planlandı rc=$requestCode")
+                Log.w(
+                    "ReminderService",
+                    "Exact izni yok. setAlarmClock ile planlandı rc=$requestCode"
+                )
             }
         }
 

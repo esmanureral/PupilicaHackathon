@@ -1,4 +1,4 @@
-package com.esmanureral.pupilicahackathon.reminder
+package com.esmanureral.pupilicahackathon.presentation.reminder
 
 import android.content.Context
 import com.esmanureral.pupilicahackathon.notification.NotificationHelper
