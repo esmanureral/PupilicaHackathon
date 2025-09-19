@@ -1,6 +1,8 @@
 package com.esmanureral.pupilicahackathon.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class WeeklyPlanItem(
-    val day: String,
-    val task: String
+    @SerializedName("day") val day: String,
+    @SerializedName("task") val task: String
 )
