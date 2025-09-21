@@ -1,4 +1,4 @@
-package com.esmanureral.pupilicahackathon.ui.chat
+package com.esmanureral.pupilicahackathon.presentation.chat
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,15 +11,17 @@ import com.esmanureral.pupilicahackathon.databinding.ItemMessageBotBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-abstract class BaseMessageViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
-    
+abstract class BaseMessageViewHolder(itemView: android.view.View) :
+    RecyclerView.ViewHolder(itemView) {
+
     protected fun formatTime(timestamp: Long): String {
         val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
         return sdf.format(Date(timestamp))
     }
 }
 
-class ChatMessageAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatMessageDiffCallback()) {
+class ChatMessageAdapter :
+    ListAdapter<ChatMessage, RecyclerView.ViewHolder>(ChatMessageDiffCallback()) {
 
     companion object {
         private const val VIEW_TYPE_USER = 1
@@ -38,12 +40,14 @@ class ChatMessageAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(Cha
                 )
                 UserMessageViewHolder(binding)
             }
+
             VIEW_TYPE_BOT -> {
                 val binding = ItemMessageBotBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
                 BotMessageViewHolder(binding)
             }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -56,14 +60,16 @@ class ChatMessageAdapter : ListAdapter<ChatMessage, RecyclerView.ViewHolder>(Cha
         }
     }
 
-    class UserMessageViewHolder(private val binding: ItemMessageUserBinding) : BaseMessageViewHolder(binding.root) {
+    class UserMessageViewHolder(private val binding: ItemMessageUserBinding) :
+        BaseMessageViewHolder(binding.root) {
         fun bind(message: ChatMessage) {
             binding.tvMessage.text = message.text
             binding.tvTime.text = formatTime(message.timestamp)
         }
     }
 
-    class BotMessageViewHolder(private val binding: ItemMessageBotBinding) : BaseMessageViewHolder(binding.root) {
+    class BotMessageViewHolder(private val binding: ItemMessageBotBinding) :
+        BaseMessageViewHolder(binding.root) {
         fun bind(message: ChatMessage) {
             binding.tvMessage.text = message.text
             binding.tvTime.text = formatTime(message.timestamp)

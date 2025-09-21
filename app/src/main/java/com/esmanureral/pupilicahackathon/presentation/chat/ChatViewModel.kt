@@ -1,4 +1,4 @@
-package com.esmanureral.pupilicahackathon.ui.chat
+package com.esmanureral.pupilicahackathon.presentation.chat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,9 +6,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import com.esmanureral.pupilicahackathon.data.model.ChatMessage
-import com.esmanureral.pupilicahackathon.data.network.ApiClient
-import com.esmanureral.pupilicahackathon.data.network.ChatApiService
+import com.esmanureral.pupilicahackathon.data.remote.ApiClient
+import com.esmanureral.pupilicahackathon.data.remote.ChatApiService
 import java.util.UUID
+
+enum class ChatErrorType(val stringResId: Int) {
+    EMPTY_MESSAGE(com.esmanureral.pupilicahackathon.R.string.error_empty_message),
+    SESSION_ERROR(com.esmanureral.pupilicahackathon.R.string.error_session_error),
+    INVALID_RESPONSE(com.esmanureral.pupilicahackathon.R.string.error_invalid_response),
+    NO_RESPONSE(com.esmanureral.pupilicahackathon.R.string.error_no_response),
+    SERVER_ERROR(com.esmanureral.pupilicahackathon.R.string.error_server_error),
+    NETWORK_ERROR(com.esmanureral.pupilicahackathon.R.string.error_network_error),
+    TIMEOUT_ERROR(com.esmanureral.pupilicahackathon.R.string.error_timeout_error),
+    CONNECTION_ERROR(com.esmanureral.pupilicahackathon.R.string.error_connection_error),
+    UNKNOWN_ERROR(com.esmanureral.pupilicahackathon.R.string.error_unknown_error)
+}
 
 class ChatViewModel : ViewModel() {
 
@@ -33,19 +45,35 @@ class ChatViewModel : ViewModel() {
     private val _messages = MutableLiveData<List<ChatMessage>>()
     val messagesLiveData: LiveData<List<ChatMessage>> = _messages
 
+    private val _errorType = MutableLiveData<ChatErrorType?>()
+    val errorTypeLiveData: LiveData<ChatErrorType?> = _errorType
+
+    private val _errorDetails = MutableLiveData<String>()
+    val errorDetailsLiveData: LiveData<String> = _errorDetails
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoadingLiveData: LiveData<Boolean> = _isLoading
 
     private val messagesList = mutableListOf<ChatMessage>()
 
-    init {
+    fun addErrorMessageToChat(errorMessage: ChatMessage) {
+        messagesList.add(errorMessage)
+        _messages.value = messagesList.toList()
+    }
+
+    fun clearError() {
+        _errorType.value = null
+        _errorDetails.value = ""
+    }
+
+    fun addWelcomeMessage(welcomeText: String) {
         val welcomeMessage = ChatMessage(
             id = UUID.randomUUID().toString(),
-            text = "Merhaba! Ben AI danışmanınızım. Size nasıl yardımcı olabilirim?",
+            text = welcomeText,
             isFromUser = false
         )
         messagesList.add(welcomeMessage)
-        _messages.value = messagesList
+        _messages.value = messagesList.toList()
     }
 
     private val _voiceButtonColor = MutableLiveData<Int>()
@@ -69,7 +97,7 @@ class ChatViewModel : ViewModel() {
     }
 
     fun onSpeechError(errorMessage: String) {
-        addErrorMessage(errorMessage)
+        addErrorMessage(ChatErrorType.UNKNOWN_ERROR, errorMessage)
     }
 
     fun onSpeechPermissionStatusChanged(isGranted: Boolean) {
@@ -103,7 +131,7 @@ class ChatViewModel : ViewModel() {
         val trimmedMessage = message.trim()
 
         if (trimmedMessage.isEmpty()) {
-            addErrorMessage(getNaturalErrorMessage("empty_message"))
+            addErrorMessage(ChatErrorType.EMPTY_MESSAGE)
             return
         }
 
@@ -111,15 +139,48 @@ class ChatViewModel : ViewModel() {
         sendMessage(trimmedMessage)
     }
 
+    fun checkPendingMessage(context: android.content.Context): String? {
+        val sharedPref =
+            context.getSharedPreferences("chat_prefs", android.content.Context.MODE_PRIVATE)
+        val pendingMessage = sharedPref.getString("pending_message", null)
+
+        if (!pendingMessage.isNullOrEmpty()) {
+            clearPendingMessage(context)
+            return pendingMessage
+        }
+        return null
+    }
+
+    private fun clearPendingMessage(context: android.content.Context) {
+        val sharedPref =
+            context.getSharedPreferences("chat_prefs", android.content.Context.MODE_PRIVATE)
+        sharedPref.edit().remove("pending_message").apply()
+    }
+
+    fun sendPendingMessage(message: String) {
+        onSendClicked(message)
+    }
+
+    fun getMessageText(currentText: String): String {
+        return currentText.trim()
+    }
+
+    fun validateMessage(message: String): Boolean {
+        return message.trim().isNotEmpty()
+    }
+
+    fun shouldShowKeyboard(): Boolean {
+        return !isLoadingLiveData.value!! ?: false
+    }
+
+    fun shouldEnableSendButton(): Boolean {
+        return !isLoadingLiveData.value!! ?: false
+    }
+
 
     fun onRecognizedTextReceived(newText: String, currentText: String = "") {
         if (newText.isNotEmpty()) {
-            val formattedText = if (currentText.isEmpty()) {
-                newText
-            } else {
-                "$currentText $newText"
-            }
-            _formattedText.value = formattedText
+            _formattedText.value = newText
         }
     }
 
@@ -131,14 +192,9 @@ class ChatViewModel : ViewModel() {
         _partialText.value = ""
     }
 
-    private fun addErrorMessage(text: String) {
-        val errorMessage = ChatMessage(
-            id = UUID.randomUUID().toString(),
-            text = text,
-            isFromUser = false
-        )
-        messagesList.add(errorMessage)
-        _messages.value = messagesList.toList()
+    private fun addErrorMessage(errorType: ChatErrorType, details: String = "") {
+        _errorType.value = errorType
+        _errorDetails.value = details
     }
 
     private fun addUserMessage(text: String) {
@@ -161,25 +217,11 @@ class ChatViewModel : ViewModel() {
         _messages.value = messagesList.toList()
     }
 
-    private fun getNaturalErrorMessage(errorType: String, details: String = ""): String {
-        return when (errorType) {
-            "empty_message" -> "Mesajınız boş görünüyor. Bir şeyler yazabilir misiniz?"
-            "session_error" -> "Bir sorun oluştu. Uygulamayı yeniden başlatmayı deneyebilir misiniz?"
-            "invalid_response" -> "Sunucudan beklenmeyen bir yanıt geldi. Tekrar deneyebilir misiniz?"
-            "no_response" -> "Sunucudan yanıt alamadım. Tekrar deneyebilir misiniz?"
-            "server_error" -> "Sunucuda bir sorun oluştu ($details). Tekrar deneyebilir misiniz?"
-            "network_error" -> "İnternet bağlantınızı kontrol edebilir misiniz?"
-            "timeout_error" -> "Bağlantı zaman aşımına uğradı. Tekrar deneyebilir misiniz?"
-            "connection_error" -> "Bağlantı sorunu yaşandı. Tekrar deneyebilir misiniz?"
-            else -> "Beklenmeyen bir hata oluştu. Tekrar deneyebilir misiniz?"
-        }
-    }
-
     private fun sendMessage(message: String) {
         val validSessionId = sessionId.trim()
 
         if (validSessionId.isEmpty()) {
-            addErrorMessage(getNaturalErrorMessage("session_error"))
+            addErrorMessage(ChatErrorType.SESSION_ERROR)
             _isLoading.value = false
             return
         }
@@ -198,21 +240,21 @@ class ChatViewModel : ViewModel() {
                         if (!responseText.isNullOrEmpty()) {
                             addBotMessage(responseText!!)
                         } else {
-                            addErrorMessage(getNaturalErrorMessage("invalid_response"))
+                            addErrorMessage(ChatErrorType.INVALID_RESPONSE)
                         }
                     } ?: run {
-                        addErrorMessage(getNaturalErrorMessage("no_response"))
+                        addErrorMessage(ChatErrorType.NO_RESPONSE)
                     }
                 } else {
                     val errorCode = response.code()
-                    addErrorMessage(getNaturalErrorMessage("server_error", errorCode.toString()))
+                    addErrorMessage(ChatErrorType.SERVER_ERROR, errorCode.toString())
                 }
             } catch (e: java.net.UnknownHostException) {
-                addErrorMessage(getNaturalErrorMessage("network_error"))
+                addErrorMessage(ChatErrorType.NETWORK_ERROR)
             } catch (e: java.net.SocketTimeoutException) {
-                addErrorMessage(getNaturalErrorMessage("timeout_error"))
+                addErrorMessage(ChatErrorType.TIMEOUT_ERROR)
             } catch (e: Exception) {
-                addErrorMessage(getNaturalErrorMessage("connection_error"))
+                addErrorMessage(ChatErrorType.CONNECTION_ERROR)
             } finally {
                 _isLoading.value = false
             }

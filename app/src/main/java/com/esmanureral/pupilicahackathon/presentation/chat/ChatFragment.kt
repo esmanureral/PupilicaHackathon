@@ -1,7 +1,6 @@
-package com.esmanureral.pupilicahackathon.ui.chat
+package com.esmanureral.pupilicahackathon.presentation.chat
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.data.model.ChatMessage
 import com.esmanureral.pupilicahackathon.databinding.FragmentChatBinding
-import com.esmanureral.pupilicahackathon.startPulseAnimation
-import com.esmanureral.pupilicahackathon.stopPulseAnimation
+import com.esmanureral.pupilicahackathon.presentation.extensions.startPulseAnimation
+import com.esmanureral.pupilicahackathon.presentation.extensions.stopPulseAnimation
+import com.esmanureral.pupilicahackathon.service.SpeechRecognizerManager
 
 class ChatFragment : Fragment() {
 
@@ -53,7 +53,34 @@ class ChatFragment : Fragment() {
         binding.btnArrow.setOnClickListener {
             findNavController().popBackStack()
         }
+        addWelcomeMessage()
+        checkPendingMessage()
+    }
 
+    private fun addWelcomeMessage() {
+        val welcomeText = getString(R.string.chat_welcome_message)
+        viewModel.addWelcomeMessage(welcomeText)
+    }
+
+    private fun getErrorMessage(errorType: ChatErrorType, details: String = ""): String {
+        return when (errorType) {
+            ChatErrorType.EMPTY_MESSAGE -> getString(R.string.error_empty_message)
+            ChatErrorType.SESSION_ERROR -> getString(R.string.error_session_error)
+            ChatErrorType.INVALID_RESPONSE -> getString(R.string.error_invalid_response)
+            ChatErrorType.NO_RESPONSE -> getString(R.string.error_no_response)
+            ChatErrorType.SERVER_ERROR -> getString(R.string.error_server_error, details)
+            ChatErrorType.NETWORK_ERROR -> getString(R.string.error_network_error)
+            ChatErrorType.TIMEOUT_ERROR -> getString(R.string.error_timeout_error)
+            ChatErrorType.CONNECTION_ERROR -> getString(R.string.error_connection_error)
+            ChatErrorType.UNKNOWN_ERROR -> getString(R.string.error_unknown_error)
+        }
+    }
+
+    private fun checkPendingMessage() {
+        val pendingMessage = viewModel.checkPendingMessage(requireContext())
+        if (!pendingMessage.isNullOrEmpty()) {
+            viewModel.sendPendingMessage(pendingMessage)
+        }
     }
 
     private fun initViewModel() {
@@ -72,9 +99,9 @@ class ChatFragment : Fragment() {
             SpeechRecognizer.ERROR_RECOGNIZER_BUSY to getString(R.string.speech_busy_error),
             SpeechRecognizer.ERROR_SERVER to getString(R.string.speech_server_error),
             SpeechRecognizer.ERROR_SPEECH_TIMEOUT to getString(R.string.speech_timeout_error),
-            -1 to getString(R.string.speech_general_error) // Default error message
+            -1 to getString(R.string.speech_general_error)
         )
-        
+
         speechRecognizerManager = SpeechRecognizerManager(
             context = requireContext(),
             languageCode = languageCode,
@@ -99,25 +126,31 @@ class ChatFragment : Fragment() {
 
     private fun initRecyclerView() {
         messageAdapter = ChatMessageAdapter()
-        binding.recyclerViewMessages.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = messageAdapter
+        with(binding) {
+            recyclerViewMessages.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                adapter = messageAdapter
+            }
         }
     }
 
     private fun initVoiceButton() {
-        binding.btnVoice.setOnClickListener {
-            if (viewModel.permissionGrantedLiveData.value == true) {
-                speechRecognizerManager.onVoiceButtonClicked()
-            } else {
-                requestRecordAudioPermission.launch(android.Manifest.permission.RECORD_AUDIO)
+        with(binding) {
+            btnVoice.setOnClickListener {
+                if (viewModel.permissionGrantedLiveData.value == true) {
+                    speechRecognizerManager.onVoiceButtonClicked()
+                } else {
+                    requestRecordAudioPermission.launch(android.Manifest.permission.RECORD_AUDIO)
+                }
             }
         }
     }
 
     private fun initSendButton() {
-        binding.btnSend.setOnClickListener {
-            sendMessage()
+        with(binding) {
+            btnSend.setOnClickListener {
+                sendMessage()
+            }
         }
     }
 
@@ -127,52 +160,69 @@ class ChatFragment : Fragment() {
     }
 
     private fun setupEditorActionListener() {
-        binding.inputMessage.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEND) {
-                sendMessage()
-                true
-            } else {
-                false
+        with(binding) {
+            inputMessage.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    sendMessage()
+                    true
+                } else {
+                    false
+                }
             }
         }
     }
 
     private fun setupEditTextClickListener() {
-        binding.inputMessage.setOnClickListener {
-            focusEditText()
-            showKeyboard()
+        with(binding) {
+            inputMessage.setOnClickListener {
+                focusEditText()
+                showKeyboard()
+            }
         }
     }
 
     private fun focusEditText() {
-        binding.inputMessage.requestFocus()
+        with(binding) {
+            inputMessage.requestFocus()
+        }
     }
 
     private fun showKeyboard() {
         val inputMethodManager =
             requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(binding.inputMessage, InputMethodManager.SHOW_IMPLICIT)
+        with(binding) {
+            inputMethodManager.showSoftInput(inputMessage, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     private fun sendMessage() {
         val message = getMessageText()
-        clearInputField()
-        hideKeyboard()
-        viewModel.onSendClicked(message)
+        if (viewModel.validateMessage(message)) {
+            clearInputField()
+            hideKeyboard()
+            viewModel.onSendClicked(message)
+        }
     }
 
     private fun getMessageText(): String {
-        return binding.inputMessage.text.toString()
+        return with(binding) {
+            val currentText = inputMessage.text.toString()
+            viewModel.getMessageText(currentText)
+        }
     }
 
     private fun clearInputField() {
-        binding.inputMessage.text?.clear()
+        with(binding) {
+            inputMessage.text?.clear()
+        }
     }
 
     private fun hideKeyboard() {
         val inputMethodManager =
             requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(binding.inputMessage.windowToken, 0)
+        with(binding) {
+            inputMethodManager.hideSoftInputFromWindow(inputMessage.windowToken, 0)
+        }
     }
 
     private fun observeViewModel() {
@@ -182,6 +232,7 @@ class ChatFragment : Fragment() {
         observePartialText()
         observeFormattedText()
         observeVoiceButtonStates()
+        observeErrors()
     }
 
     private fun observeMessages() {
@@ -193,7 +244,9 @@ class ChatFragment : Fragment() {
 
     private fun scrollToLastMessage(messages: List<ChatMessage>) {
         if (messages.isNotEmpty()) {
-            binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
+            with(binding) {
+                recyclerViewMessages.scrollToPosition(messages.size - 1)
+            }
         }
     }
 
@@ -205,19 +258,22 @@ class ChatFragment : Fragment() {
     }
 
     private fun updateSendButtonState(isLoading: Boolean) {
-        binding.btnSend.isEnabled = !isLoading
-        binding.btnSend.alpha = if (isLoading) 0.5f else 1.0f
+        with(binding) {
+            btnSend.isEnabled = viewModel.shouldEnableSendButton()
+            btnSend.alpha = if (isLoading) 0.5f else 1.0f
+        }
     }
 
     private fun updateInputFieldState(isLoading: Boolean) {
-        binding.inputMessage.isEnabled = !isLoading
+        with(binding) {
+            inputMessage.isEnabled = viewModel.shouldShowKeyboard()
+        }
     }
 
     private fun observeRecognizedText() {
         viewModel.recognizedTextLiveData.observe(viewLifecycleOwner) { newText ->
             if (newText.isNotEmpty()) {
-                val currentText = binding.inputMessage.text.toString()
-                viewModel.onRecognizedTextReceived(newText, currentText)
+                viewModel.onRecognizedTextReceived(newText)
                 viewModel.clearRecognizedText()
                 viewModel.clearPartialText()
             }
@@ -227,8 +283,10 @@ class ChatFragment : Fragment() {
     private fun observePartialText() {
         viewModel.partialTextLiveData.observe(viewLifecycleOwner) { partialText ->
             if (partialText.isNotEmpty()) {
-                binding.inputMessage.setText(partialText)
-                binding.inputMessage.setSelection(partialText.length)
+                with(binding) {
+                    inputMessage.setText(partialText)
+                    inputMessage.setSelection(partialText.length)
+                }
             }
         }
     }
@@ -236,8 +294,10 @@ class ChatFragment : Fragment() {
     private fun observeFormattedText() {
         viewModel.formattedTextLiveData.observe(viewLifecycleOwner) { formattedText ->
             if (formattedText.isNotEmpty()) {
-                binding.inputMessage.setText(formattedText)
-                binding.inputMessage.setSelection(formattedText.length)
+                with(binding) {
+                    inputMessage.setText(formattedText)
+                    inputMessage.setSelection(formattedText.length)
+                }
             }
         }
     }
@@ -250,33 +310,60 @@ class ChatFragment : Fragment() {
 
     private fun observeVoiceButtonColor() {
         viewModel.voiceButtonColorLiveData.observe(viewLifecycleOwner) { color ->
-            binding.btnVoice.setColorFilter(color)
+            with(binding) {
+                btnVoice.setColorFilter(color)
+            }
         }
     }
 
     private fun observeVoiceButtonScale() {
         viewModel.voiceButtonScaleLiveData.observe(viewLifecycleOwner) { scale ->
-            binding.btnVoice.scaleX = scale
-            binding.btnVoice.scaleY = scale
+            with(binding) {
+                btnVoice.scaleX = scale
+                btnVoice.scaleY = scale
+            }
         }
     }
 
     private fun observeVoiceButtonAnimations() {
         viewModel.shouldStartPulseAnimationLiveData.observe(viewLifecycleOwner) { shouldStart ->
             if (shouldStart) {
-                binding.btnVoice.startPulseAnimation()
+                with(binding) {
+                    btnVoice.startPulseAnimation()
+                }
                 viewModel.resetStartPulseAnimationFlag()
             }
         }
 
         viewModel.shouldStopPulseAnimationLiveData.observe(viewLifecycleOwner) { shouldStop ->
             if (shouldStop) {
-                binding.btnVoice.stopPulseAnimation()
+                with(binding) {
+                    btnVoice.stopPulseAnimation()
+                }
                 viewModel.resetStopPulseAnimationFlag()
             }
         }
     }
 
+    private fun observeErrors() {
+        viewModel.errorTypeLiveData.observe(viewLifecycleOwner) { errorType ->
+            errorType?.let {
+                val details = viewModel.errorDetailsLiveData.value ?: ""
+                val errorMessage = getErrorMessage(it, details)
+                addErrorMessageToChat(errorMessage)
+                viewModel.clearError()
+            }
+        }
+    }
+
+    private fun addErrorMessageToChat(errorText: String) {
+        val errorMessage = ChatMessage(
+            id = java.util.UUID.randomUUID().toString(),
+            text = errorText,
+            isFromUser = false
+        )
+        viewModel.addErrorMessageToChat(errorMessage)
+    }
 
     override fun onPause() {
         super.onPause()
@@ -285,7 +372,9 @@ class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.btnVoice.stopPulseAnimation()
+        with(binding) {
+            btnVoice.stopPulseAnimation()
+        }
         speechRecognizerManager.destroy()
         _binding = null
     }

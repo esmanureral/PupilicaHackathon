@@ -1,8 +1,10 @@
 package com.esmanureral.pupilicahackathon.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class ChatMessage(
-    val id: String = "",
-    val text: String,
-    val isFromUser: Boolean,
-    val timestamp: Long = System.currentTimeMillis()
+    @SerializedName("id") val id: String = "",
+    @SerializedName("text") val text: String,
+    @SerializedName("is_from_user") val isFromUser: Boolean,
+    @SerializedName("timestamp") val timestamp: Long = System.currentTimeMillis()
 )
