@@ -145,7 +145,7 @@
     <string name="badge_name">Yeni Rozet</string>
     <string name="badge_image">Rozet</string>
     <string name="btn_arrow">Geri</string>
-    <string name="tv_badges_text">AI Danışman</string>
+    <string name="tv_badges_text">AI Doktor</string>
     <string name="reminder_title">Diş Fırçalama Hatırlatması</string>
     <string name="morning_evening_time_selection">Sabah-Akşam Saati Seçiniz</string>
     <string name="morning_reminder_desc">Sabah Hatırlatması</string>
@@ -173,7 +173,7 @@
     <string name="tv_ai_title">AI Diş Analizi</string>
     <string name="remaining_analysis">Analiz: 0/3</string>
     <string name="image_chatbot">image chatbot</string>
-    <string name="chat_title">AI Danışman</string>
+    <string name="chat_title">AI Doktor</string>
     <string name="reminder_icon">reminder icon</string>
     <string name="reminder_titles">Diş Fırçalama Hatırlatması</string>
     <string name="reminder_desc">Sağlıklı dişler için düzenli fırçalama hatırlatması ayarlayın</string>
