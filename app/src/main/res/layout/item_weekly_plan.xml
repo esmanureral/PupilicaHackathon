@@ -3,47 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
+    android:layout_margin="@dimen/padding_medium"
     android:outlineProvider="none"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="@dimen/card_corner_radius_medium"
     app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:padding="@dimen/padding_xlarge">
 
-        <!-- Day Title -->
         <TextView
             android:id="@+id/tvDay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Pazartesi"
-            android:textSize="16sp"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:text="@string/day_monday"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/text_size_large"
             android:textStyle="bold"
-            android:textColor="@color/smile_text_primary"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Task Description -->
         <TextView
             android:id="@+id/tvTask"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="2 dakika boyunca dişlerinizi, florürlü diş macunuyla fırçalayın. Diş ipi kullanın."
-            android:textSize="14sp"
-            android:textColor="@color/gray"
-            android:lineSpacingExtra="4dp"
-            android:maxLines="0"
             android:ellipsize="none"
-            app:layout_constraintStart_toStartOf="parent"
+            android:lineSpacingExtra="@dimen/_6dp"
+            android:maxLines="0"
+            android:text="@string/weekly_plan_task_example"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_size_medium"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvDay" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
-

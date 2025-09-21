@@ -4,31 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/smile_background">
+    android:background="@color/light_white">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/smile_background"
-        android:elevation="4dp"
+        android:background="@color/light_white"
+        android:elevation="@dimen/elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationIconTint="@color/smile_text_primary"
+        app:navigationIconTint="@color/dark_grey"
         app:title=""
-        app:titleTextColor="@color/smile_text_primary">
+        app:titleTextColor="@color/dark_grey">
 
         <TextView
             android:id="@+id/tv_question_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/_16dp"
             android:gravity="center_vertical"
-            android:text="Soru 1"
-            android:textColor="@color/smile_text_primary"
-            android:textSize="20sp"
+            android:text="@string/question_number"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/text_size_xxlarge"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -43,29 +43,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                android:text="Skor: 0"
+                android:text="@string/score_text"
                 android:textColor="@color/blue"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/btn_badges"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/_32dp"
+                android:layout_height="@dimen/_32dp"
                 android:background="@drawable/circle_background"
-                android:contentDescription="Rozetler"
-                android:padding="6dp"
-                android:src="@drawable/ic_badges"
+                android:contentDescription="@string/badges"
+                android:padding="@dimen/_6dp"
+                android:src="@drawable/badges"
                 app:tint="@color/blue" />
+
         </LinearLayout>
+
     </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/questionCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="20dp"
+        android:layout_margin="@dimen/_16dp"
+        app:cardCornerRadius="@dimen/_20dp"
         app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,25 +78,26 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="@dimen/_24dp">
 
             <TextView
                 android:id="@+id/tvQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/smile_text_primary"
-                android:textSize="18sp"
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/text_size_xlarge"
                 android:textStyle="bold"
                 tools:text="Diş sağlığı için en önemli faktör nedir?" />
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressIndicator"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/image_view"
+        android:layout_height="@dimen/image_view"
         android:indeterminate="true"
         android:visibility="visible"
         app:indicatorColor="@color/blue"
@@ -107,71 +110,67 @@
         android:id="@+id/btnOption1"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="A) Seçenek 1"
-        android:textColor="@color/white"
-        app:cornerRadius="20dp"
+        android:layout_height="@dimen/badge_size_small"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginBottom="@dimen/_16dp"
+        app:cornerRadius="@dimen/_20dp"
         app:layout_constraintBottom_toTopOf="@+id/btnOption2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="A) Seçenek 1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnOption2"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="B) Seçenek 2"
-        android:textColor="@color/white"
-        app:cornerRadius="20dp"
+        android:layout_height="@dimen/badge_size_small"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginBottom="@dimen/_16dp"
+        app:cornerRadius="@dimen/_20dp"
         app:layout_constraintBottom_toTopOf="@+id/btnOption3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="B) Seçenek 2" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnOption3"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="C) Seçenek 3"
-        android:textColor="@color/white"
-        app:cornerRadius="20dp"
+        android:layout_height="@dimen/badge_size_small"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginBottom="@dimen/_16dp"
+        app:cornerRadius="@dimen/_20dp"
         app:layout_constraintBottom_toTopOf="@+id/btnOption4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="C) Seçenek 3" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnOption4"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="32dp"
-        android:text="D) Seçenek 4"
-        android:textColor="@color/white"
-        app:cornerRadius="20dp"
+        android:layout_height="@dimen/badge_size_small"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginBottom="@dimen/_32dp"
+        app:cornerRadius="@dimen/_20dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_next_question"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="D) Seçenek 4" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_next_question"
         style="@style/Widget.Material3.Button"
         android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="@dimen/badge_size_small"
+        android:layout_marginHorizontal="@dimen/_16dp"
+        android:layout_marginBottom="@dimen/_16dp"
         android:backgroundTint="@color/blue"
-        android:text="️Sonraki Soru"
+        android:text="@string/next_question"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="@dimen/item_artist_text_size"
         android:textStyle="bold"
-        app:cornerRadius="20dp"
+        app:cornerRadius="@dimen/_20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

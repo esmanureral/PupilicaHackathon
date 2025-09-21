@@ -3,36 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/smile_background"
+    android:background="@color/light_white"
     android:fillViewport="true"
     android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/smile_background">
+        android:background="@color/light_white">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/smile_background"
-            android:elevation="4dp"
+            android:background="@color/light_white"
+            android:elevation="@dimen/card_elevation_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@color/smile_text_primary"
-            app:title="Diş Fırçalama Hatırlatması"
-            app:titleTextColor="@color/smile_text_primary" />
+            app:navigationIconTint="@color/dark_grey"
+            app:title="@string/reminder_title"
+            app:titleTextColor="@color/dark_grey" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/quickOptionsCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="@dimen/margin_xxxlarge"
             android:backgroundTint="@color/light_green"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="@dimen/card_corner_radius_xlarge"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,26 +41,26 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="24dp">
+                android:padding="@dimen/padding_xxlarge">
 
                 <TextView
                     android:id="@+id/tvQuickOptionsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sabah-Akşam Saati Seçiniz"
-                    android:textColor="@color/smile_text_primary"
-                    android:textSize="20sp"
+                    android:text="@string/morning_evening_time_selection"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/text_size_xxlarge"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/morningCard"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="20dp"
+                    android:layout_width="@dimen/image_size_large"
+                    android:layout_height="@dimen/image_size_large"
+                    android:layout_marginTop="@dimen/margin_xlarge"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    app:cardCornerRadius="@dimen/card_corner_radius_large"
                     app:cardElevation="0dp"
                     app:layout_constraintEnd_toStartOf="@id/eveningCard"
                     app:layout_constraintStart_toStartOf="parent"
@@ -72,11 +72,11 @@
 
                         <ImageView
                             android:id="@+id/img_sunrise"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="@dimen/image_size_large"
+                            android:layout_height="@dimen/image_size_large"
                             android:background="@drawable/sunrise"
                             android:clickable="true"
-                            android:contentDescription="Sabah Hatırlatması"
+                            android:contentDescription="@string/morning_reminder_desc"
                             android:focusable="true"
                             android:scaleType="fitCenter" />
 
@@ -86,11 +86,11 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/eveningCard"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="20dp"
-                    app:cardCornerRadius="20dp"
+                    android:layout_width="@dimen/image_size_large"
+                    android:layout_height="@dimen/image_size_large"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_xlarge"
+                    app:cardCornerRadius="@dimen/card_corner_radius_large"
                     app:cardElevation="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/morningCard"
@@ -102,11 +102,11 @@
 
                         <ImageView
                             android:id="@+id/img_sunset"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="@dimen/image_size_large"
+                            android:layout_height="@dimen/image_size_large"
                             android:background="@drawable/night"
                             android:clickable="true"
-                            android:contentDescription="Akşam Hatırlatması"
+                            android:contentDescription="@string/evening_reminder_desc"
                             android:focusable="true"
                             android:scaleType="fitCenter" />
 
@@ -121,9 +121,9 @@
             android:id="@+id/daySelectionCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/task_card_pink"
-            app:cardCornerRadius="16dp"
+            android:layout_marginTop="@dimen/margin_large"
+            app:cardBackgroundColor="@color/light_pink"
+            app:cardCornerRadius="@dimen/card_corner_radius_medium"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -132,15 +132,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp">
+                android:padding="@dimen/padding_xlarge">
 
                 <TextView
                     android:id="@+id/tvDaySelectionTitle"
-                    android:layout_width="161dp"
-                    android:layout_height="17dp"
-                    android:text="Tekrar Eden Günler"
-                    android:textColor="@color/smile_text_primary"
-                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recurring_days_title"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -149,11 +149,11 @@
                     android:id="@+id/checkbox_everyday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Her Günü Seç"
-                    android:textColor="@color/smile_text_primary"
-                    android:textSize="16sp"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:text="@string/select_every_day"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="bold"
                     app:buttonTint="@color/blue"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -180,36 +180,36 @@
                             android:id="@+id/checkbox_sunday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Pazar"
-                            android:textColor="@color/smile_text_primary"
-                            android:textSize="14sp"
+                            android:text="@string/day_sunday"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/text_size_medium"
                             app:buttonTint="@color/blue" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/checkbox_monday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Pazartesi"
-                            android:textColor="@color/smile_text_primary"
-                            android:textSize="14sp"
+                            android:text="@string/day_monday"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/text_size_medium"
                             app:buttonTint="@color/blue" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/checkbox_tuesday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Salı"
-                            android:textColor="@color/smile_text_primary"
-                            android:textSize="14sp"
+                            android:text="@string/day_tuesday"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/text_size_medium"
                             app:buttonTint="@color/blue" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/checkbox_wednesday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Çarşamba"
-                            android:textColor="@color/smile_text_primary"
-                            android:textSize="14sp"
+                            android:text="@string/day_wednesday"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/text_size_medium"
                             app:buttonTint="@color/blue" />
 
                     </LinearLayout>
@@ -224,27 +224,27 @@
                             android:id="@+id/checkbox_thursday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Perşembe"
-                            android:textColor="@color/smile_text_primary"
-                            android:textSize="14sp"
+                            android:text="@string/day_thursday"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/text_size_medium"
                             app:buttonTint="@color/blue" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/checkbox_friday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Cuma"
-                            android:textColor="@color/smile_text_primary"
-                            android:textSize="14sp"
+                            android:text="@string/day_friday"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/text_size_medium"
                             app:buttonTint="@color/blue" />
 
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/checkbox_saturday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Cumartesi"
-                            android:textColor="@color/smile_text_primary"
-                            android:textSize="14sp"
+                            android:text="@string/day_saturday"
+                            android:textColor="@color/dark_grey"
+                            android:textSize="@dimen/text_size_medium"
                             app:buttonTint="@color/blue" />
 
                     </LinearLayout>
@@ -255,13 +255,13 @@
                     android:id="@+id/btn_save_reminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/button_blue_background"
-                    android:paddingHorizontal="24dp"
-                    android:paddingVertical="12dp"
-                    android:text="Hatırlatmayı Kaydet"
+                    android:paddingHorizontal="@dimen/padding_xxlarge"
+                    android:paddingVertical="@dimen/padding_medium"
+                    android:text="@string/save_reminder"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dayCheckboxesLayout" />
@@ -273,11 +273,11 @@
             android:id="@+id/layout_active_reminders"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_large"
             android:elevation="0dp"
             android:visibility="visible"
             app:cardBackgroundColor="@color/blue"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="@dimen/card_corner_radius_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/daySelectionCard">
@@ -285,15 +285,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="20dp">
+                android:padding="@dimen/padding_xlarge">
 
                 <TextView
                     android:id="@+id/tvActiveRemindersTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Aktif Hatırlatmalar"
-                    android:textColor="@color/smile_text_primary"
-                    android:textSize="18sp"
+                    android:text="@string/active_reminders"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -302,12 +302,12 @@
                     android:id="@+id/layout_single_reminder"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:background="@color/light_yellow"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="16dp"
-                    app:cornerRadius="12dp"
+                    android:padding="@dimen/padding_large"
+                    app:cornerRadius="@dimen/card_corner_radius_small"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvActiveRemindersTitle">
@@ -318,35 +318,35 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:text="Henüz hatırlatma ayarlanmamış"
+                        android:text="@string/no_reminder_set"
                         android:textColor="@color/blue"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_medium" />
 
                     <ImageView
                         android:id="@+id/btn_clear_single_reminder"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_delete"
-
-                        />
+                        android:layout_width="@dimen/icon_size_small"
+                        android:layout_height="@dimen/icon_size_small"
+                        android:src="@drawable/ic_delete" />
 
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tv_error"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_large"
             android:gravity="center"
             android:textColor="@color/red"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_medium"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_active_reminders" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>

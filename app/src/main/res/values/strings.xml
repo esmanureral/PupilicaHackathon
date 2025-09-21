@@ -2,6 +2,9 @@
 
     <string name="app_name">Diş Sağlığım</string>
     <string name="skip">Atla</string>
+    <string name="analysis_toolbar">Analiz Sonuçları</string>
+    <string name="tvPredictions_tools">Caries: 93.3%\nHypodontia: 6.2%"</string>
+    <string name="tv_summary">Diş çürüğü riskiniz yüksek. Düzenli bakımla bu riski önemli ölçüde azaltabiliriz."</string>
     <string name="next">İleri</string>
     <string name="get_started">Başla</string>
     <string name="onb_title_1">Akıllı Diş Analizi</string>
@@ -19,7 +22,6 @@
     <string name="quiz_finished">Quiz bitti!</string>
     <string name="fun_fact_badge">💡 %1$s</string>
     <string name="badge_range_format">%1$d to %2$d</string>
-    
     <string name="category_brushing">Fırçalama</string>
     <string name="category_cleaning">Temizlik</string>
     <string name="category_protection">Koruma</string>
@@ -33,13 +35,10 @@
     <string name="category_stress">Stres</string>
     <string name="category_harmful_habits">Zararlı Alışkanlıklar</string>
     <string name="category_aesthetics">Estetik</string>
-    
     <string name="default_fact_1_title">Diş Fırçalama Süresi</string>
     <string name="default_fact_1_description">Dişlerinizi en az 2 dakika fırçalamalısınız. Bu süre, tüm diş yüzeylerinin etkili bir şekilde temizlenmesi için gereklidir.</string>
-    
     <string name="default_fact_2_title">Diş İpi Kullanımı</string>
     <string name="default_fact_2_description">Günde bir kez diş ipi kullanmak, fırçalama ile ulaşılamayan bölgelerdeki plakları temizler ve diş eti sağlığını korur.</string>
-    
     <string name="default_fact_3_title">Florürün Faydaları</string>
     <string name="default_fact_3_description">Florür, diş minesini güçlendirir ve çürük oluşumunu önler. Florürlü diş macunu kullanmak önemlidir.</string>
     <string name="camera_permission_required">Kamera izni gerekli!</string>
@@ -73,12 +72,10 @@
     <string name="day_friday">Cuma</string>
     <string name="day_saturday">Cumartesi</string>
     <string name="result_not_found">Sonuç bulunamadı</string>
-
     <string name="notification_permission_message">Hatırlatmaların çalışması için uygulama bildirimlerini açın.</string>
     <string name="exact_alarm_permission_title">Kesin alarm izni gerekli</string>
     <string name="exact_alarm_permission_message">Zamanında hatırlatma için Kesin Alarmlar iznini verin.</string>
     <string name="open_settings">Ayarları Aç</string>
-
     <string name="speech_audio_error">Ses kaydında sorun oluştu. Tekrar deneyebilir misiniz?</string>
     <string name="speech_client_error">Ses algılama başlatılamadı. Tekrar deneyebilir misiniz?</string>
     <string name="speech_permission_error">Mikrofon izni gerekli. Lütfen izinleri kontrol edin.</string>
@@ -89,35 +86,25 @@
     <string name="speech_server_error">Sunucu hatası. Tekrar deneyebilir misiniz?</string>
     <string name="speech_timeout_error">Konuşma zaman aşımı. Tekrar deneyebilir misiniz?</string>
     <string name="speech_general_error">Ses algılamada sorun oluştu. Tekrar deneyebilir misiniz?</string>
-
-    <!-- Home fragment dialog strings -->
     <string name="photo_selection_title">Fotoğraf Seçin</string>
     <string name="photo_selection_message">AI analizi için diş fotoğrafınızı yükleyin</string>
     <string name="camera_option">Kamera</string>
     <string name="gallery_option">Galeri</string>
     <string name="cancel_option">İptal</string>
-
-    <!-- Game badge names -->
     <string name="badge_milk_tooth">Süt Dişi</string>
     <string name="badge_foam_knight">Köpük Şövalyesi</string>
     <string name="badge_sugar_hunter">Şeker Avcısı</string>
     <string name="badge_plaque_protector">Plak Koruyucusu</string>
     <string name="badge_tooth_fairy_ambassador">Diş Perisi Elçisi</string>
     <string name="badge_sparkling_smile">Işıltılı Gülüş</string>
-
-    <!-- Badge category names -->
     <string name="badge_category_beginner">Başlangıç</string>
     <string name="badge_category_intermediate">Orta</string>
     <string name="badge_category_advanced">İleri</string>
     <string name="badge_category_expert">Uzman</string>
-    
-    <!-- Badge congratulation -->
     <string name="congratulations_badge_unlocked">🎉 Tebrikler! 🎉</string>
     <string name="new_badge_unlocked">Yeni Rozet Açıldı!</string>
     <string name="continue_quiz">Geç</string>
     <string name="view_badges">Rozetleri Gör</string>
-
-    <!-- Share with doctor feature -->
     <string name="share_with_doctor">Doktorunla Paylaş</string>
     <string name="share_subject">Diş Analizi Sonuçları</string>
     <string name="share_content_title">Pupullica AI Diş Analizi Sonuçları</string>
@@ -128,25 +115,15 @@
     <string name="share_content_plan_item">• %1$s: %2$s</string>
     <string name="date_format">dd/MM/yyyy HH:mm</string>
     <string name="share_content_date_prefix">Tarih: %1$s</string>
-
-    <!-- Constants -->
     <string name="speech_language_code">tr-TR</string>
     <string name="image_mime_type">image/*</string>
-    
-    <!-- Network connection messages -->
     <string name="no_internet_title">İnternet Bağlantısı Gerekli</string>
     <string name="no_internet_message">Bu özelliği kullanabilmek için internet bağlantınızın olması gerekiyor.</string>
-    
-    <!-- Premium messages -->
     <string name="premium_title">Premium Gerekli</string>
     <string name="premium_message">Günlük 3 analiz hakkınız doldu. Sınırsız analiz için Premium\'a geçin!</string>
     <string name="premium_button">Premium\'a Geç</string>
     <string name="used_analyses">Analiz: %1$d/3</string>
-    
-    <!-- Chat messages -->
     <string name="chat_welcome_message">Merhaba! Ben AI danışmanınızım. Size nasıl yardımcı olabilirim?</string>
-    
-    <!-- Chat error messages -->
     <string name="error_empty_message">Mesajınız boş görünüyor. Bir şeyler yazabilir misiniz?</string>
     <string name="error_session_error">Bir sorun oluştu. Uygulamayı yeniden başlatmayı deneyebilir misiniz?</string>
     <string name="error_invalid_response">Sunucudan beklenmeyen bir yanıt geldi. Tekrar deneyebilir misiniz?</string>
@@ -156,9 +133,58 @@
     <string name="error_timeout_error">Bağlantı zaman aşımına uğradı. Tekrar deneyebilir misiniz?</string>
     <string name="error_connection_error">Bağlantı sorunu yaşandı. Tekrar deneyebilir misiniz?</string>
     <string name="error_unknown_error">Beklenmeyen bir hata oluştu. Tekrar deneyebilir misiniz?</string>
-
-    <!-- Voice Assistant messages -->
     <string name="voice_chat_started">Sesli sohbet başlatıldı</string>
     <string name="voice_chat_stopped">Sesli sohbet durduruldu</string>
     <string name="no_bot_message_to_speak">Okunacak bot mesajı bulunamadı</string>
+    <string name="analysis_descr">image view analysis</string>
+    <string name="tv_summary_title">Analiz Özeti</string>
+    <string name="tv_prediction_title">Risk Analizi</string>
+    <string name="tv_pla_title_text">Haftalık Bakım Planı</string>
+    <string name="btn_watch_video_descr">image view button watch video</string>
+    <string name="btn_share_plan">image view share button</string>
+    <string name="badge_name">Yeni Rozet</string>
+    <string name="badge_image">Rozet</string>
+    <string name="btn_arrow">Geri</string>
+    <string name="tv_badges_text">AI Danışman</string>
+    <string name="reminder_title">Diş Fırçalama Hatırlatması</string>
+    <string name="morning_evening_time_selection">Sabah-Akşam Saati Seçiniz</string>
+    <string name="morning_reminder_desc">Sabah Hatırlatması</string>
+    <string name="evening_reminder_desc">Akşam Hatırlatması</string>
+    <string name="recurring_days_title">Tekrar Eden Günler</string>
+    <string name="select_every_day">Her Günü Seç</string>
+    <string name="save_reminder">Hatırlatmayı Kaydet</string>
+    <string name="active_reminders">Aktif Hatırlatmalar</string>
+    <string name="no_reminder_set">Henüz hatırlatma ayarlanmamış</string>
+    <string name="weekly_plan_task_example">2 dakika boyunca dişlerinizi, florürlü diş macunuyla fırçalayın. Diş ipi kullanın.</string>
+    <string name="onboarding_text">Diş Sağlığım</string>
+    <string name="tv_message">Mesajınız</string>
+    <string name="score_label">Skor:</string>
+    <string name="detail">Detay</string>
+    <string name="question_number">Soru 1</string>
+    <string name="score_text">Skor: 0</string>
+    <string name="badges">Rozetler</string>
+    <string name="next_question">️Sonraki Soru</string>
+    <string name="btn_back">Back</string>
+    <string name="tv_hello">Merhaba</string>
+    <string name="tv_username">Bugün nasılsın?</string>
+    <string name="et_search">AI Doktora sor</string>
+    <string name="tv_facts_title">Bunları Biliyor Muydunuz?</string>
+    <string name="tv_quick">Diş Sağlığı Hizmetleri</string>
+    <string name="tv_ai_title">AI Diş Analizi</string>
+    <string name="remaining_analysis">Analiz: 0/3</string>
+    <string name="image_chatbot">image chatbot</string>
+    <string name="chat_title">AI Danışman</string>
+    <string name="reminder_icon">reminder icon</string>
+    <string name="reminder_titles">Diş Fırçalama Hatırlatması</string>
+    <string name="reminder_desc">Sağlıklı dişler için düzenli fırçalama hatırlatması ayarlayın</string>
+    <string name="set_reminder">Hatırlatmayı Oluştur</string>
+    <string name="premium">PREMIUM</string>
+    <string name="fact_icon">fact icon</string>
+    <string name="fact_title">Diş Sağlığı Bilgisi</string>
+    <string name="fun_fact_badges">💡 İlginç Bilgi</string>
+    <string name="btn_voice">Sesli Mesaj</string>
+    <string name="input_message">Mesaj yazın...</string>
+    <string name="btn_send">Gönder</string>
+    <string name="home_fragment">Ana Sayfa</string>
+    <string name="quiz_fragment">Oyun</string>
 </resources>

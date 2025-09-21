@@ -4,76 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="@dimen/margin_small"
     android:outlineProvider="none"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="@dimen/card_corner_radius_medium"
+    app:cardElevation="@dimen/card_elevation_medium"
     app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="20dp">
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_xlarge">
 
         <ImageView
             android:id="@+id/badge_image"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/badge1"
+            android:layout_width="@dimen/badge_size_small"
+            android:layout_height="@dimen/badge_size_small"
             android:background="@drawable/circle_blue_background"
-            android:padding="12dp"
-            android:contentDescription="Rozet" />
+            android:contentDescription="@string/badge_image"
+            android:padding="@dimen/padding_medium"
+            android:src="@drawable/badge1" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_xlarge"
             android:layout_weight="1"
-            android:layout_marginStart="20dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/badge_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Şansız Bedevi"
-                android:textColor="@color/smile_text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/dark_grey"
+                android:textSize="@dimen/text_size_xlarge"
+                android:textStyle="bold"
+                tools:text="Şansız Bedevi" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_marginTop="@dimen/margin_small"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/score_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Skor:"
+                    android:text="@string/score_label"
                     android:textColor="@color/gray"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_size_medium" />
 
                 <TextView
                     android:id="@+id/score_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="-20"
+                    android:layout_marginStart="@dimen/_6dp"
                     android:textColor="@color/blue"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    tools:text="-20" />
+
             </LinearLayout>
+
         </LinearLayout>
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/icon_size_large"
+            android:layout_height="@dimen/icon_size_large"
+            android:contentDescription="@string/detail"
             android:src="@drawable/arrow_back"
-            android:contentDescription="Detay"
             app:tint="@color/gray" />
+
     </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>

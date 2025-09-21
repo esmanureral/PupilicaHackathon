@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/smile_background"
+    android:background="@color/light_white"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,7 +11,6 @@
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <!-- Confetti Animation (Background) -->
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/confettiAnimation"
             android:layout_width="match_parent"
@@ -26,57 +24,51 @@
             app:lottie_fileName="confetti.json"
             app:lottie_loop="true" />
 
-        <!-- Congratulation Text -->
         <TextView
             android:id="@+id/congratulationText"
+            style="@style/DarkGreyBoldText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginHorizontal="@dimen/_24dp"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginBottom="@dimen/_8dp"
             android:background="@drawable/text_background_rounded"
-            android:elevation="8dp"
+            android:elevation="@dimen/_8dp"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="@dimen/_16dp"
             android:text="@string/congratulations_badge_unlocked"
-            android:textColor="@color/smile_text_primary"
-            android:textSize="28sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- New Badge Unlocked Text -->
         <TextView
             android:id="@+id/newBadgeText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginHorizontal="@dimen/_32dp"
+            android:layout_marginTop="@dimen/_16dp"
+            android:layout_marginBottom="@dimen/_40dp"
             android:background="@drawable/text_background_rounded_light"
-            android:elevation="6dp"
+            android:elevation="@dimen/elevation"
             android:gravity="center"
-            android:padding="12dp"
+            android:padding="@dimen/_12dp"
             android:text="@string/new_badge_unlocked"
             android:textColor="@color/gray"
-            android:textSize="20sp"
-            android:textStyle="normal"
+            android:textSize="@dimen/item_artist_text_size"
             app:layout_constraintBottom_toTopOf="@id/badgeCard"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/congratulationText" />
 
-        <!-- Badge Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/badgeCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginBottom="48dp"
+            android:layout_marginHorizontal="@dimen/_24dp"
+            android:layout_marginBottom="@dimen/image_view"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="12dp"
+            app:cardCornerRadius="@dimen/_24dp"
+            app:cardElevation="@dimen/_12dp"
             app:layout_constraintBottom_toTopOf="@id/buttonContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,21 +79,19 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="32dp">
+                android:padding="@dimen/_32dp">
 
-                <!-- Badge Image -->
                 <ImageView
                     android:id="@+id/badgeImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_width="@dimen/image_size_large"
+                    android:layout_height="@dimen/image_size_large"
+                    android:layout_marginBottom="@dimen/margin_xlarge"
                     android:background="@drawable/circle_blue_background"
-                    android:contentDescription="Rozet"
-                    android:elevation="8dp"
-                    android:padding="20dp"
+                    android:contentDescription="@string/badge_image"
+                    android:elevation="@dimen/card_elevation_large"
+                    android:padding="@dimen/padding_xlarge"
                     android:src="@drawable/badge1" />
 
-                <!-- Badge Name -->
                 <TextView
                     android:id="@+id/badgeNameText"
                     android:layout_width="wrap_content"
@@ -111,21 +101,20 @@
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowRadius="2"
-                    android:text="Yeni Rozet"
-                    android:textColor="@color/smile_text_primary"
-                    android:textSize="20sp"
+                    android:text="@string/badge_name"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/text_size_xxlarge"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Button Container -->
         <LinearLayout
             android:id="@+id/buttonContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
+            android:layout_marginHorizontal="@dimen/margin_xxxlarge"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -133,35 +122,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/badgeCard">
 
-            <!-- Continue Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContinue"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="16dp"
+                android:layout_height="@dimen/button_height_large"
+                android:layout_marginBottom="@dimen/margin_large"
                 android:backgroundTint="@color/blue"
-                android:elevation="4dp"
+                android:elevation="@dimen/card_elevation_medium"
                 android:text="@string/continue_quiz"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_xlarge"
                 android:textStyle="bold"
-                app:cornerRadius="16dp"
+                app:cornerRadius="@dimen/card_corner_radius_medium"
                 app:icon="@drawable/ic_arrow_forward"
                 app:iconGravity="textEnd"
-                app:iconPadding="12dp"
-                app:iconSize="20dp" />
+                app:iconPadding="@dimen/padding_medium"
+                app:iconSize="@dimen/icon_size_medium" />
 
-            <!-- View Badges Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnViewBadges"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/button_height_large"
                 android:background="@drawable/button_blue_background"
                 android:backgroundTint="@android:color/transparent"
-                android:elevation="2dp"
+                android:elevation="@dimen/card_elevation_small"
                 android:text="@string/view_badges"
                 android:textColor="@color/blue"
-                android:textSize="18sp"
-                app:cornerRadius="16dp" />
+                android:textSize="@dimen/text_size_xlarge"
+                app:cornerRadius="@dimen/card_corner_radius_medium" />
 
         </LinearLayout>
 

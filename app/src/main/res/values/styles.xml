@@ -2,7 +2,7 @@
 <resources>
 
     <style name="ToolbarTitleText">
-        <item name="android:textSize">@dimen/toolbar_title_size</item>
+        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/black</item>
     </style>
@@ -22,6 +22,12 @@
     <style name="OptionButtonStyle">
         <item name="backgroundTint">@color/option_color</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DarkGreyBoldText">
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

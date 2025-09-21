@@ -27,13 +27,13 @@ class OnboardingViewModel(
                 R.raw.tooth_analys,
                 context.getString(R.string.onb_title_1),
                 context.getString(R.string.onb_desc_1),
-                context.getColor(R.color.onb_yellow)
+                context.getColor(R.color.light_yellow)
             ),
             OnboardingPage(
                 R.raw.tooth_asistants,
                 context.getString(R.string.onb_title_2),
                 context.getString(R.string.onb_desc_2),
-                context.getColor(R.color.onb_blue)
+                context.getColor(R.color.light_blue)
             ),
             OnboardingPage(
                 R.raw.tooth_brush,
@@ -45,7 +45,7 @@ class OnboardingViewModel(
                 R.raw.game,
                 context.getString(R.string.onb_title_4),
                 context.getString(R.string.onb_desc_4),
-                context.getColor(R.color.onb_blue)
+                context.getColor(R.color.light_blue)
             )
         )
     }

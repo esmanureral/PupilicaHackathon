@@ -62,7 +62,7 @@ class GameBadgeAdapter :
     }
 
     private fun updateItemBackground(view: View, isUnlocked: Boolean) {
-        val bgColorRes = if (isUnlocked) R.color.green_light else R.color.smile_background_light
+        val bgColorRes = if (isUnlocked) R.color.green_light else R.color.light_white
         view.setBackgroundColor(ContextCompat.getColor(view.context, bgColorRes))
         
         if (view is com.google.android.material.card.MaterialCardView) {

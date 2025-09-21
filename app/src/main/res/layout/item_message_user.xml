@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="end"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="@dimen/_8dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="@dimen/badge_size_small"
         android:background="@drawable/message_user_bg"
+        android:elevation="@dimen/card_corner_radius_small"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:elevation="2dp">
+        android:padding="@dimen/_16dp">
 
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mesajınız"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingExtra="@dimen/card_elevation_small"
+            android:text="@string/tv_message"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:lineSpacingExtra="2dp"
-            android:fontFamily="sans-serif-medium" />
+            android:textSize="@dimen/text_size_large" />
 
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="8dp"
-            android:text="12:34"
-            android:textColor="@color/white"
-            android:textSize="12sp"
+            android:layout_marginTop="@dimen/_8dp"
             android:alpha="0.8"
-            android:fontFamily="sans-serif" />
+            android:fontFamily="sans-serif"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_small"
+            tools:text="12:34" />
 
     </LinearLayout>
 
