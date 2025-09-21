@@ -6,61 +6,65 @@
     android:layout_height="match_parent"
     android:background="@color/smile_background">
 
-    <!-- Header -->
-    <LinearLayout
-        android:id="@+id/card_top"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/smile_background"
+        android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIconTint="@color/smile_text_primary"
+        app:title=""
+        app:titleTextColor="@color/smile_text_primary">
 
-        <ImageView
-            android:id="@+id/btnArrow"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="4dp"
-            app:tint="@color/smile_text_primary"
-            android:contentDescription="Geri" />
-
+        <!-- Rozet Text + Icon -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_badges"
-                android:background="@drawable/circle_blue_background"
-                android:padding="4dp"
-                app:tint="@color/white" />
-
+            <!-- Önce Text -->
             <TextView
                 android:id="@+id/tv_badges"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
                 android:text="Rozetler"
                 android:textColor="@color/smile_text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
 
-        <View
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
-    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <!-- Badges RecyclerView -->
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:textColor="@color/smile_text_secondary"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:text="Bir hata oluştu. Lütfen tekrar deneyin." />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
@@ -70,7 +74,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_top"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:listitem="@layout/item_badge" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

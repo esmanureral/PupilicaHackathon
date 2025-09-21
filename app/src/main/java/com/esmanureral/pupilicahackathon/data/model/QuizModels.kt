@@ -1,4 +1,4 @@
-package com.esmanureral.pupilicahackathon.data.network
+package com.esmanureral.pupilicahackathon.data.model
 
 import com.google.gson.annotations.SerializedName
 
