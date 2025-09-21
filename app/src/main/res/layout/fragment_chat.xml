@@ -23,8 +23,8 @@
             android:src="@drawable/ic_arrow_back"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="4dp"
-            android:tint="@color/smile_text_primary"
-            android:contentDescription="Geri" />
+            android:contentDescription="Geri"
+            app:tint="@color/smile_text_primary" />
 
         <TextView
             android:id="@+id/tv_badges"
@@ -37,9 +37,6 @@
             android:textColor="@color/smile_text_primary"
             android:gravity="center" />
 
-        <View
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
     </LinearLayout>
 
     <!-- Messages RecyclerView -->
@@ -60,8 +57,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:outlineProvider="none"
         app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -80,8 +78,8 @@
                 android:src="@android:drawable/ic_btn_speak_now"
                 android:background="@drawable/circle_background"
                 android:padding="8dp"
-                android:tint="@color/smile_blue"
-                android:contentDescription="Sesli Mesaj" />
+                android:contentDescription="Sesli Mesaj"
+                app:tint="@color/blue" />
 
             <EditText
                 android:id="@+id/inputMessage"
@@ -98,7 +96,7 @@
                 android:minHeight="40dp"
                 android:padding="8dp"
                 android:textColor="@color/smile_text_primary"
-                android:textColorHint="@color/smile_text_secondary"
+                android:textColorHint="@color/gray"
                 android:textSize="16sp" />
 
             <ImageView

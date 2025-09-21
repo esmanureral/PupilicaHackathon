@@ -48,7 +48,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="2dp"
             android:maxLines="4"
-            android:textColor="@color/smile_text_secondary"
+            android:textColor="@color/gray"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

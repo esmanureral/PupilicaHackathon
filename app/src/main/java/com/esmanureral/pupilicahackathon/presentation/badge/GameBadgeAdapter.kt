@@ -37,7 +37,7 @@ class GameBadgeAdapter :
             val badgeWithState = getItem(position)
             when {
                 payloads.contains(BadgeDiffCallback.PAYLOAD_UNLOCK_STATUS_CHANGED) -> {
-                    updateItemBackground(holder.binding.root, badgeWithState.isUnlocked)
+                    updateItemBackground(holder.itemView, badgeWithState.isUnlocked)
                 }
 
                 else -> {
@@ -57,12 +57,16 @@ class GameBadgeAdapter :
                 badge.minValue,
                 badge.maxValue
             )
-            updateItemBackground(root, badgeWithState.isUnlocked)
+            updateItemBackground(holder.itemView, badgeWithState.isUnlocked)
         }
     }
 
     private fun updateItemBackground(view: View, isUnlocked: Boolean) {
-        val bgColorRes = if (isUnlocked) R.color.green_light else R.color.gray
+        val bgColorRes = if (isUnlocked) R.color.green_light else R.color.smile_background_light
         view.setBackgroundColor(ContextCompat.getColor(view.context, bgColorRes))
+        
+        if (view is com.google.android.material.card.MaterialCardView) {
+            view.setCardBackgroundColor(ContextCompat.getColor(view.context, bgColorRes))
+        }
     }
 }

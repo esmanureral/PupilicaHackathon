@@ -1,52 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="icon_size">24dp</dimen>
-    <dimen name="fab_bg_radius">50dp</dimen>
-    <dimen name="space_4dp">4dp</dimen>
-    <dimen name="toolbar_title_margin_start">8dp</dimen>
-    <dimen name="header_padding">12dp</dimen>
     <dimen name="toolbar_title_text_size">24sp</dimen>
-    <dimen name="header_text_size">18dp</dimen>
-    <dimen name="stroke_width">0dp</dimen>
-    <dimen name="indicator_height">2dp</dimen>
-    <dimen name="divider_height">1dp</dimen>
-    <dimen name="padding_8dp">8dp</dimen>
-    <dimen name="elevation_9dp">9dp</dimen>
-    <dimen name="margin_6dp">6dp</dimen>
-    <dimen name="shimmer_height">20dp</dimen>
-    <dimen name="artist_title_text_size">20sp</dimen>
-    <dimen name="option_height">52dp</dimen>
-    <dimen name="card_corner_radius">5dp</dimen>
-    <dimen name="thanks_size">11sp</dimen>
-    <dimen name="padding_bottom">56dp</dimen>
-    <dimen name="app_bar_height">650dp</dimen>
-    <dimen name="iv_favorite_width">48dp</dimen>
-    <dimen name="padding_32dp">32dp</dimen>
-    <dimen name="padding_64dp">64dp</dimen>
-    <dimen name="padding_40dp">40dp</dimen>
-    <dimen name="progress_indicator_size">40dp</dimen>
-    <dimen name="iv_favorite_margin">16dp</dimen>
-    <dimen name="custom_card_view_style">0dp</dimen>
-    <dimen name="iv_favorite_bottom">26dp</dimen>
+    <dimen name="toolbar_title_size">24sp</dimen>
     <dimen name="item_artist_text_size">18sp</dimen>
     <dimen name="item_year_text_size">14sp</dimen>
-    <dimen name="translation_1">1dp</dimen>
-    <dimen name="translation_6">6dp</dimen>
     <dimen name="tv_title_text_size">32sp</dimen>
-    <dimen name="translation_x">7dp</dimen>
-    <dimen name="translation_y">-7dp</dimen>
-    <dimen name="iv_artwork_image_size">80dp</dimen>
-    <dimen name="shimmer_layout">160dp</dimen>
-    <dimen name="tv_title_size">16sp</dimen>
-    <dimen name="nested_scroll_view_margin_top">-30dp</dimen>
-    <dimen name="circle_background_size">36dp</dimen>
-    <dimen name="tv_artist_name_shimmer">17dp</dimen>
-    <dimen name="tv_years_shimmer">15dp</dimen>
-    <dimen name="result_game_width">140dp</dimen>
-    <dimen name="result_game_height">180dp</dimen>
-    <dimen name="logo_image_view">150dp</dimen>
-    <dimen name="toolbar_title_size">24sp</dimen>
+    <dimen name="custom_card_view_style">0dp</dimen>
+    <dimen name="iv_favorite_margin">16dp</dimen>
 
 
 </resources>

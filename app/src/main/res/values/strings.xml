@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Pupullica Yapay Zeka</string>
+    <string name="app_name">Diş Sağlığım</string>
     <string name="skip">Atla</string>
     <string name="next">İleri</string>
     <string name="get_started">Başla</string>
@@ -42,10 +42,7 @@
     
     <string name="default_fact_3_title">Florürün Faydaları</string>
     <string name="default_fact_3_description">Florür, diş minesini güçlendirir ve çürük oluşumunu önler. Florürlü diş macunu kullanmak önemlidir.</string>
-    <string name="current_badge_label">Current Badge</string>
-    <string name="badges_title">ROZETLER</string>
     <string name="camera_permission_required">Kamera izni gerekli!</string>
-    <string name="recognized_text_format">%1$s %2$s</string>
     <string name="reminder_channel_name">Diş Fırçalama Hatırlatmaları</string>
     <string name="reminder_channel_description">Diş fırçalama hatırlatma bildirimleri</string>
     <string name="reminder_action">com.esmanureral.pupilicahackathon.REMINDER_ACTION</string>
@@ -108,6 +105,18 @@
     <string name="badge_tooth_fairy_ambassador">Diş Perisi Elçisi</string>
     <string name="badge_sparkling_smile">Işıltılı Gülüş</string>
 
+    <!-- Badge category names -->
+    <string name="badge_category_beginner">Başlangıç</string>
+    <string name="badge_category_intermediate">Orta</string>
+    <string name="badge_category_advanced">İleri</string>
+    <string name="badge_category_expert">Uzman</string>
+    
+    <!-- Badge congratulation -->
+    <string name="congratulations_badge_unlocked">🎉 Tebrikler! 🎉</string>
+    <string name="new_badge_unlocked">Yeni Rozet Açıldı!</string>
+    <string name="continue_quiz">Geç</string>
+    <string name="view_badges">Rozetleri Gör</string>
+
     <!-- Share with doctor feature -->
     <string name="share_with_doctor">Doktorunla Paylaş</string>
     <string name="share_subject">Diş Analizi Sonuçları</string>
@@ -133,4 +142,23 @@
     <string name="premium_message">Günlük 3 analiz hakkınız doldu. Sınırsız analiz için Premium\'a geçin!</string>
     <string name="premium_button">Premium\'a Geç</string>
     <string name="used_analyses">Analiz: %1$d/3</string>
+    
+    <!-- Chat messages -->
+    <string name="chat_welcome_message">Merhaba! Ben AI danışmanınızım. Size nasıl yardımcı olabilirim?</string>
+    
+    <!-- Chat error messages -->
+    <string name="error_empty_message">Mesajınız boş görünüyor. Bir şeyler yazabilir misiniz?</string>
+    <string name="error_session_error">Bir sorun oluştu. Uygulamayı yeniden başlatmayı deneyebilir misiniz?</string>
+    <string name="error_invalid_response">Sunucudan beklenmeyen bir yanıt geldi. Tekrar deneyebilir misiniz?</string>
+    <string name="error_no_response">Sunucudan yanıt alamadım. Tekrar deneyebilir misiniz?</string>
+    <string name="error_server_error">Sunucuda bir sorun oluştu (%1$s). Tekrar deneyebilir misiniz?</string>
+    <string name="error_network_error">İnternet bağlantınızı kontrol edebilir misiniz?</string>
+    <string name="error_timeout_error">Bağlantı zaman aşımına uğradı. Tekrar deneyebilir misiniz?</string>
+    <string name="error_connection_error">Bağlantı sorunu yaşandı. Tekrar deneyebilir misiniz?</string>
+    <string name="error_unknown_error">Beklenmeyen bir hata oluştu. Tekrar deneyebilir misiniz?</string>
+
+    <!-- Voice Assistant messages -->
+    <string name="voice_chat_started">Sesli sohbet başlatıldı</string>
+    <string name="voice_chat_stopped">Sesli sohbet durduruldu</string>
+    <string name="no_bot_message_to_speak">Okunacak bot mesajı bulunamadı</string>
 </resources>

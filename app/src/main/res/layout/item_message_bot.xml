@@ -12,7 +12,8 @@
         android:layout_marginEnd="60dp"
         android:background="@drawable/message_bot_bg"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:elevation="2dp">
 
         <TextView
             android:id="@+id/tvMessage"
@@ -21,7 +22,8 @@
             android:text="Bot yanıtı"
             android:textColor="@color/smile_text_primary"
             android:textSize="16sp"
-            android:lineSpacingExtra="2dp" />
+            android:lineSpacingExtra="2dp"
+            android:fontFamily="sans-serif-medium" />
 
         <TextView
             android:id="@+id/tvTime"
@@ -30,8 +32,9 @@
             android:layout_gravity="end"
             android:layout_marginTop="8dp"
             android:text="12:34"
-            android:textColor="@color/smile_text_secondary"
-            android:textSize="12sp" />
+            android:textColor="@color/gray"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif" />
 
     </LinearLayout>
 

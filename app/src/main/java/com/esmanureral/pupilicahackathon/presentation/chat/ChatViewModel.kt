@@ -1,5 +1,7 @@
 package com.esmanureral.pupilicahackathon.presentation.chat
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +10,7 @@ import kotlinx.coroutines.launch
 import com.esmanureral.pupilicahackathon.data.model.ChatMessage
 import com.esmanureral.pupilicahackathon.data.remote.ApiClient
 import com.esmanureral.pupilicahackathon.data.remote.ChatApiService
+import java.util.Locale
 import java.util.UUID
 
 enum class ChatErrorType(val stringResId: Int) {
@@ -26,6 +29,8 @@ class ChatViewModel : ViewModel() {
 
     private val chatApiService: ChatApiService = ApiClient.provideChatApi()
     private val sessionId = UUID.randomUUID().toString()
+    private var textToSpeech: TextToSpeech? = null
+    private var isVoiceChatMode = false
 
     private val _isListening = MutableLiveData<Boolean>()
     val isListeningLiveData: LiveData<Boolean> = _isListening
@@ -239,6 +244,7 @@ class ChatViewModel : ViewModel() {
 
                         if (!responseText.isNullOrEmpty()) {
                             addBotMessage(responseText!!)
+                            speakBotResponse(responseText!!)
                         } else {
                             addErrorMessage(ChatErrorType.INVALID_RESPONSE)
                         }
@@ -261,7 +267,44 @@ class ChatViewModel : ViewModel() {
         }
     }
 
+    // Sesli Asistan Fonksiyonları
+    fun initializeTextToSpeech(context: Context) {
+        textToSpeech = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech?.language = Locale("tr", "TR")
+            }
+        }
+    }
+
+    // 1. Sadece sesli oku
+    fun speakText(text: String) {
+        textToSpeech?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    // 2. Tam otomatik sesli sohbet
+    fun startVoiceChat() {
+        isVoiceChatMode = true
+        // Sesli sohbet modunu başlat
+    }
+
+    fun stopVoiceChat() {
+        isVoiceChatMode = false
+        textToSpeech?.stop()
+    }
+
+    fun isVoiceChatActive(): Boolean {
+        return isVoiceChatMode
+    }
+
+    // Bot mesajını sesli okuma
+    private fun speakBotResponse(text: String) {
+        if (isVoiceChatMode) {
+            speakText(text)
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
+        textToSpeech?.shutdown()
     }
 }

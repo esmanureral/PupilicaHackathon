@@ -27,8 +27,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="Pupilica"
-            android:textColor="@color/smile_blue"
+            android:text="Diş Sağlığım"
+            android:textColor="@color/blue"
             android:textSize="28sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/smile_text_secondary"
+        android:textColor="@color/gray"
         android:textSize="16sp"
         android:lineSpacingExtra="4dp"
         tools:text="Diş sağlığı yolculuğunuza hoş geldiniz! Kolay randevu alma, hatırlatıcılar ve faydalı ağız bakım ipuçları ile daha sağlıklı, daha parlak bir gülümsemeye ulaşın." />
