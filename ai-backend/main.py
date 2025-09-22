@@ -32,7 +32,8 @@ async def chat(message: str = Form(...), session_id: str = Form(...)):
     """Metin tabanlı sohbet için endpoint. Kullanıcıdan bir mesaj ve oturum ID'si alır, chatbot'tan bir yanıt döndürür."""
     try:
         loop = asyncio.get_event_loop()
-        reply = await loop.run_in_executor(executor, chatbot.chat, message) 
+        reply = await loop.run_in_executor(executor, chatbot.chat, message)
+        return {"reply": reply}
     except Exception as e:
         print(f"Chat error: {str(e)}")
         raise HTTPException(
