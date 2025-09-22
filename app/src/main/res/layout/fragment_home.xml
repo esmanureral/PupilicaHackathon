@@ -104,7 +104,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/searchCard" />
 
-        <com.esmanureral.pupilicahackathon.presentation.home.AccessibleViewPager2
+        <com.esmanureral.pupilicahackathon.presentation.feature.home.AccessibleViewPager2
             android:id="@+id/vpDentalFacts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

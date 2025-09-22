@@ -88,7 +88,14 @@ class AnalysisResultViewModel : ViewModel() {
         val weeklyPlan = parseWeeklyPlanFromJson(json)
         val videoUrl = json.optString("video_suggestion", "")
 
-        return AnalysisResult(dentalComment, predictions, weeklyPlan, videoUrl)
+        // Eğer weekly plan boşsa, default plan oluştur
+        val finalWeeklyPlan = if (weeklyPlan.isEmpty()) {
+            createDefaultWeeklyPlan()
+        } else {
+            weeklyPlan
+        }
+
+        return AnalysisResult(dentalComment, predictions, finalWeeklyPlan, videoUrl)
     }
 
     private fun cleanDentalComment(dentalComment: String): String {
@@ -114,27 +121,89 @@ class AnalysisResultViewModel : ViewModel() {
     }
 
     private fun parseWeeklyPlanFromJson(json: JSONObject): List<WeeklyPlanItem> {
-        val array = json.optJSONArray("weekly_plan") ?: return emptyList()
-        return List(array.length()) { i ->
-            val item = array.optJSONObject(i)
-            WeeklyPlanItem(
-                day = item?.optString("day", "") ?: "",
-                task = item?.optString("task", "") ?: ""
-            )
+        // Farklı field isimlerini dene
+        val possibleFields = listOf("weekly_plan", "weeklyPlan", "plan", "schedule", "haftalik_plan")
+        
+        for (field in possibleFields) {
+            val array = json.optJSONArray(field)
+            if (array != null) {
+                val result = List(array.length()) { i ->
+                    val item = array.optJSONObject(i)
+                    val day = item?.optString("day", "") ?: ""
+                    val task = item?.optString("task", "") ?: ""
+                    WeeklyPlanItem(day = day, task = task)
+                }
+                return result
+            }
         }
+        
+        // Eğer hiçbir field bulunamazsa, dental_comment içinden çıkarmaya çalış
+        val dentalComment = json.optString("dental_comment", "")
+        if (dentalComment.isNotEmpty()) {
+            return extractWeeklyPlanFromText(dentalComment)
+        }
+        
+        return emptyList()
+    }
+    
+    private fun extractWeeklyPlanFromText(text: String): List<WeeklyPlanItem> {
+        val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
+        val days = listOf("Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar")
+        val weeklyPlan = mutableListOf<WeeklyPlanItem>()
+        
+        for (line in lines) {
+            for (day in days) {
+                if (line.contains(day)) {
+                    val task = line.replace(day, "").trim()
+                    if (task.isNotEmpty()) {
+                        weeklyPlan.add(WeeklyPlanItem(day, task))
+                    }
+                }
+            }
+        }
+        
+        return weeklyPlan
     }
 
     private fun parseTextResult(text: String): AnalysisResult {
+        android.util.Log.d("AnalysisResultViewModel", "parseTextResult: input text = $text")
         val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
+        val weeklyPlan = extractWeeklyPlan(lines)
+        
+        // Eğer weekly plan boşsa, default plan oluştur
+        val finalWeeklyPlan = if (weeklyPlan.isEmpty()) {
+            android.util.Log.d("AnalysisResultViewModel", "Weekly plan empty, creating default plan")
+            createDefaultWeeklyPlan()
+        } else {
+            android.util.Log.d("AnalysisResultViewModel", "Using extracted weekly plan")
+            weeklyPlan
+        }
+        
+        android.util.Log.d("AnalysisResultViewModel", "Final weekly plan size: ${finalWeeklyPlan.size}")
+        
         return AnalysisResult(
             summary = lines.joinToString(" "),
             predictions = "",
-            weeklyPlan = extractWeeklyPlan(lines),
+            weeklyPlan = finalWeeklyPlan,
             videoUrl = ""
+        )
+    }
+    
+    private fun createDefaultWeeklyPlan(): List<WeeklyPlanItem> {
+        return listOf(
+            WeeklyPlanItem("Pazartesi", "2 dakika boyunca dişlerinizi, florürlü diş macunuyla fırçalayın. Diş ipi kullanın."),
+            WeeklyPlanItem("Salı", "Dişlerinizi fırçalayın ve ağız gargarası kullanın. Şekerli içeceklerden kaçının."),
+            WeeklyPlanItem("Çarşamba", "2 dakika boyunca dişlerinizi fırçalayın. Diş ipi ile temizlik yapın."),
+            WeeklyPlanItem("Perşembe", "Dişlerinizi fırçalayın ve ağız gargarası kullanın. Sağlıklı beslenmeye dikkat edin."),
+            WeeklyPlanItem("Cuma", "2 dakika boyunca dişlerinizi fırçalayın. Diş ipi kullanın."),
+            WeeklyPlanItem("Cumartesi", "Dişlerinizi fırçalayın ve ağız gargarası kullanın. Bol su için."),
+            WeeklyPlanItem("Pazar", "2 dakika boyunca dişlerinizi fırçalayın. Diş ipi ile temizlik yapın.")
         )
     }
 
     private fun extractWeeklyPlan(lines: List<String>): List<WeeklyPlanItem> {
+        android.util.Log.d("AnalysisResultViewModel", "extractWeeklyPlan: input lines = $lines")
+        
         val days = listOf(
             "Pazartesi",
             "Salı",
@@ -149,7 +218,9 @@ class AnalysisResultViewModel : ViewModel() {
         var currentTask = ""
 
         for (line in lines) {
+            android.util.Log.d("AnalysisResultViewModel", "Processing line: '$line'")
             if (days.any { it == line }) {
+                android.util.Log.d("AnalysisResultViewModel", "Found day: $line")
                 if (currentDay.isNotEmpty()) {
                     weeklyPlan.add(WeeklyPlanItem(currentDay, currentTask.trim()))
                 }
@@ -164,6 +235,7 @@ class AnalysisResultViewModel : ViewModel() {
             weeklyPlan.add(WeeklyPlanItem(currentDay, currentTask.trim()))
         }
 
+        android.util.Log.d("AnalysisResultViewModel", "extractWeeklyPlan: result size = ${weeklyPlan.size}")
         return weeklyPlan
     }
 

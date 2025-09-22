@@ -34,9 +34,17 @@
             android:gravity="center"
             android:text="@string/tv_badges_text" />
 
+        <ImageView
+            android:id="@+id/btnVoiceAssistant"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/btn_voice_assistant"
+            android:src="@drawable/voice_asistant"
+            app:tint="@color/blue" />
+
     </LinearLayout>
 
-    <!-- Messages RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMessages"
         android:layout_width="0dp"

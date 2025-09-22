@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
-import org.json.JSONArray
 import java.io.ByteArrayOutputStream
 
 class HomeViewModel : ViewModel() {
@@ -149,7 +148,4 @@ class HomeViewModel : ViewModel() {
         return Bitmap.createScaledBitmap(source, newWidth, newHeight, true)
     }
 
-    private inline fun JSONArray.forEach(action: (Any?) -> Unit) {
-        for (i in 0 until length()) action(get(i))
-    }
 }

@@ -193,9 +193,11 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvPlan"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_300dp"
                         android:layout_marginTop="@dimen/_20dp"
-                        android:nestedScrollingEnabled="false"
+                        android:fadeScrollbars="false"
+                        android:nestedScrollingEnabled="true"
+                        android:scrollbars="vertical"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvPlanTitle"

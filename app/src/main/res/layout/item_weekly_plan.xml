@@ -30,15 +30,13 @@
             android:id="@+id/tvTask"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="none"
             android:lineSpacingExtra="@dimen/_6dp"
-            android:maxLines="0"
             android:text="@string/weekly_plan_task_example"
-            android:textColor="@color/gray"
+            android:textColor="@color/black"
             android:textSize="@dimen/text_size_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDay" />
+            app:layout_constraintTop_toBottomOf="@id/tvDay"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

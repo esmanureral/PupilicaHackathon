@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.model.AnalysisResult
+import com.esmanureral.pupilicahackathon.domain.model.WeeklyPlanItem
 import com.esmanureral.pupilicahackathon.databinding.FragmentAnalysisResultBinding
 import com.esmanureral.pupilicahackathon.presentation.feature.reminder.WeeklyPlanAdapter
 import java.text.SimpleDateFormat
@@ -54,7 +56,22 @@ class AnalysisResultFragment : Fragment() {
             rvPlan.adapter = weeklyPlanAdapter
             val layoutManager = GridLayoutManager(requireContext(), 2)
             rvPlan.layoutManager = layoutManager
+            
+            // RecyclerView layout parametrelerini programatik olarak ayarla
+            val layoutParams = rvPlan.layoutParams
+            layoutParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+            layoutParams.height = 300.dpToPx()
+            rvPlan.layoutParams = layoutParams
+            
+            // Scroll özelliklerini ayarla
+            rvPlan.isNestedScrollingEnabled = true
+            rvPlan.isVerticalScrollBarEnabled = true
+            rvPlan.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
         }
+    }
+    
+    private fun Int.dpToPx(): Int {
+        return (this * requireContext().resources.displayMetrics.density).toInt()
     }
 
     private fun initArgs() {
@@ -183,7 +200,18 @@ class AnalysisResultFragment : Fragment() {
     }
 
     private fun updateWeeklyPlan(result: AnalysisResult) {
-        weeklyPlanAdapter.updateData(result.weeklyPlan)
+        // RecyclerView visibility kontrolü
+        with(binding) {
+            if (result.weeklyPlan.isNotEmpty()) {
+                rvPlan.visibility = View.VISIBLE
+            } else {
+                rvPlan.visibility = View.GONE
+            }
+        }
+        
+        if (weeklyPlanAdapter != null) {
+            weeklyPlanAdapter.updateData(result.weeklyPlan)
+        }
     }
 
     private fun updateVideoButton(result: AnalysisResult) {

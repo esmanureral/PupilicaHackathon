@@ -147,14 +147,16 @@ class HomeFragment : Fragment() {
 
         binding.vpDentalFacts.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
                 currentPosition = position
                 updatePageIndicator(position)
             }
         })
 
-        binding.vpDentalFacts.setOnTouchListener { _, _ ->
+        binding.vpDentalFacts.setOnTouchListener { view, event ->
             stopAutoScroll()
             startAutoScroll()
+            view.performClick()
             false
         }
 
@@ -190,11 +192,11 @@ class HomeFragment : Fragment() {
                 if (factsCount > 1) {
                     currentPosition = (currentPosition + 1) % factsCount
                     binding.vpDentalFacts.currentItem = currentPosition
-                    autoScrollHandler?.postDelayed(this, 3000)
+                    autoScrollHandler?.postDelayed(this, 3000L)
                 }
             }
         }
-        autoScrollHandler?.postDelayed(autoScrollRunnable!!, 3000)
+        autoScrollRunnable?.let { autoScrollHandler?.postDelayed(it, 3000L) }
     }
 
     private fun stopAutoScroll() {
@@ -257,11 +259,14 @@ class HomeFragment : Fragment() {
     private fun navigateToAnalysisResult(result: String) {
         val action = HomeFragmentDirections.actionHomeFragmentToAnalysisResultFragment(
             result,
-            viewModel.lastImageUri,
+            viewModel.lastImageUri ?: "",
             result
         )
-        try { findNavController().navigate(action) }
-        catch (e: Exception) { requireContext().showToast(getString(R.string.error_no_time)) }
+        try { 
+            findNavController().navigate(action) 
+        } catch (e: Exception) { 
+            requireContext().showToast(getString(R.string.error_no_time)) 
+        }
     }
 
     private fun handleCapturedImage(bitmap: Bitmap, uri: String?) {
@@ -308,5 +313,17 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         stopAutoScroll()
         _binding = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopAutoScroll()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (factsCount > 1) {
+            startAutoScroll()
+        }
     }
 }

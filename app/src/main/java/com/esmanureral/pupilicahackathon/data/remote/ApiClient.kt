@@ -10,8 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
     private const val BASE_URL = "https://raw.githubusercontent.com/"
-    private const val ANALYZE_BASE_URL = "https://ed3eb7d9c4bb.ngrok-free.app/"
-    private const val CHAT_BASE_URL = "https://212845086219.ngrok-free.app//"
+    private const val ANALYZE_BASE_URL = "https://f798550631b2.ngrok-free.app/"
+    private const val CHAT_BASE_URL = "https://f798550631b2.ngrok-free.app/"
 
     fun provideApi(): QuizApiService {
         val client = OkHttpClient.Builder().build()

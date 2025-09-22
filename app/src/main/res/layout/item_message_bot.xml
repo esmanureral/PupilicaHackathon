@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/badge_size_small"
         android:background="@drawable/message_bot_bg"
-        android:elevation="@dimen/card_elevation_small"
         android:orientation="vertical"
         android:padding="@dimen/_16dp">
 

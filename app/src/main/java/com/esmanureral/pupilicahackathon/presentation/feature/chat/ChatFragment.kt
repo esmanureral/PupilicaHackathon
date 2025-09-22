@@ -57,6 +57,14 @@ class ChatFragment : Fragment() {
         binding.btnArrow.setOnClickListener {
             findNavController().popBackStack()
         }
+        
+        binding.btnVoiceAssistant.setOnClickListener {
+            if (viewModel.permissionGrantedLiveData.value == true) {
+                speechRecognizerManager.onVoiceButtonClicked()
+            } else {
+                requestRecordAudioPermission.launch(android.Manifest.permission.RECORD_AUDIO)
+            }
+        }
         addWelcomeMessage()
         checkPendingMessage()
     }

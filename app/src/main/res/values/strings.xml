@@ -183,6 +183,7 @@
     <string name="fact_title">Diş Sağlığı Bilgisi</string>
     <string name="fun_fact_badges">💡 İlginç Bilgi</string>
     <string name="btn_voice">Sesli Mesaj</string>
+    <string name="btn_voice_assistant">Sesli Asistan</string>
     <string name="input_message">Mesaj yazın...</string>
     <string name="btn_send">Gönder</string>
     <string name="home_fragment">Ana Sayfa</string>
