@@ -160,17 +160,17 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_pla_title_text"
-                        app:layout_constraintEnd_toStartOf="@id/btnWatchVideo"
+                        app:layout_constraintEnd_toStartOf="@id/ivWatchVideo"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <ImageView
-                        android:id="@+id/btnWatchVideo"
+                    <ImageButton
+                        android:id="@+id/ivWatchVideo"
                         android:layout_width="@dimen/image_view"
                         android:layout_height="@dimen/image_view"
                         android:background="@drawable/circle_background"
                         android:clickable="true"
-                        android:contentDescription="@string/btn_watch_video_descr"
+                        android:contentDescription="@string/iv_watch_video_descr"
                         android:focusable="true"
                         android:padding="@dimen/_10dp"
                         android:src="@drawable/ic_youtube"

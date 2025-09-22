@@ -140,7 +140,7 @@
     <string name="tv_summary_title">Analiz Özeti</string>
     <string name="tv_prediction_title">Risk Analizi</string>
     <string name="tv_pla_title_text">Haftalık Bakım Planı</string>
-    <string name="btn_watch_video_descr">image view button watch video</string>
+    <string name="iv_watch_video_descr">image view button watch video</string>
     <string name="btn_share_plan">image view share button</string>
     <string name="badge_name">Yeni Rozet</string>
     <string name="badge_image">Rozet</string>

@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.model.AnalysisResult
-import com.esmanureral.pupilicahackathon.domain.model.WeeklyPlanItem
 import com.esmanureral.pupilicahackathon.databinding.FragmentAnalysisResultBinding
 import com.esmanureral.pupilicahackathon.presentation.feature.reminder.WeeklyPlanAdapter
 import java.text.SimpleDateFormat
@@ -56,20 +55,18 @@ class AnalysisResultFragment : Fragment() {
             rvPlan.adapter = weeklyPlanAdapter
             val layoutManager = GridLayoutManager(requireContext(), 2)
             rvPlan.layoutManager = layoutManager
-            
-            // RecyclerView layout parametrelerini programatik olarak ayarla
+
             val layoutParams = rvPlan.layoutParams
             layoutParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
             layoutParams.height = 300.dpToPx()
             rvPlan.layoutParams = layoutParams
-            
-            // Scroll özelliklerini ayarla
+
             rvPlan.isNestedScrollingEnabled = true
             rvPlan.isVerticalScrollBarEnabled = true
             rvPlan.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
         }
     }
-    
+
     private fun Int.dpToPx(): Int {
         return (this * requireContext().resources.displayMetrics.density).toInt()
     }
@@ -208,15 +205,13 @@ class AnalysisResultFragment : Fragment() {
                 rvPlan.visibility = View.GONE
             }
         }
-        
-        if (weeklyPlanAdapter != null) {
-            weeklyPlanAdapter.updateData(result.weeklyPlan)
-        }
+
+        weeklyPlanAdapter.updateData(result.weeklyPlan)
     }
 
     private fun updateVideoButton(result: AnalysisResult) {
         with(binding) {
-            btnWatchVideo.setOnClickListener {
+            ivWatchVideo.setOnClickListener {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(result.videoUrl)))
             }
         }
