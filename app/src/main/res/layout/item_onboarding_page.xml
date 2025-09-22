@@ -6,50 +6,46 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="32dp">
+    android:padding="@dimen/_32dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/_40dp"
         android:gravity="center_vertical"
-        android:layout_marginBottom="40dp">
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/dental"
-            android:background="@drawable/circle_blue_background"
-            android:padding="12dp"
-            app:tint="@color/white" />
+            android:layout_width="@dimen/image_view"
+            android:layout_height="@dimen/image_view"
+            android:background="@drawable/badge5"
+            android:padding="@dimen/_12dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="Pupilica"
-            android:textColor="@color/smile_blue"
-            android:textSize="28sp"
+            android:text="@string/onboarding_text"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/onboarding_text_size"
             android:textStyle="bold" />
     </LinearLayout>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieView"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        android:layout_marginBottom="40dp"
+        android:layout_width="@dimen/lottie_view"
+        android:layout_height="@dimen/lottie_view"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/_40dp"
         app:lottie_autoPlay="true"
         app:lottie_loop="true" />
 
     <TextView
         android:id="@+id/title"
+        style="@style/DarkGreyBoldText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:textColor="@color/smile_text_primary"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/_16dp"
         android:gravity="center"
         tools:text="Daha Parlak Bir Gülümseme İçin Yolculuğunuza Başlayın" />
 
@@ -58,9 +54,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/smile_text_secondary"
-        android:textSize="16sp"
-        android:lineSpacingExtra="4dp"
+        android:lineSpacingExtra="@dimen/elevation"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/text_size_large"
         tools:text="Diş sağlığı yolculuğunuza hoş geldiniz! Kolay randevu alma, hatırlatıcılar ve faydalı ağız bakım ipuçları ile daha sağlıklı, daha parlak bir gülümsemeye ulaşın." />
 
 </LinearLayout>

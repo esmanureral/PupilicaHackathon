@@ -3,8 +3,8 @@
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="blue">#5E8CCF</color>
-    <color name="gray">#525A66</color>
+    <color name="blue">#2196F3</color>
+    <color name="gray">#757575</color>
     <color name="green_light">#9BBC67</color>
     <color name="red_light">#A05858</color>
     <color name="option_color">#717E81</color>
@@ -13,25 +13,15 @@
     <color name="greenHome">#4CAF50</color>
     <color name="primary">#2196F3</color>
     <color name="red">#F44336</color>
-    <color name="onb_yellow">#FFE2A9</color>
-    <color name="onb_blue">#CFE0FF</color>
     <color name="onb_pink">#FFCFE6</color>
-    
-    <!-- SmileSync inspired colors -->
-    <color name="smile_blue">#2196F3</color>
-    <color name="smile_blue_light">#E3F2FD</color>
-    <color name="smile_blue_dark">#1976D2</color>
-    <color name="smile_gray">#F5F5F5</color>
-    <color name="smile_text_primary">#212121</color>
-    <color name="smile_text_secondary">#757575</color>
-    <color name="smile_background">#FAFAFA</color>
-    <color name="smile_card_background">#FFFFFF</color>
-    <color name="smile_accent">#03DAC6</color>
-    
-    <!-- New colors for modern design -->
-    <color name="background_light">#F8F9FA</color>
-    <color name="gray_light">#E9ECEF</color>
-    <color name="text_secondary">#6C757D</color>
     <color name="green">#28A745</color>
+    <color name="light_blue">#E3F2FD</color>
+    <color name="light_white">#F8F7F7</color>
+    <color name="light_orange">#FFF3E0</color>
+    <color name="light_red">#FFEBEE</color>
+    <color name="light_green">#E8F5E8</color>
+    <color name="light_yellow">#FFFBD7</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="light_pink">#FFE8F0</color>
 
 </resources>

@@ -3,60 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
-    android:layout_marginBottom="12dp"
-    android:backgroundTint="@color/white">
+    android:layout_margin="@dimen/padding_medium"
+    android:outlineProvider="none"
+    app:cardCornerRadius="@dimen/card_corner_radius_medium"
+    app:cardElevation="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:padding="@dimen/padding_xlarge">
 
-        <View
-            android:layout_width="4dp"
-            android:layout_height="40dp"
-            android:background="@color/orange"
-            android:layout_marginEnd="16dp" />
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvDay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:text="@string/day_monday"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvDay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:text="Pazartesi" />
+        <TextView
+            android:id="@+id/tvTask"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="@dimen/_6dp"
+            android:text="@string/weekly_plan_task_example"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDay"/>
 
-            <TextView
-                android:id="@+id/tvTask"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:textSize="14sp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/text_secondary"
-                android:text="2 dakika boyunca dişlerinizi, florürlü diş macunuyla fırçalayın. Diş ipi kullanın." />
-
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/check_circle"
-            app:tint="@color/green"
-            android:layout_marginStart="8dp" />
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
-

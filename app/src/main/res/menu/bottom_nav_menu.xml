@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    
+
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
-        android:title="Ana Sayfa" />
+        android:title="@string/home_fragment" />
 
-    
+
     <item
         android:id="@+id/quizFragment"
-        android:icon="@drawable/ic_badges"
-        android:title="Oyun" />
-        
+        android:icon="@drawable/game"
+        android:title="@string/quiz_fragment" />
+
 </menu>
