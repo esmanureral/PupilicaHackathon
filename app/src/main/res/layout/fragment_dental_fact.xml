@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/light_white"
+    android:outlineProvider="none"
+    app:cardCornerRadius="@dimen/_16dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_20dp">
+
+        <ImageView
+            android:id="@+id/ivFactIcon"
+            android:layout_width="@dimen/image_view"
+            android:layout_height="@dimen/image_view"
+            android:background="@drawable/circle_background_light_green"
+            android:contentDescription="@string/fact_icon"
+            android:padding="@dimen/_8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/tooth" />
+
+        <TextView
+            android:id="@+id/tvFactTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16dp"
+            android:layout_marginTop="@dimen/_8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/fact_title"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivFactIcon"
+            app:layout_constraintTop_toTopOf="@id/ivFactIcon" />
+
+        <TextView
+            android:id="@+id/tvFactDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8dp"
+            android:ellipsize="end"
+            android:lineSpacingExtra="@dimen/card_elevation_small"
+            android:maxLines="4"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivFactIcon"
+            tools:text="Bu bilgi diş sağlığınız için önemli bir ipucu içeriyor." />
+
+        <TextView
+            android:id="@+id/tvFunFactBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12dp"
+            android:background="@drawable/fun_fact_badge"
+            android:ellipsize="end"
+            android:paddingHorizontal="@dimen/_12dp"
+            android:paddingVertical="@dimen/elevation"
+            android:scrollHorizontally="false"
+            android:singleLine="true"
+            android:text="@string/fun_fact_badges"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tvFactDescription"
+            app:layout_constraintTop_toBottomOf="@id/tvFactDescription" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,177 @@
+[
+  {
+    "id": 1,
+    "title": "Diş Fırçalama Süresi",
+    "description": "Dişlerinizi en az 2 dakika fırçalamalısınız. Bu süre, tüm diş yüzeylerinin etkili bir şekilde temizlenmesi için gereklidir.",
+    "iconResId": "tooth_brush",
+    "category": "BRUSHING"
+  },
+  {
+    "id": 2,
+    "title": "Diş İpi Kullanımı",
+    "description": "Günde bir kez diş ipi kullanmak, fırçalama ile ulaşılamayan bölgelerdeki plakları temizler ve diş eti sağlığını korur.",
+    "iconResId": "dental_floss",
+    "category": "CLEANING"
+  },
+  {
+    "id": 3,
+    "title": "Florürün Faydaları",
+    "description": "Florür, diş minesini güçlendirir ve çürük oluşumunu önler. Florürlü diş macunu kullanmak önemlidir.",
+    "iconResId": "protection",
+    "category": "PROTECTION"
+  },
+  {
+    "id": 4,
+    "title": "Şekerli İçecekler",
+    "description": "Şekerli içecekler diş minesini eritir. Bu içecekleri tükettikten sonra ağzınızı su ile çalkalayın.",
+    "iconResId": "protection",
+    "category": "NUTRITION"
+  },
+  {
+    "id": 5,
+    "title": "Diş Hekimi Kontrolü",
+    "description": "6 ayda bir diş hekimi kontrolüne gitmek, diş problemlerini erken tespit etmenizi sağlar.",
+    "iconResId": "dental",
+    "category": "CHECKUP"
+  },
+  {
+    "id": 6,
+    "title": "Gece Fırçalama",
+    "description": "Gece yatmadan önce diş fırçalamak çok önemlidir. Gece boyunca bakteriler daha aktif olur.",
+    "iconResId": "night",
+    "category": "ROUTINE"
+  },
+  {
+    "id": 7,
+    "title": "Diş Fırçası Değişimi",
+    "description": "Diş fırçanızı 3-4 ayda bir değiştirmelisiniz. Yıpranmış fırçalar etkili temizlik yapamaz.",
+    "iconResId": "tooth_brush",
+    "category": "MAINTENANCE"
+  },
+  {
+    "id": 8,
+    "title": "Ağız Kokusu",
+    "description": "Ağız kokusu genellikle diş eti hastalığı veya çürüklerden kaynaklanır. Düzenli kontrol önemlidir.",
+    "iconResId": "bad_breath",
+    "category": "HEALTH"
+  },
+  {
+    "id": 9,
+    "title": "Hamilelik ve Diş Sağlığı",
+    "description": "Hamilelik sırasında hormon değişiklikleri diş eti hassasiyetini artırabilir. Ekstra bakım gerekir.",
+    "iconResId": "pregnancy",
+    "category": "SPECIAL_CONDITIONS"
+  },
+  {
+    "id": 10,
+    "title": "Çocuklarda Diş Bakımı",
+    "description": "Çocukların ilk dişleri çıktığında temizlik başlamalı. 2 yaşından itibaren florürlü macun kullanılabilir.",
+    "iconResId": "baby_dental",
+    "category": "CHILD_CARE"
+  },
+  {
+    "id": 11,
+    "title": "Diş Gıcırdatma",
+    "description": "Stres ve anksiyete diş gıcırdatmaya neden olabilir. Gece plağı kullanımı önerilir.",
+    "iconResId": "tooth",
+    "category": "STRESS"
+  },
+  {
+    "id": 12,
+    "title": "Sigara ve Diş Sağlığı",
+    "description": "Sigara diş eti hastalığı riskini artırır ve dişlerde lekelenmeye neden olur.",
+    "iconResId": "caries",
+    "category": "HARMFUL_HABITS"
+  },
+  {
+    "id": 13,
+    "title": "Kalsiyum ve Diş Sağlığı",
+    "description": "Kalsiyum açısından zengin besinler (süt, peynir, yoğurt) diş ve kemik sağlığı için önemlidir.",
+    "iconResId": "pills_bottle",
+    "category": "NUTRITION"
+  },
+  {
+    "id": 14,
+    "title": "Asitli İçecekler",
+    "description": "Asitli içecekler diş minesini zayıflatır. Pipet kullanarak dişlerle temasını azaltabilirsiniz.",
+    "iconResId": "pills_bottle",
+    "category": "NUTRITION"
+  },
+  {
+    "id": 15,
+    "title": "Diş Beyazlatma",
+    "description": "Diş beyazlatma işlemi profesyonel kontrol altında yapılmalıdır. Evde yapılan yöntemler zararlı olabilir.",
+    "iconResId": "clean_teeth",
+    "category": "AESTHETICS"
+  },
+  {
+    "id": 16,
+    "title": "Diş Macunu Miktarı",
+    "description": "Yetişkinler için bezelye tanesi kadar, çocuklar için pirinç tanesi kadar macun yeterlidir.",
+    "iconResId": "toothpaste",
+    "category": "BRUSHING"
+  },
+  {
+    "id": 17,
+    "title": "Dilin Temizlenmesi",
+    "description": "Dilinizi fırçalamak veya dil temizleyici kullanmak ağız kokusunu önlemeye yardımcı olur.",
+    "iconResId": "tongue_cleansing",
+    "category": "CLEANING"
+  },
+  {
+    "id": 18,
+    "title": "Su İçmenin Önemi",
+    "description": "Yemeklerden sonra su içmek, ağızda kalan asitleri ve yiyecek artıklarını uzaklaştırır.",
+    "iconResId": "water",
+    "category": "NUTRITION"
+  },
+  {
+    "id": 19,
+    "title": "Diş Eti Kanaması",
+    "description": "Diş eti kanaması genellikle diş eti iltihabının belirtisidir. İhmal edilmemelidir.",
+    "iconResId": "bleeding_gums",
+    "category": "HEALTH"
+  },
+  {
+    "id": 20,
+    "title": "Sert Nesneleri Çiğnemeyin",
+    "description": "Ceviz kabuğu, buz veya kalem gibi sert nesneleri ısırmak diş minesine zarar verebilir.",
+    "iconResId": "block",
+    "category": "HARMFUL_HABITS"
+  },
+  {
+    "id": 21,
+    "title": "Süt Dişlerinin Önemi",
+    "description": "Süt dişleri, daimi dişler için rehberdir. Erken kaybedilmesi çene yapısını etkileyebilir.",
+    "iconResId": "baby_dental",
+    "category": "CHILD_CARE"
+  },
+  {
+    "id": 22,
+    "title": "Diş Sıkma ve Baş Ağrısı",
+    "description": "Diş sıkma, çene kaslarını zorlar ve baş ağrısına sebep olabilir.",
+    "iconResId": "tooth",
+    "category": "STRESS"
+  },
+  {
+    "id": 23,
+    "title": "Gece Atıştırmaları",
+    "description": "Gece atıştırmak dişlerde çürüme riskini artırır. Özellikle şekerli gıdalardan kaçının.",
+    "iconResId": "bleeding_gums",
+    "category": "ROUTINE"
+  },
+  {
+    "id": 24,
+    "title": "Limon ve Diş Sağlığı",
+    "description": "Limon gibi asidik besinleri aşırı tüketmek diş minesini aşındırır.",
+    "iconResId": "block",
+    "category": "NUTRITION"
+  },
+  {
+    "id": 25,
+    "title": "Profesyonel Diş Temizliği",
+    "description": "Diş hekimi tarafından yapılan profesyonel temizlik, tartar ve lekeleri etkili şekilde giderir.",
+    "iconResId": "clean_teeth",
+    "category": "CHECKUP"
+  }
+]
