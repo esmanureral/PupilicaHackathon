@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.databinding.ActivityMainBinding
 import com.esmanureral.pupilicahackathon.data.local.OnboardingPreferences
-import com.esmanureral.pupilicahackathon.presentation.reminder.ReminderSystemManager
+import com.esmanureral.pupilicahackathon.presentation.feature.reminder.ReminderSystemManager
 
 class MainActivity : AppCompatActivity() {
 

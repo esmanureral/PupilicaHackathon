@@ -3,8 +3,8 @@ package com.esmanureral.pupilicahackathon.presentation.home.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.esmanureral.pupilicahackathon.data.model.DentalFact
-import com.esmanureral.pupilicahackathon.presentation.home.DentalFactFragment
+import com.esmanureral.pupilicahackathon.domain.model.DentalFact
+import com.esmanureral.pupilicahackathon.presentation.feature.home.DentalFactFragment
 
 class DentalFactsPagerAdapter(
     fragmentActivity: FragmentActivity,

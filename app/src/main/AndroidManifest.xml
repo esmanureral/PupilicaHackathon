@@ -43,7 +43,7 @@
         </activity>
 
         <receiver
-            android:name=".service.ReminderNotificationService"
+            android:name=".infrastructure.service.ReminderNotificationService"
             android:exported="false" />
 
         <provider

@@ -1,5 +1,8 @@
 package com.esmanureral.pupilicahackathon.data.remote
 
+import com.esmanureral.pupilicahackathon.data.remote.api.AnalyzeApiService
+import com.esmanureral.pupilicahackathon.data.remote.api.ChatApiService
+import com.esmanureral.pupilicahackathon.data.remote.api.QuizApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

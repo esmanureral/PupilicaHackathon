@@ -2,7 +2,8 @@ package com.esmanureral.pupilicahackathon.data.repository
 
 import android.content.Context
 import com.esmanureral.pupilicahackathon.data.local.ReminderSharedPreferences
-import com.esmanureral.pupilicahackathon.data.model.ReminderModel
+import com.esmanureral.pupilicahackathon.domain.model.ReminderModel
+import com.esmanureral.pupilicahackathon.domain.repository.ReminderRepository
 
 class ReminderRepositoryImpl(private val context: Context) : ReminderRepository {
 

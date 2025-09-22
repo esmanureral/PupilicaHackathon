@@ -2,7 +2,7 @@ package com.esmanureral.pupilicahackathon.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.esmanureral.pupilicahackathon.data.model.ReminderModel
+import com.esmanureral.pupilicahackathon.domain.model.ReminderModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import androidx.core.content.edit

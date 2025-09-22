@@ -4,8 +4,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import com.esmanureral.pupilicahackathon.R
-import com.esmanureral.pupilicahackathon.data.model.ReminderModel
-import com.esmanureral.pupilicahackathon.service.ReminderNotificationService
+import com.esmanureral.pupilicahackathon.domain.model.ReminderModel
+import com.esmanureral.pupilicahackathon.infrastructure.service.ReminderNotificationService
 
 class NotificationUseCase(private val context: Context) {
 

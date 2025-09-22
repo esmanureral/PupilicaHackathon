@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/quizFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.quiz.QuizFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.quiz.QuizFragment"
         android:label="QuizFragment">
         <action
             android:id="@+id/action_quizFragment_to_gameBadgeFragment"
@@ -18,12 +18,12 @@
 
     <fragment
         android:id="@+id/gameBadgeFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.badge.GameBadgeFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.badge.GameBadgeFragment"
         android:label="GameBadgeFragment" />
 
     <fragment
         android:id="@+id/badgeCongratulationFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.congratulation.BadgeCongratulationFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.congratulation.BadgeCongratulationFragment"
         android:label="Badge Congratulation">
         <argument
             android:name="badgeId"
@@ -41,7 +41,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.home.HomeFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.home.HomeFragment"
         android:label="HomeFragment">
 
         <action
@@ -63,17 +63,17 @@
 
     <fragment
         android:id="@+id/reminderFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.reminder.ReminderFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.reminder.ReminderFragment"
         android:label="ReminderFragment" />
 
     <fragment
         android:id="@+id/badgesFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.badge.GameBadgeFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.badge.GameBadgeFragment"
         android:label="Rozetler" />
 
     <fragment
         android:id="@+id/analysisResultFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.result.AnalysisResultFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.result.AnalysisResultFragment"
         android:label="Analysis Result">
         <argument
             android:name="resultText"
@@ -93,7 +93,7 @@
 
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.onboarding.OnboardingFragment"
+        android:name="com.esmanureral.pupilicahackathon.presentation.feature.onboarding.OnboardingFragment"
         android:label="Onboarding" />
 
 </navigation>
