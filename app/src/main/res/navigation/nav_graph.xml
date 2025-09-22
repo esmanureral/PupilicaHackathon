@@ -58,7 +58,7 @@
 
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.esmanureral.pupilicahackathon.presentation.chat.ChatFragment"
+        android:name="com.esmanureral.pupilicahackathon.ui.chat.ChatFragment"
         android:label="ChatFragment" />
 
     <fragment

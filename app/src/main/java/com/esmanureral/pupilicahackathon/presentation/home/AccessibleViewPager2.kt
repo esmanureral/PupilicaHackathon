@@ -29,11 +29,11 @@ class AccessibleViewPager2 @JvmOverloads constructor(
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val result = super.onTouchEvent(event)
-        
+
         if (event.action == MotionEvent.ACTION_DOWN) {
             onTouchCallback?.invoke()
         }
-        
+
         return result
     }
 
@@ -47,11 +47,11 @@ class AccessibleViewPager2 @JvmOverloads constructor(
         set(value) {
             viewPager2.adapter = value
         }
-    
+
     var currentItem: Int
         get() = viewPager2.currentItem
         set(value) = viewPager2.setCurrentItem(value, false)
-    
+
 
     fun registerOnPageChangeCallback(callback: ViewPager2.OnPageChangeCallback) {
         viewPager2.registerOnPageChangeCallback(callback)

@@ -15,7 +15,7 @@ class BadgeCongratulationFragment : Fragment() {
 
     private var _binding: FragmentBadgeCongratulationBinding? = null
     private val binding get() = _binding!!
-    
+
     private val args: BadgeCongratulationFragmentArgs by navArgs()
     private val viewModel: BadgeCongratulationViewModel by viewModels()
 

@@ -1,4 +1,4 @@
-package com.esmanureral.pupilicahackathon.presentation.badge
+package com.esmanureral.pupilicahackathon.presentation
 
 import androidx.recyclerview.widget.DiffUtil
 import com.esmanureral.pupilicahackathon.data.model.BadgeWithState

@@ -1,4 +1,4 @@
-package com.esmanureral.pupilicahackathon.presentation.chat
+package com.esmanureral.pupilicahackathon.ui.chat
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,8 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.data.model.ChatMessage
 import com.esmanureral.pupilicahackathon.databinding.FragmentChatBinding
+import com.esmanureral.pupilicahackathon.presentation.chat.ChatMessageAdapter
 import com.esmanureral.pupilicahackathon.presentation.extensions.startPulseAnimation
 import com.esmanureral.pupilicahackathon.presentation.extensions.stopPulseAnimation
+import com.esmanureral.pupilicahackathon.presentation.chat.ChatErrorType
+import com.esmanureral.pupilicahackathon.presentation.chat.ChatViewModel
 import com.esmanureral.pupilicahackathon.service.SpeechRecognizerManager
 
 class ChatFragment : Fragment() {

@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.data.local.OnboardingPreferences
-import com.esmanureral.pupilicahackathon.data.model.OnboardingPage
 import com.esmanureral.pupilicahackathon.databinding.FragmentOnboardingBinding
 import com.esmanureral.pupilicahackathon.presentation.extensions.dp
 

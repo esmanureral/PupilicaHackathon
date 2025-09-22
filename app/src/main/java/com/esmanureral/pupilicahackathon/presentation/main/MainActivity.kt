@@ -10,8 +10,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.esmanureral.pupilicahackathon.R
 import com.esmanureral.pupilicahackathon.databinding.ActivityMainBinding
-import com.esmanureral.pupilicahackathon.presentation.reminder.ReminderSystemManager
 import com.esmanureral.pupilicahackathon.data.local.OnboardingPreferences
+import com.esmanureral.pupilicahackathon.presentation.reminder.ReminderSystemManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,13 +36,10 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = binding.fragmentContainerView.getFragment<NavHostFragment>()
         val navController = navHostFragment.navController
 
-        // Check if onboarding is completed
         checkOnboardingStatus(navController)
 
-        // Setup BottomNavigationView with NavController
         binding.bottomNavigation.setupWithNavController(navController)
 
-        // Hide bottom navigation on certain fragments
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.bottomNavigation.isVisible = when (destination.id) {
                 R.id.homeFragment, R.id.chatFragment, R.id.reminderFragment, R.id.gameBadgeFragment -> true

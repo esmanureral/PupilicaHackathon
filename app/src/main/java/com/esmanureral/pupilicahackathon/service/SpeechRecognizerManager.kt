@@ -137,10 +137,10 @@ class SpeechRecognizerManager(
             }
         }
     }
-    
+
     private fun handleSpeechError(error: Int) {
         val errorMessage = errorMessages[error] ?: errorMessages[-1] ?: "Bilinmeyen hata oluştu"
-        
+
         onSpeechError(errorMessage)
         stopListening()
     }
