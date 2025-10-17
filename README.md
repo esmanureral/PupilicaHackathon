@@ -2,7 +2,7 @@
 
 ## 🏆 Pupilica Yapay Zeka Hackathonu – 2. Ödül 🥈
 
-**Diş Sağlığım**, yapay zeka destekli diş sağlığı analizi ve eğitimi sunan kapsamlı bir mobil uygulama ve backend platformudur. Modern Android geliştirme teknikleri ve AI entegrasyonu ile kullanıcıların ağız-diş sağlığını korumalarına yardımcı olmayı amaçlamaktadır.
+**Diş Sağlığım**, yapay zeka destekli diş sağlığı analizi ve eğitimi sunan kapsamlı bir mobil uygulama ve backend platformudur. Modern Android geliştirme teknikleri ve AI entegrasyonu ile kullanıcıların ağız-diş sağlığını korumalarına yardımcı olmayı amaçlamaktadır..
 
 ---
 
